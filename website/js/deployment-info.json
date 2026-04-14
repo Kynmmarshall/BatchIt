@@ -1,0 +1,17 @@
+{
+  "app_name": "BatchIt",
+  "build_number": "local-preview",
+  "job_name": "jenkins/batchit",
+  "build_url": "#",
+  "deployed_at_utc": "not-deployed-yet",
+  "artifacts": {
+    "apk": {
+      "path": "download/BatchIt.apk",
+      "sha256": "pending"
+    },
+    "aab": {
+      "path": "download/app-release.aab",
+      "sha256": "pending"
+    }
+  }
+}

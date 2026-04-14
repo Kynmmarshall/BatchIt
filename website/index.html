@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="BatchIt release portal for Android APK and AAB downloads.">
+	<title>BatchIt Release Portal</title>
+	<link rel="stylesheet" href="css/style.css">
+	<script src="js/script.js" defer></script>
+</head>
+<body>
+	<div class="bg-orb orb-a" aria-hidden="true"></div>
+	<div class="bg-orb orb-b" aria-hidden="true"></div>
+	<div class="bg-grid" aria-hidden="true"></div>
+
+	<header class="hero shell">
+		<p class="eyebrow">BatchIt DevOps Deployment Portal</p>
+		<h1>Fresh Android Builds, Published Automatically</h1>
+		<p class="hero-copy">
+			Every successful Jenkins run publishes the latest Android artifacts here.
+			Use this page to install, verify, and share the current release.
+		</p>
+		<div class="hero-actions">
+			<a class="btn btn-primary" href="download/BatchIt.apk">Download APK</a>
+			<a class="btn btn-ghost" href="download/app-release.aab">Download AAB</a>
+		</div>
+		<div class="hero-stats">
+			<div class="stat">
+				<span>Pipeline</span>
+				<strong id="pipeline-status">Checking...</strong>
+			</div>
+			<div class="stat">
+				<span>Build</span>
+				<strong id="build-number">-</strong>
+			</div>
+			<div class="stat">
+				<span>Last Deploy (UTC)</span>
+				<strong id="deployed-at">-</strong>
+			</div>
+		</div>
+	</header>
+
+	<main class="shell layout">
+		<section class="panel release-panel">
+			<h2>Release Details</h2>
+			<div class="detail-grid">
+				<p><span>Application</span><strong>BatchIt</strong></p>
+				<p><span>Build Number</span><strong id="build-number-detail">-</strong></p>
+				<p><span>Jenkins Job</span><strong id="job-name">-</strong></p>
+				<p>
+					<span>Build URL</span>
+					<strong><a id="build-url" href="#" target="_blank" rel="noopener">Open build log</a></strong>
+				</p>
+			</div>
+		</section>
+
+		<section class="panel artifact-panel">
+			<h2>Artifacts</h2>
+			<div class="artifact-grid">
+				<article class="artifact-card">
+					<h3>Android APK</h3>
+					<p>Fast install package for testers and devices.</p>
+					<ul>
+						<li>File: BatchIt.apk</li>
+						<li>Size: <span id="apk-size">-</span></li>
+						<li>SHA-256: <span id="apk-sha">-</span></li>
+					</ul>
+					<a class="btn btn-primary block" href="download/BatchIt.apk">Download APK</a>
+				</article>
+
+				<article class="artifact-card">
+					<h3>Android App Bundle</h3>
+					<p>Upload package for Google Play Console release flow.</p>
+					<ul>
+						<li>File: app-release.aab</li>
+						<li>Size: <span id="aab-size">-</span></li>
+						<li>SHA-256: <span id="aab-sha">-</span></li>
+					</ul>
+					<a class="btn btn-ghost block" href="download/app-release.aab">Download AAB</a>
+				</article>
+			</div>
+		</section>
+
+		<section class="panel command-panel">
+			<h2>Quick Install Command</h2>
+			<p>Use this command from your desktop after downloading the APK.</p>
+			<div class="command-row">
+				<pre id="install-command">adb install -r BatchIt.apk</pre>
+				<button class="copy-btn" type="button" data-copy-target="install-command">Copy</button>
+			</div>
+		</section>
+	</main>
+
+	<footer class="shell footer">
+		<p>
+			BatchIt Release Portal • Updated automatically by Jenkins
+		</p>
+	</footer>
+</body>
+</html>
