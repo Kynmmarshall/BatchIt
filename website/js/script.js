@@ -67,7 +67,7 @@ async function loadDeploymentInfo() {
 
 		const [apkSize, aabSize] = await Promise.all([
 			getFileSize("download/BatchIt.apk"),
-			getFileSize("download/app-release.aab")
+			getFileSize("download/BatchIt.aab")
 		]);
 
 		setText("apk-size", apkSize);

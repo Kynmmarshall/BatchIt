@@ -143,14 +143,14 @@ pipeline {
                     fi
 
                     if [ -f build/app/outputs/bundle/release/app-release.aab ]; then
-                        cp build/app/outputs/bundle/release/app-release.aab "$DEPLOY_STAGING/download/app-release.aab"
+                        cp build/app/outputs/bundle/release/app-release.aab "$DEPLOY_STAGING/download/BatchIt.aab"
                     else
                         echo "Missing AAB output"
                         exit 1
                     fi
 
                     apk_sha256=$(sha256sum "$DEPLOY_STAGING/download/BatchIt.apk" | awk '{print $1}')
-                    aab_sha256=$(sha256sum "$DEPLOY_STAGING/download/app-release.aab" | awk '{print $1}')
+                    aab_sha256=$(sha256sum "$DEPLOY_STAGING/download/BatchIt.aab" | awk '{print $1}')
                     deployed_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
                     cat > "$DEPLOY_STAGING/js/deployment-info.json" <<EOF
@@ -166,7 +166,7 @@ pipeline {
       "sha256": "${apk_sha256}"
     },
     "aab": {
-      "path": "download/app-release.aab",
+            "path": "download/BatchIt.aab",
       "sha256": "${aab_sha256}"
     }
   }

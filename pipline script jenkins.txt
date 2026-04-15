@@ -340,14 +340,14 @@ HTACCESS
                 mkdir -p /var/www/BatchIt/download/
                 
                 if [ -f "build/app/outputs/flutter-apk/app-release.apk" ]; then
-                    cp build/app/outputs/flutter-apk/app-release.apk /var/www/BatchIt/download/
+                    cp build/app/outputs/flutter-apk/app-release.apk /var/www/BatchIt/download/BatchIt.apk
                     echo "✅ APK copied successfully"
                 else
                     echo "❌ APK file not found!"
                 fi
                 
                 if [ -f "build/app/outputs/bundle/release/app-release.aab" ]; then
-                    cp build/app/outputs/bundle/release/app-release.aab /var/www/BatchIt/download/
+                    cp build/app/outputs/bundle/release/app-release.aab /var/www/BatchIt/download/BatchIt.aab
                     echo "✅ AAB copied successfully"
                 else
                     echo "❌ AAB file not found!"
