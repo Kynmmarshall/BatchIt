@@ -23,11 +23,13 @@ body {
 	margin: 0;
 	padding: 0;
 	min-height: 100%;
+	background-color: #071217;
 }
 
 body {
 	font-family: 'Outfit', 'Segoe UI', sans-serif;
 	color: var(--text);
+	background-color: #071217;
 	background: radial-gradient(circle at 20% 10%, #214450 0%, rgba(33, 68, 80, 0) 45%),
 		radial-gradient(circle at 85% 22%, #2f5a4f 0%, rgba(47, 90, 79, 0) 38%),
 		linear-gradient(160deg, #071217 0%, #0d242d 45%, #102f39 100%);
@@ -368,6 +370,11 @@ pre {
 }
 
 @media (max-width: 700px) {
+	html,
+	body {
+		background-color: #061015 !important;
+	}
+
 	:root {
 		--text: #f8fdff;
 		--muted: #d7e7ec;
@@ -376,6 +383,7 @@ pre {
 	}
 
 	body {
+		background-color: #061015;
 		background: linear-gradient(165deg, #061015 0%, #0a1e26 50%, #0e2a34 100%);
 	}
 
