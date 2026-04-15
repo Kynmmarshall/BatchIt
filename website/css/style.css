@@ -366,3 +366,63 @@ pre {
 		grid-template-columns: 1fr;
 	}
 }
+
+@media (max-width: 700px) {
+	:root {
+		--text: #f8fdff;
+		--muted: #d7e7ec;
+		--panel: rgba(4, 18, 23, 0.92);
+		--panel-border: rgba(196, 247, 239, 0.32);
+	}
+
+	body {
+		background: linear-gradient(165deg, #061015 0%, #0a1e26 50%, #0e2a34 100%);
+	}
+
+	.bg-orb {
+		opacity: 0.14;
+		filter: blur(52px);
+	}
+
+	.bg-grid {
+		opacity: 0.2;
+	}
+
+	.hero {
+		padding: 2.7rem 0 1.8rem;
+	}
+
+	.eyebrow {
+		background: rgba(8, 39, 45, 0.76);
+		color: #e0f8f3;
+		border-color: rgba(126, 242, 218, 0.5);
+	}
+
+	.hero-copy,
+	.stat span,
+	.artifact-card p,
+	.command-panel p,
+	.footer,
+	.detail-grid span {
+		color: #d9eaf0;
+	}
+
+	.panel,
+	.artifact-card,
+	.detail-grid p,
+	pre {
+		background: rgba(4, 17, 22, 0.94);
+		border-color: rgba(198, 243, 236, 0.26);
+	}
+
+	.btn-ghost {
+		background: rgba(11, 40, 48, 0.86);
+		color: #f2fffc;
+		border-color: rgba(211, 248, 242, 0.44);
+	}
+
+	.copy-btn {
+		background: rgba(255, 171, 87, 0.28);
+		color: #fff2e4;
+	}
+}
