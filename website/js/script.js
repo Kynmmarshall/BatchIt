@@ -1,4 +1,6 @@
 const deploymentInfoUrl = "js/deployment-info.json";
+let refreshTimer = null;
+let lastBuildNumber = null;
 
 function byId(id) {
 	return document.getElementById(id);
@@ -50,10 +52,12 @@ async function loadDeploymentInfo() {
 		}
 
 		const data = await response.json();
+		const buildNumber = data.build_number || "-";
+		lastBuildNumber = buildNumber;
 
 		setText("pipeline-status", "Healthy");
-		setText("build-number", data.build_number || "-");
-		setText("build-number-detail", data.build_number || "-");
+		setText("build-number", buildNumber);
+		setText("build-number-detail", buildNumber);
 		setText("deployed-at", data.deployed_at_cameroon || data.last_deployed || "-");
 		setText("job-name", data.job_name || "-");
 
@@ -73,6 +77,24 @@ async function loadDeploymentInfo() {
 		setText("pipeline-status", "Waiting for first deployment");
 		setText("apk-size", "Unavailable");
 		setText("aab-size", "Unavailable");
+	}
+}
+
+async function refreshDeploymentInfo() {
+	try {
+		const response = await fetch(`${deploymentInfoUrl}?v=${Date.now()}`, { cache: "no-store" });
+		if (!response.ok) {
+			return;
+		}
+
+		const data = await response.json();
+		const buildNumber = data.build_number || "-";
+
+		if (buildNumber !== lastBuildNumber) {
+			await loadDeploymentInfo();
+		}
+	} catch (_error) {
+		// Ignore refresh errors and keep the last visible values.
 	}
 }
 
@@ -103,4 +125,11 @@ function wireCopyButtons() {
 document.addEventListener("DOMContentLoaded", () => {
 	wireCopyButtons();
 	loadDeploymentInfo();
+	refreshTimer = window.setInterval(refreshDeploymentInfo, 30000);
+});
+
+document.addEventListener("visibilitychange", () => {
+	if (!document.hidden) {
+		refreshDeploymentInfo();
+	}
 });
