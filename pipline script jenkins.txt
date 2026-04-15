@@ -286,7 +286,7 @@ function updateDeploymentInfo() {
         .then((response) => response.json())
         .then((data) => {
             setText('last-updated', data.last_deployed || '-');
-            setText('deployed-at', data.deployed_at_utc || data.last_deployed || '-');
+            setText('deployed-at', data.deployed_at_cameroon || data.last_deployed || '-');
             setText('build-number', data.build_number || '-');
             setText('apk-size', data?.artifacts?.apk?.size_human || '-');
             setText('aab-size', data?.artifacts?.aab?.size_human || '-');
@@ -328,8 +328,9 @@ HTACCESS
                     echo "❌ AAB file not found!"
                 fi
 
+                export TZ='Africa/Douala'
                 DEPLOYMENT_TIME=$(date "+%Y-%m-%d at %H:%M:%S")
-                DEPLOYMENT_TIME_UTC=$(date -u "+%Y-%m-%dT%H:%M:%SZ")
+                DEPLOYMENT_TIME_CMR=$(date "+%Y-%m-%dT%H:%M:%S%z")
                 TIMESTAMP=$(date +%s)
 
                 APK_PATH="/var/www/BatchIt/download/BatchIt.apk"
@@ -348,7 +349,8 @@ HTACCESS
                 cat > /var/www/BatchIt/js/deployment-info.json << EOF
 {
     "last_deployed": "${DEPLOYMENT_TIME}",
-    "deployed_at_utc": "${DEPLOYMENT_TIME_UTC}",
+    "deployed_at_cameroon": "${DEPLOYMENT_TIME_CMR}",
+    "timezone": "Africa/Douala (UTC+1)",
     "build_number": "${BUILD_NUMBER}",
     "job_name": "${JOB_NAME}",
     "build_url": "${BUILD_URL}",
