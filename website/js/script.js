@@ -54,16 +54,13 @@ async function loadDeploymentInfo() {
 		setText("pipeline-status", "Healthy");
 		setText("build-number", data.build_number || "-");
 		setText("build-number-detail", data.build_number || "-");
-		setText("deployed-at", data.deployed_at_utc || "-");
+		setText("deployed-at", data.deployed_at_cameroon || data.last_deployed || "-");
 		setText("job-name", data.job_name || "-");
 
 		const buildUrl = byId("build-url");
 		if (buildUrl && data.build_url) {
 			buildUrl.href = data.build_url;
 		}
-
-		setText("apk-sha", data?.artifacts?.apk?.sha256 || "-");
-		setText("aab-sha", data?.artifacts?.aab?.sha256 || "-");
 
 		const [apkSize, aabSize] = await Promise.all([
 			getFileSize("download/BatchIt.apk"),
