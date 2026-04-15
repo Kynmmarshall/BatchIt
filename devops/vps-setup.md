@@ -64,10 +64,10 @@ sdkmanager "platform-tools" "platforms;android-36" "build-tools;35.0.0"
 ## 5. Prepare deployment directory
 
 ~~~bash
-sudo mkdir -p /var/www/batchit
-sudo chown -R jenkins:www-data /var/www/batchit
-sudo chmod -R 775 /var/www/batchit
-sudo find /var/www/batchit -type d -exec chmod g+s {} \;
+sudo mkdir -p /var/www/BatchIt
+sudo chown -R jenkins:www-data /var/www/BatchIt
+sudo chmod -R 775 /var/www/BatchIt
+sudo find /var/www/BatchIt -type d -exec chmod g+s {} \;
 ~~~
 
 ## 6. Configure Nginx site
@@ -78,6 +78,16 @@ Copy the included config:
 sudo cp devops/nginx-batchit.conf /etc/nginx/sites-available/batchit
 sudo ln -sf /etc/nginx/sites-available/batchit /etc/nginx/sites-enabled/batchit
 sudo rm -f /etc/nginx/sites-enabled/default
+sudo nginx -t
+sudo systemctl reload nginx
+~~~
+
+If you see a conflicting server_name warning, find duplicate enabled sites and disable the old one:
+
+~~~bash
+sudo grep -R "server_name .*duckdns.org" /etc/nginx/sites-enabled /etc/nginx/sites-available -n
+sudo ls -la /etc/nginx/sites-enabled
+sudo rm -f /etc/nginx/sites-enabled/OLD_SITE_NAME
 sudo nginx -t
 sudo systemctl reload nginx
 ~~~
@@ -118,15 +128,37 @@ sudo ufw allow 443/tcp
 
 ## 10. Optional domain + HTTPS
 
-After DNS points to VPS:
+Before running Certbot, confirm your DuckDNS A record resolves to your VPS IP.
+
+Run from the VPS:
+
+~~~bash
+DUCKDNS_DOMAIN="batchit"
+DUCKDNS_TOKEN="YOUR_DUCKDNS_TOKEN"
+VPS_IP="YOUR_VPS_PUBLIC_IP"
+curl -fsS "https://www.duckdns.org/update?domains=${DUCKDNS_DOMAIN}&token=${DUCKDNS_TOKEN}&ip=${VPS_IP}&ipv6="
+dig +short batchit.duckdns.org A @1.1.1.1
+~~~
+
+The DuckDNS update command should return `OK`.
+
+If dig output is empty, do not run Certbot yet. Wait for propagation and verify again.
+
+Then issue certificate:
 
 ~~~bash
 sudo apt install -y certbot python3-certbot-nginx
 sudo certbot --nginx -d your-domain.com -d www.your-domain.com
 ~~~
 
+For DuckDNS single-host setup:
+
+~~~bash
+sudo certbot --nginx -d batchit.duckdns.org
+~~~
+
 ## Important notes
 
-- Your Jenkinsfile assumes Flutter is at /opt/flutter and deployment target is /var/www/batchit.
+- Your Jenkinsfile assumes Flutter is at /opt/flutter and deployment target is /var/www/BatchIt.
 - Keep Android signing keys in Jenkins Credentials, not in the repository.
 - If your repository is private, add a GitHub token credential in Jenkins and attach it to the pipeline SCM config.
