@@ -238,11 +238,6 @@ pipeline {
                 if [ -d "website" ]; then
                     cp -r website/css website/images website/index.html website/js /var/www/BatchIt/
                     echo "✅ Website copied from repository"
-                    
-                    if [ -f "/var/www/BatchIt/index.html" ]; then
-                        sed -i "s|id=\\\"last-updated\\\">.*<|id=\\\"last-updated\\\"><|g" /var/www/BatchIt/index.html
-                        echo "✅ Cleared existing timestamp from HTML"
-                    fi
                 else
                     echo "⚠ No website directory found, creating basic one"
                     mkdir -p /var/www/BatchIt/css/
@@ -263,67 +258,47 @@ pipeline {
 <body>
     <h1>BatchIt</h1>
     <p>Download our app:</p>
-    <a href="download/app-release.apk">Download APK</a><br>
-    <a href="download/app-release.aab">Download AAB</a>
+    <a href="download/BatchIt.apk">Download APK</a><br>
+    <a href="download/BatchIt.aab">Download AAB</a>
+    <p>Build Number: <span id="build-number">Loading...</span></p>
+    <p>Last Updated (UTC): <span id="deployed-at">Loading...</span></p>
+    <p>APK Size: <span id="apk-size">Loading...</span></p>
+    <p>AAB Size: <span id="aab-size">Loading...</span></p>
     <p>Last Updated: <span id="last-updated">Loading...</span></p>
 </body>
 </html>
 EOF
                 fi
                 
-                # Create/update the JavaScript file with cache control
+                # Create fallback JavaScript only if website script is missing
                 mkdir -p /var/www/BatchIt/js/
-                DEPLOYMENT_TIME=$(date "+%Y-%m-%d at %H:%M:%S")
-                TIMESTAMP=$(date +%s)
-                
-                cat > /var/www/BatchIt/js/script.js << EOF
-// Cache control headers
-console.log("Script loaded - Build ${BUILD_NUMBER}");
+                if [ ! -f "/var/www/BatchIt/js/script.js" ]; then
+                    cat > /var/www/BatchIt/js/script.js << 'EOF'
+function setText(id, value) {
+    const node = document.getElementById(id);
+    if (node) {
+        node.textContent = value;
+    }
+}
 
-// Function to update deployment time
-function updateDeploymentTime() {
-    fetch('js/deployment-info.json?' + new Date().getTime())
-        .then(response => response.json())
-        .then(data => {
-            const lastUpdatedElement = document.getElementById('last-updated');
-            if (lastUpdatedElement) {
-                lastUpdatedElement.textContent = data.last_deployed;
-                console.log('Deployment time updated:', data.last_deployed);
-            }
+function updateDeploymentInfo() {
+    fetch('js/deployment-info.json?' + Date.now())
+        .then((response) => response.json())
+        .then((data) => {
+            setText('last-updated', data.last_deployed || '-');
+            setText('deployed-at', data.deployed_at_utc || data.last_deployed || '-');
+            setText('build-number', data.build_number || '-');
+            setText('apk-size', data?.artifacts?.apk?.size_human || '-');
+            setText('aab-size', data?.artifacts?.aab?.size_human || '-');
         })
-        .catch(error => {
-            console.error('Error fetching deployment info:', error);
-            const lastUpdatedElement = document.getElementById('last-updated');
-            if (lastUpdatedElement) {
-                lastUpdatedElement.textContent = 'Error loading time';
-            }
+        .catch(() => {
+            setText('last-updated', 'Error loading time');
         });
 }
 
-// Update time when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    updateDeploymentTime();
-});
-
-// Force update on visibility change (when tab becomes active)
-document.addEventListener('visibilitychange', function() {
-    if (!document.hidden) {
-        updateDeploymentTime();
-    }
-});
-
-// Optional: Update every 30 seconds if you want real-time updates
-// setInterval(updateDeploymentTime, 30000);
+document.addEventListener('DOMContentLoaded', updateDeploymentInfo);
 EOF
-
-                # Create deployment info JSON
-                cat > /var/www/BatchIt/js/deployment-info.json << EOF
-{
-    "last_deployed": "${DEPLOYMENT_TIME}",
-    "build_number": "${BUILD_NUMBER}",
-    "timestamp": ${TIMESTAMP}
-}
-EOF
+                fi
 
                 # Add cache control headers via .htaccess (if using Apache)
                 if [ -d "/var/www/BatchIt" ]; then
@@ -352,6 +327,48 @@ HTACCESS
                 else
                     echo "❌ AAB file not found!"
                 fi
+
+                DEPLOYMENT_TIME=$(date "+%Y-%m-%d at %H:%M:%S")
+                DEPLOYMENT_TIME_UTC=$(date -u "+%Y-%m-%dT%H:%M:%SZ")
+                TIMESTAMP=$(date +%s)
+
+                APK_PATH="/var/www/BatchIt/download/BatchIt.apk"
+                AAB_PATH="/var/www/BatchIt/download/BatchIt.aab"
+
+                apk_size_bytes=$(stat -c%s "$APK_PATH" 2>/dev/null || echo 0)
+                aab_size_bytes=$(stat -c%s "$AAB_PATH" 2>/dev/null || echo 0)
+
+                apk_size_human=$(numfmt --to=iec --suffix=B "$apk_size_bytes" 2>/dev/null || echo "${apk_size_bytes} B")
+                aab_size_human=$(numfmt --to=iec --suffix=B "$aab_size_bytes" 2>/dev/null || echo "${aab_size_bytes} B")
+
+                apk_sha256=$(sha256sum "$APK_PATH" 2>/dev/null | awk '{print $1}')
+                aab_sha256=$(sha256sum "$AAB_PATH" 2>/dev/null | awk '{print $1}')
+
+                # Create deployment info JSON with values used by the website UI
+                cat > /var/www/BatchIt/js/deployment-info.json << EOF
+{
+    "last_deployed": "${DEPLOYMENT_TIME}",
+    "deployed_at_utc": "${DEPLOYMENT_TIME_UTC}",
+    "build_number": "${BUILD_NUMBER}",
+    "job_name": "${JOB_NAME}",
+    "build_url": "${BUILD_URL}",
+    "timestamp": ${TIMESTAMP},
+    "artifacts": {
+        "apk": {
+            "path": "download/BatchIt.apk",
+            "size_bytes": ${apk_size_bytes},
+            "size_human": "${apk_size_human}",
+            "sha256": "${apk_sha256}"
+        },
+        "aab": {
+            "path": "download/BatchIt.aab",
+            "size_bytes": ${aab_size_bytes},
+            "size_human": "${aab_size_human}",
+            "sha256": "${aab_sha256}"
+        }
+    }
+}
+EOF
                 
                 echo "✅ Deployment completed successfully! Time: ${DEPLOYMENT_TIME}"
             '''
