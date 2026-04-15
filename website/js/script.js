@@ -125,11 +125,11 @@ function wireCopyButtons() {
 document.addEventListener("DOMContentLoaded", () => {
 	wireCopyButtons();
 	loadDeploymentInfo();
-	refreshTimer = window.setInterval(refreshDeploymentInfo, 30000);
+	refreshTimer = window.setInterval(loadDeploymentInfo, 30000);
 });
 
 document.addEventListener("visibilitychange", () => {
 	if (!document.hidden) {
-		refreshDeploymentInfo();
+		loadDeploymentInfo();
 	}
 });
