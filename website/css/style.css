@@ -83,6 +83,26 @@ body {
 	animation: rise 560ms ease-out;
 }
 
+.brand-mark {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 4.4rem;
+	height: 4.4rem;
+	margin-bottom: 0.9rem;
+	border-radius: 1.15rem;
+	background: rgba(7, 31, 36, 0.68);
+	border: 1px solid rgba(171, 232, 237, 0.2);
+	box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+}
+
+.brand-logo {
+	width: 82%;
+	height: 82%;
+	object-fit: contain;
+	display: block;
+}
+
 .eyebrow {
 	display: inline-block;
 	margin: 0;
@@ -398,6 +418,12 @@ pre {
 
 	.hero {
 		padding: 2.7rem 0 1.8rem;
+	}
+
+	.brand-mark {
+		width: 3.7rem;
+		height: 3.7rem;
+		margin-bottom: 0.75rem;
 	}
 
 	.eyebrow {
