@@ -1,5 +1,6 @@
 import 'package:batchit/core/utils/formatters.dart';
 import 'package:batchit/models/order.dart';
+import 'package:batchit/themes/app_spacing.dart';
 import 'package:flutter/material.dart';
 
 class OrderCard extends StatelessWidget {
@@ -17,24 +18,55 @@ class OrderCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          gradient: LinearGradient(
+            colors: theme.brightness == Brightness.dark
+                ? const [Color(0xFF1A2823), Color(0xFF13211C)]
+                : const [Color(0xFFFFFFFF), Color(0xFFF6FBF8)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(order.productName, style: theme.textTheme.titleMedium),
-            const SizedBox(height: 4),
-            Text('${formatKg(order.quantityKg)} • ${order.hubName}'),
-            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(order.productName, style: theme.textTheme.titleMedium),
+                ),
+                Icon(
+                  Icons.local_shipping_outlined,
+                  size: 18,
+                  color: theme.colorScheme.primary,
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              '${formatKg(order.quantityKg)} • ${order.hubName}',
+              style: theme.textTheme.bodyMedium,
+            ),
+            const SizedBox(height: AppSpacing.sm),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
               decoration: BoxDecoration(
                 color: theme.colorScheme.secondaryContainer,
                 borderRadius: BorderRadius.circular(999),
               ),
-              child: Text(
-                statusLabel,
-                style: theme.textTheme.labelMedium,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.info_outline, size: 14),
+                  const SizedBox(width: 6),
+                  Text(
+                    statusLabel,
+                    style: theme.textTheme.labelMedium,
+                  ),
+                ],
               ),
             ),
           ],

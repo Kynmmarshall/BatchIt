@@ -2,6 +2,9 @@ import 'package:batchit/core/router/app_routes.dart';
 import 'package:batchit/core/utils/formatters.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/providers/batch_provider.dart';
+import 'package:batchit/themes/app_spacing.dart';
+import 'package:batchit/widgets/common/app_primary_button.dart';
+import 'package:batchit/widgets/common/app_screen_container.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,32 +27,58 @@ class BatchDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.batchDetails)),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+      body: AppScreenContainer(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(batch.productName, style: Theme.of(context).textTheme.headlineSmall),
-            const SizedBox(height: 8),
-            Text('${formatKg(batch.currentQuantityKg)} / ${formatKg(batch.bulkSizeKg)}'),
-            const SizedBox(height: 8),
-            LinearProgressIndicator(value: batch.progress),
-            const SizedBox(height: 16),
-            Text('${l10n.location}: ${batch.locationName}'),
-            Text('${l10n.hub}: ${batch.hubName}'),
-            const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton(
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    AppRoutes.joinBatch,
-                    arguments: batchId,
-                  );
-                },
-                child: Text(l10n.joinBatch),
+            const SizedBox(height: AppSpacing.sm),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${formatKg(batch.currentQuantityKg)} / ${formatKg(batch.bulkSizeKg)}',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(999),
+                      child: LinearProgressIndicator(value: batch.progress, minHeight: 10),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    Row(
+                      children: [
+                        const Icon(Icons.place_outlined, size: 18),
+                        const SizedBox(width: AppSpacing.xs),
+                        Expanded(child: Text('${l10n.location}: ${batch.locationName}')),
+                      ],
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Row(
+                      children: [
+                        const Icon(Icons.storefront_outlined, size: 18),
+                        const SizedBox(width: AppSpacing.xs),
+                        Expanded(child: Text('${l10n.hub}: ${batch.hubName}')),
+                      ],
+                    ),
+                  ],
+                ),
               ),
+            ),
+            const Spacer(),
+            AppPrimaryButton(
+              label: l10n.joinBatch,
+              icon: Icons.group_add_rounded,
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  AppRoutes.joinBatch,
+                  arguments: batchId,
+                );
+              },
             ),
           ],
         ),

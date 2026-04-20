@@ -31,25 +31,38 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
         index: _index,
         children: screens,
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _index,
-        onDestinationSelected: (value) {
-          setState(() {
-            _index = value;
-          });
-        },
-        destinations: [
-          NavigationDestination(icon: const Icon(Icons.home_outlined), label: l10n.home),
-          NavigationDestination(
-            icon: const Icon(Icons.add_circle_outline),
-            label: l10n.createBatch,
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
           ),
-          NavigationDestination(
-            icon: const Icon(Icons.shopping_bag_outlined),
-            label: l10n.myOrders,
+        ),
+        child: SafeArea(
+          top: false,
+          child: NavigationBar(
+            selectedIndex: _index,
+            onDestinationSelected: (value) {
+              setState(() {
+                _index = value;
+              });
+            },
+            destinations: [
+              NavigationDestination(icon: const Icon(Icons.home_outlined), label: l10n.home),
+              NavigationDestination(
+                icon: const Icon(Icons.add_circle_outline),
+                label: l10n.createBatch,
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.shopping_bag_outlined),
+                label: l10n.myOrders,
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.person_outline),
+                label: l10n.profile,
+              ),
+            ],
           ),
-          NavigationDestination(icon: const Icon(Icons.person_outline), label: l10n.profile),
-        ],
+        ),
       ),
     );
   }
