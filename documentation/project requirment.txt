@@ -1,0 +1,292 @@
+🚀 BatchIt – Updated Project Roadmap (v2)
+🧭 Phase 1: Planning & Architecture (Week 1)
+🎯 Goals
+• Define scalable architecture
+• Add internationalization, real-time, and map support early
+• Assign roles clearly
+📌 Tasks
+• Define full app flow:
+User → Batch → Hub → Delivery → Reset Cycle
+• Design database schema (PostgreSQL):
+ Users (profile, auth providers)
+ Products (bulk size, reset state)
+ Batches (status, location, threshold)
+ Orders (fractions per user)
+ Hub assignments
+ Chat messages
+ Notifications
+• Define API structure (REST + WebSocket for realtime)
+• Setup:
+ VPS environment
+ Jenkins CI/CD
+ Git + branching strategy
+• Plan core systems:
+ 🌍 Localization (EN/FR)
+ 🌙 Theme system (Dark/Light)
+ 📡 Realtime engine (WebSockets or Firebase)
+ 🗺️ Map integration (Google Maps / OpenStreetMap)
+
+🏗️ Phase 2: Core Backend Development (Weeks 2–3)
+🎯 Goals
+Build intelligent backend + realtime logic
+📌 Features
+🔐 Authentication
+• JWT auth
+• Google & Facebook OAuth
+• Profile creation (name, avatar, location)
+📍 Location System
+• Store user coordinates
+• Radius filtering (~500m)
+• Geo queries (PostGIS recommended)
+🛒 Product & Batch System
+• Hub defines:
+ Product
+ Bulk size (editable)
+• Users:
+ Request fractional quantities
+• Track:
+ current_quantity / bulk_quantity (REALTIME)
+⚙️ Fractional Purchase Engine (CORE 🔥)
+• Aggregate user requests
+• Auto-trigger when threshold reached
+• Split orders per user
+🔄 Product Lifecycle
+• Mark product as:
+ Active
+ Completed
+• Hub can:
+ Reset product for new cycle
+💬 Community Chat (NEW)
+• Batch-based chat rooms
+• Messages stored + realtime updates
+🔔 Notifications API
+• Batch completed
+• Threshold reached
+• Pickup alerts
+
+📱 Phase 3: Mobile App (Flutter) (Weeks 3–5)
+🎯 Goals
+Clean UI + smooth UX + realtime updates
+📌 Core Screens
+🔑 Auth & Onboarding
+• Email signup/login
+• Google & Facebook login
+• Language selection (EN 🇬🇧 / FR 🇫🇷)
+🏠 Home
+• Nearby batches (within 500m)
+• Product progress bars (REALTIME)
+🛒 Batch Screens
+• Create batch
+• Join batch
+• Live quantity tracking:
+ “23kg / 50kg”
+🗺️ Map View (NEW 🔥)
+• Show users within 500m
+• Show hubs + batch locations
+• Privacy-safe markers (approximate location)
+💬 Community Chat
+• Group chat per batch
+• Realtime messaging
+📦 Orders
+• My orders
+• Status tracking
+• Pickup confirmation
+👤 Profile Screen (NEW)
+• User info
+• Order history
+• Language switch
+• Theme toggle (Dark/Light)
+🏠 Hub Dashboard
+• Create/manage products
+• Set bulk size
+• See live progress
+• Reset product after completion
+
+🚚 Phase 4: Logistics & Hub System (Week 5–6)
+🎯 Goals
+Make the system usable in real life
+📌 Features
+• Hub assignment:
+ Manual or auto
+• Hub controls:
+ Set bulk size
+ Monitor live demand
+ Reset product cycle
+• Order lifecycle:
+ Created → Triggered → Delivered → Completed
+• Pickup system:
+ QR / confirmation button
+• Reward system:
+ Points / discounts
+
+🔔 Phase 5: Realtime & Notifications (Week 6)
+📌 Features
+• WebSocket / Firebase realtime updates:
+ Product progress updates
+ Chat messages
+ Batch triggers
+• Notifications:
+ Threshold reached
+ Order ready
+ Pickup reminder
+
+⚙️ Phase 6: DevOps & Deployment (Week 6–7)
+📌 Tasks
+• Jenkins CI/CD pipeline
+• Auto build + deploy
+• Logging & monitoring
+• Database backups
+• Performance:
+ Optimize geo queries
+ Optimize realtime events
+
+🧭 Phase 7: Testing & Launch (Week 8)
+📌 Tasks
+• Backend unit tests
+• Flutter UI testing
+• Realtime stress testing
+• Beta testing (community)
+• Bug fixing
+🚀 Launch MVP
+
+👥 Updated Team Roles (5 People)
+• Backend Lead
+→ API, DB, fractional engine
+• Backend/Realtime Dev
+→ WebSockets, chat, notifications
+• DevOps Engineer
+→ VPS, Jenkins, deployment
+• 2 Flutter Devs
+→ UI, maps, chat, themes, localization
+• (QA/Product role can be shared)
+
+🔥 UPDATED MVP PRIORITY (FOCUS HARD)
+If you want speed + impact, build this FIRST:
+✅ MUST-HAVE
+1. Auth (Email + Google)
+2. Location grouping (500m)
+3. Create/join batch
+4. Bulk threshold tracking (REALTIME)
+5. Hub sets bulk size
+6. Simple notifications
+7. Product reset system
+8. Basic profile screen
+⚡ HIGH VALUE ADD (still MVP-worthy)
+9. Dark/Light theme
+10. English/French support
+11. Map view (basic)
+12. Live quantity progress
+🚀 PHASE 2 (after MVP)
+• Facebook login
+• Community chat
+• Advanced rewards
+• Smart hub assignment
+
+🧭 Important Reality Check
+A few things to watch:
+ Realtime + Maps + Chat together can slow you down
+→ Keep implementations simple (don’t over-engineer)
+ Privacy risk with location
+→ Never show exact house location, use approximate radius
+ Fractional engine is your core advantage
+→ Spend most backend effort here, not UI polish 
+
+
+
+🚀 BatchIt – Full Screen List
+🔐 1. Authentication & Onboarding
+• Splash Screen
+• Onboarding Screens (2–3 slides max)
+• Login Screen
+• Register Screen
+• Google/Facebook Sign-in (integrated UI)
+• Forgot Password Screen
+👤 2. User Profile & Settings
+• Profile Screen
+• Edit Profile Screen
+• Order History Screen
+• Settings Screen
+ Language (EN/FR)
+ Theme (Dark/Light)
+ Notification Preferences
+🏠 3. Home (Main Entry Point)
+• Home Screen
+ Nearby batches list
+ Quick stats (active batches)
+ CTA: Create / Join batch
+🛒 4. Batch System
+• Create Batch Screen
+ Product name
+ Bulk size
+ Location
+• Batch Details Screen (VERY IMPORTANT 🔥)
+ Product info
+ Progress bar (e.g. 23kg / 50kg)
+ Users in batch
+ Join button
+ Hub info
+• Join Batch Screen
+ Enter quantity
+ Confirm participation
+📦 5. Orders
+• My Orders Screen
+ Active orders
+ Completed orders
+• Order Details Screen
+ Product
+ Quantity
+ Status (Pending / Ready / Picked)
+ Hub info
+🏠 6. Hub System
+• Hub Dashboard Screen
+ Managed batches
+ Live progress tracking
+• Manage Product Screen
+ Set bulk size
+ Reset product
+🗺️ 7. Map Feature
+• Map Screen
+ Nearby users
+ Batch locations
+ Hub markers
+• Map Detail Popup (bottom sheet style)
+ Batch summary
+ Quick join button
+💬 8. Community Chat
+• Chat List Screen (optional early)
+• Chat Room Screen
+ Messages
+ Input field
+ Sender info
+🔔 9. Notifications
+• Notifications Screen
+ Batch completed
+ Pickup reminders
+ System alerts
+🎯 10. Utility / System Screens
+• Loading Screen / States
+• Empty State Screens (no batches, no orders)
+• Error Screen (network issues, etc.)
+🔥 MVP SCREEN PRIORITY (IMPORTANT)
+Start with ONLY these:
+✅ Core MVP Screens
+1. Login / Register
+2. Home
+3. Create Batch
+4. Batch Details
+5. Join Batch
+6. My Orders
+7. Profile
+👉 That’s enough to launch.
+⚡ Phase 2 Screens (After MVP)
+• Map Screen
+• Chat Screen
+• Hub Dashboard
+• Notifications Screen
+• Settings (theme + language)
+🧠 Design Tip (Very Important)
+Don’t design screens in isolation.
+Think in flows:
+👉 User Flow Example:
+Login → Home → Batch → Join → Order → Pickup
+If that flow is smooth, your app works.

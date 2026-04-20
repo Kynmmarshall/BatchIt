@@ -1,0 +1,3 @@
+Build a Figma-style UI polish pass (exact visual system, spacing, cards, typography, components) on top of this architecture.
+Add real backend integration stubs (REST + websocket service interfaces) so providers switch from mock to API-ready.
+Add map/chat/hub screens as Phase-2 modules using the same folder conventions.
