@@ -1,3 +1,5 @@
+import 'package:batchit/themes/app_icons.dart';
+import 'package:batchit/themes/app_motion.dart';
 import 'package:flutter/material.dart';
 
 class AppPrimaryButton extends StatelessWidget {
@@ -34,7 +36,17 @@ class AppPrimaryButton extends StatelessWidget {
       width: double.infinity,
       child: FilledButton(
         onPressed: onTap,
-        child: _ButtonChild(label: label, isLoading: isLoading, icon: icon),
+        child: AnimatedSwitcher(
+          duration: AppMotion.fast,
+          switchInCurve: AppMotion.emphasized,
+          switchOutCurve: Curves.easeIn,
+          child: _ButtonChild(
+            key: ValueKey<bool>(isLoading),
+            label: label,
+            isLoading: isLoading,
+            icon: icon,
+          ),
+        ),
       ),
     );
   }
@@ -42,6 +54,7 @@ class AppPrimaryButton extends StatelessWidget {
 
 class _ButtonChild extends StatelessWidget {
   const _ButtonChild({
+    super.key,
     required this.label,
     required this.isLoading,
     required this.icon,
@@ -68,7 +81,7 @@ class _ButtonChild extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon, size: 18),
+        Icon(icon, size: AppIcons.md),
         const SizedBox(width: 8),
         Text(label),
       ],

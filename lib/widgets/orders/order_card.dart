@@ -1,5 +1,8 @@
 import 'package:batchit/core/utils/formatters.dart';
 import 'package:batchit/models/order.dart';
+import 'package:batchit/themes/app_icons.dart';
+import 'package:batchit/themes/app_radius.dart';
+import 'package:batchit/themes/app_shadows.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +24,8 @@ class OrderCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(AppSpacing.md),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+          boxShadow: AppShadows.card(theme.brightness),
           gradient: LinearGradient(
             colors: theme.brightness == Brightness.dark
                 ? const [Color(0xFF1A2823), Color(0xFF13211C)]
@@ -40,7 +44,7 @@ class OrderCard extends StatelessWidget {
                 ),
                 Icon(
                   Icons.local_shipping_outlined,
-                  size: 18,
+                  size: AppIcons.md,
                   color: theme.colorScheme.primary,
                 ),
               ],
@@ -55,12 +59,12 @@ class OrderCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
               decoration: BoxDecoration(
                 color: theme.colorScheme.secondaryContainer,
-                borderRadius: BorderRadius.circular(999),
+                borderRadius: BorderRadius.circular(AppRadius.pill),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.info_outline, size: 14),
+                  const Icon(Icons.info_outline, size: AppIcons.sm - 2),
                   const SizedBox(width: 6),
                   Text(
                     statusLabel,

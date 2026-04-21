@@ -3,6 +3,7 @@ import 'package:batchit/screens/batch/create_batch_screen.dart';
 import 'package:batchit/screens/home/home_screen.dart';
 import 'package:batchit/screens/orders/my_orders_screen.dart';
 import 'package:batchit/screens/profile/profile_screen.dart';
+import 'package:batchit/themes/app_icons.dart';
 import 'package:flutter/material.dart';
 
 class MainNavigationShell extends StatefulWidget {
@@ -47,17 +48,24 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
               });
             },
             destinations: [
-              NavigationDestination(icon: const Icon(Icons.home_outlined), label: l10n.home),
               NavigationDestination(
-                icon: const Icon(Icons.add_circle_outline),
+                icon: const Icon(Icons.home_outlined, size: AppIcons.lg),
+                selectedIcon: const Icon(Icons.home_rounded, size: AppIcons.lg),
+                label: l10n.home,
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.add_circle_outline, size: AppIcons.lg),
+                selectedIcon: const Icon(Icons.add_circle_rounded, size: AppIcons.lg),
                 label: l10n.createBatch,
               ),
               NavigationDestination(
-                icon: const Icon(Icons.shopping_bag_outlined),
+                icon: const Icon(Icons.shopping_bag_outlined, size: AppIcons.lg),
+                selectedIcon: const Icon(Icons.shopping_bag_rounded, size: AppIcons.lg),
                 label: l10n.myOrders,
               ),
               NavigationDestination(
-                icon: const Icon(Icons.person_outline),
+                icon: const Icon(Icons.person_outline, size: AppIcons.lg),
+                selectedIcon: const Icon(Icons.person, size: AppIcons.lg),
                 label: l10n.profile,
               ),
             ],

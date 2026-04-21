@@ -1,6 +1,10 @@
 import 'package:batchit/core/utils/formatters.dart';
 import 'package:batchit/models/batch.dart';
 import 'package:batchit/themes/app_colors.dart';
+import 'package:batchit/themes/app_icons.dart';
+import 'package:batchit/themes/app_motion.dart';
+import 'package:batchit/themes/app_radius.dart';
+import 'package:batchit/themes/app_shadows.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:flutter/material.dart';
 
@@ -31,10 +35,11 @@ class BatchCard extends StatelessWidget {
                 ? const [Color(0xFF1A2823), Color(0xFF15211D)]
                 : const [Color(0xFFFFFFFF), Color(0xFFF3FBF7)],
           ),
-          borderRadius: BorderRadius.circular(24),
+          boxShadow: AppShadows.card(theme.brightness),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
         ),
         child: InkWell(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.md),
@@ -58,7 +63,7 @@ class BatchCard extends StatelessWidget {
                         color: batch.isFull
                             ? theme.colorScheme.primaryContainer
                             : theme.colorScheme.surfaceContainerHighest,
-                        borderRadius: BorderRadius.circular(999),
+                        borderRadius: BorderRadius.circular(AppRadius.pill),
                       ),
                       child: Text(
                         batch.isFull ? 'FULL' : 'OPEN',
@@ -73,23 +78,30 @@ class BatchCard extends StatelessWidget {
                   style: theme.textTheme.bodyLarge,
                 ),
                 const SizedBox(height: AppSpacing.sm),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(999),
-                  child: LinearProgressIndicator(
-                    value: batch.progress,
-                    minHeight: 10,
-                    backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      isDark ? AppColors.accent : theme.colorScheme.primary,
-                    ),
-                  ),
+                TweenAnimationBuilder<double>(
+                  duration: AppMotion.slow,
+                  curve: AppMotion.emphasized,
+                  tween: Tween<double>(begin: 0, end: batch.progress),
+                  builder: (context, value, _) {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(AppRadius.pill),
+                      child: LinearProgressIndicator(
+                        value: value,
+                        minHeight: 10,
+                        backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          isDark ? AppColors.accent : theme.colorScheme.primary,
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Row(
                   children: [
                     Icon(
                       Icons.place_outlined,
-                      size: 16,
+                      size: AppIcons.sm,
                       color: theme.colorScheme.primary,
                     ),
                     const SizedBox(width: AppSpacing.xs),
@@ -103,7 +115,7 @@ class BatchCard extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.storefront_outlined,
-                      size: 16,
+                      size: AppIcons.sm,
                       color: theme.colorScheme.primary,
                     ),
                     const SizedBox(width: AppSpacing.xs),
@@ -117,7 +129,7 @@ class BatchCard extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   child: FilledButton.tonalIcon(
                     onPressed: onTap,
-                    icon: const Icon(Icons.arrow_forward_rounded, size: 18),
+                    icon: const Icon(Icons.arrow_forward_rounded, size: AppIcons.md),
                     label: Text(joinLabel),
                   ),
                 ),

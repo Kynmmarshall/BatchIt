@@ -1,4 +1,6 @@
 import 'package:batchit/themes/app_colors.dart';
+import 'package:batchit/themes/app_motion.dart';
+import 'package:batchit/themes/app_radius.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -62,6 +64,15 @@ class AppTheme {
       colorScheme: scheme,
       textTheme: textTheme,
       useMaterial3: true,
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
+          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.macOS: FadeForwardsPageTransitionsBuilder(),
+          TargetPlatform.windows: FadeForwardsPageTransitionsBuilder(),
+          TargetPlatform.linux: FadeForwardsPageTransitionsBuilder(),
+        },
+      ),
       scaffoldBackgroundColor: isDark
           ? AppColors.darkBackground
           : AppColors.lightBackground,
@@ -81,7 +92,7 @@ class AppTheme {
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           side: BorderSide(color: scheme.outlineVariant),
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppRadius.lg),
         ),
       ),
       dividerColor: scheme.outlineVariant,
@@ -99,15 +110,15 @@ class AppTheme {
           color: isDark ? AppColors.darkMuted : AppColors.lightMuted,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
           borderSide: BorderSide(color: scheme.outlineVariant),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
           borderSide: BorderSide(color: scheme.outlineVariant),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
           borderSide: BorderSide(color: scheme.primary, width: 1.4),
         ),
       ),
@@ -115,9 +126,10 @@ class AppTheme {
         style: FilledButton.styleFrom(
           minimumSize: const Size.fromHeight(56),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
           ),
           textStyle: textTheme.titleMedium,
+          animationDuration: AppMotion.fast,
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
@@ -125,7 +137,7 @@ class AppTheme {
           minimumSize: const Size.fromHeight(54),
           side: BorderSide(color: scheme.outlineVariant),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
           ),
           textStyle: textTheme.titleMedium,
         ),
@@ -145,7 +157,9 @@ class AppTheme {
         ),
       ),
       chipTheme: ChipThemeData(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.pill),
+        ),
         side: BorderSide(color: scheme.outlineVariant),
       ),
     );

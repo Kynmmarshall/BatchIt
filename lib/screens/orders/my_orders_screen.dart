@@ -3,6 +3,7 @@ import 'package:batchit/models/order.dart';
 import 'package:batchit/providers/order_provider.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/common/app_screen_container.dart';
+import 'package:batchit/widgets/common/app_staggered_fade.dart';
 import 'package:batchit/widgets/orders/order_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -48,9 +49,12 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              l10n.myOrders,
-              style: Theme.of(context).textTheme.headlineSmall,
+            AppStaggeredFade(
+              index: 0,
+              child: Text(
+                l10n.myOrders,
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
             ),
             const SizedBox(height: AppSpacing.sm),
             Expanded(
@@ -61,9 +65,12 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                       separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.sm),
                       itemBuilder: (context, index) {
                         final order = orderProvider.orders[index];
-                        return OrderCard(
-                          order: order,
-                          statusLabel: _statusLabel(context, order.status),
+                        return AppStaggeredFade(
+                          index: index + 1,
+                          child: OrderCard(
+                            order: order,
+                            statusLabel: _statusLabel(context, order.status),
+                          ),
                         );
                       },
                     ),

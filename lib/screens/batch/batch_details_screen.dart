@@ -1,10 +1,13 @@
 import 'package:batchit/core/router/app_routes.dart';
 import 'package:batchit/core/utils/formatters.dart';
+import 'package:batchit/themes/app_icons.dart';
+import 'package:batchit/themes/app_motion.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/providers/batch_provider.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/common/app_primary_button.dart';
 import 'package:batchit/widgets/common/app_screen_container.dart';
+import 'package:batchit/widgets/common/app_staggered_fade.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -31,54 +34,73 @@ class BatchDetailsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(batch.productName, style: Theme.of(context).textTheme.headlineSmall),
+            AppStaggeredFade(
+              index: 0,
+              child: Text(
+                batch.productName,
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+            ),
             const SizedBox(height: AppSpacing.sm),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.md),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${formatKg(batch.currentQuantityKg)} / ${formatKg(batch.bulkSizeKg)}',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(999),
-                      child: LinearProgressIndicator(value: batch.progress, minHeight: 10),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    Row(
-                      children: [
-                        const Icon(Icons.place_outlined, size: 18),
-                        const SizedBox(width: AppSpacing.xs),
-                        Expanded(child: Text('${l10n.location}: ${batch.locationName}')),
-                      ],
-                    ),
-                    const SizedBox(height: AppSpacing.xs),
-                    Row(
-                      children: [
-                        const Icon(Icons.storefront_outlined, size: 18),
-                        const SizedBox(width: AppSpacing.xs),
-                        Expanded(child: Text('${l10n.hub}: ${batch.hubName}')),
-                      ],
-                    ),
-                  ],
+            AppStaggeredFade(
+              index: 1,
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${formatKg(batch.currentQuantityKg)} / ${formatKg(batch.bulkSizeKg)}',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      TweenAnimationBuilder<double>(
+                        duration: AppMotion.slow,
+                        curve: AppMotion.emphasized,
+                        tween: Tween<double>(begin: 0, end: batch.progress),
+                        builder: (context, value, _) {
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(999),
+                            child: LinearProgressIndicator(value: value, minHeight: 10),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      Row(
+                        children: [
+                          const Icon(Icons.place_outlined, size: AppIcons.md),
+                          const SizedBox(width: AppSpacing.xs),
+                          Expanded(child: Text('${l10n.location}: ${batch.locationName}')),
+                        ],
+                      ),
+                      const SizedBox(height: AppSpacing.xs),
+                      Row(
+                        children: [
+                          const Icon(Icons.storefront_outlined, size: AppIcons.md),
+                          const SizedBox(width: AppSpacing.xs),
+                          Expanded(child: Text('${l10n.hub}: ${batch.hubName}')),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
             const Spacer(),
-            AppPrimaryButton(
-              label: l10n.joinBatch,
-              icon: Icons.group_add_rounded,
-              onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  AppRoutes.joinBatch,
-                  arguments: batchId,
-                );
-              },
+            AppStaggeredFade(
+              index: 2,
+              child: AppPrimaryButton(
+                label: l10n.joinBatch,
+                icon: Icons.group_add_rounded,
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    AppRoutes.joinBatch,
+                    arguments: batchId,
+                  );
+                },
+              ),
             ),
           ],
         ),

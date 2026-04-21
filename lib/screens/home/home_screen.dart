@@ -2,9 +2,12 @@ import 'package:batchit/core/router/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/providers/batch_provider.dart';
 import 'package:batchit/themes/app_colors.dart';
+import 'package:batchit/themes/app_radius.dart';
+import 'package:batchit/themes/app_shadows.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/batch/batch_card.dart';
 import 'package:batchit/widgets/common/app_screen_container.dart';
+import 'package:batchit/widgets/common/app_staggered_fade.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -37,34 +40,46 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: isDark
-                      ? AppColors.darkHeroGradient
-                      : AppColors.lightHeroGradient,
+            AppStaggeredFade(
+              index: 0,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.lg,
+                  AppSpacing.lg,
+                  AppSpacing.lg,
+                  AppSpacing.md,
                 ),
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.nearbyBatches,
-                    style: theme.textTheme.titleLarge?.copyWith(color: Colors.white),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: isDark
+                        ? AppColors.darkHeroGradient
+                        : AppColors.lightHeroGradient,
                   ),
-                  const SizedBox(height: AppSpacing.xs),
-                  Text(
-                    '${l10n.activeBatches}: ${batchProvider.batches.length}',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Colors.white.withValues(alpha: 0.92),
+                  borderRadius: BorderRadius.circular(AppRadius.xl),
+                  boxShadow: AppShadows.hero(theme.brightness),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.nearbyBatches,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        color: Colors.white,
+                        letterSpacing: -0.2,
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      '${l10n.activeBatches}: ${batchProvider.batches.length}',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: Colors.white.withValues(alpha: 0.92),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: AppSpacing.md),
@@ -76,16 +91,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.sm),
                       itemBuilder: (context, index) {
                         final batch = batchProvider.batches[index];
-                        return BatchCard(
-                          batch: batch,
-                          joinLabel: l10n.join,
-                          onTap: () {
-                            Navigator.pushNamed(
-                              context,
-                              AppRoutes.batchDetails,
-                              arguments: batch.id,
-                            );
-                          },
+                        return AppStaggeredFade(
+                          index: index + 1,
+                          beginOffset: const Offset(0, 0.06),
+                          child: BatchCard(
+                            batch: batch,
+                            joinLabel: l10n.join,
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                AppRoutes.batchDetails,
+                                arguments: batch.id,
+                              );
+                            },
+                          ),
                         );
                       },
                     ),

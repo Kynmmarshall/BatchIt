@@ -8,6 +8,7 @@ import 'package:batchit/screens/auth/login_screen.dart';
 import 'package:batchit/screens/auth/register_screen.dart';
 import 'package:batchit/screens/batch/batch_details_screen.dart';
 import 'package:batchit/screens/batch/join_batch_screen.dart';
+import 'package:batchit/themes/app_motion.dart';
 import 'package:batchit/themes/app_theme.dart';
 import 'package:batchit/widgets/navigation/main_navigation_shell.dart';
 import 'package:flutter/material.dart';
@@ -44,31 +45,59 @@ class BatchItApp extends StatelessWidget {
           onGenerateRoute: (settingsRoute) {
             switch (settingsRoute.name) {
               case AppRoutes.login:
-                return MaterialPageRoute(builder: (_) => const LoginScreen());
+                return _buildRoute(const LoginScreen());
               case AppRoutes.register:
-                return MaterialPageRoute(builder: (_) => const RegisterScreen());
+                return _buildRoute(const RegisterScreen());
               case AppRoutes.shell:
-                return MaterialPageRoute(builder: (_) => const MainNavigationShell());
+                return _buildRoute(const MainNavigationShell(), isRoot: true);
               case AppRoutes.batchDetails:
                 final id = settingsRoute.arguments as String?;
                 if (id == null) {
                   return _fallbackRoute();
                 }
-                return MaterialPageRoute(
-                  builder: (_) => BatchDetailsScreen(batchId: id),
-                );
+                return _buildRoute(BatchDetailsScreen(batchId: id));
               case AppRoutes.joinBatch:
                 final id = settingsRoute.arguments as String?;
                 if (id == null) {
                   return _fallbackRoute();
                 }
-                return MaterialPageRoute(
-                  builder: (_) => JoinBatchScreen(batchId: id),
-                );
+                return _buildRoute(JoinBatchScreen(batchId: id));
               default:
                 return _fallbackRoute();
             }
           },
+        );
+      },
+    );
+  }
+
+  PageRoute<T> _buildRoute<T>(Widget child, {bool isRoot = false}) {
+    if (isRoot) {
+      return PageRouteBuilder<T>(
+        pageBuilder: (_, __, ___) => child,
+        transitionDuration: Duration.zero,
+        reverseTransitionDuration: Duration.zero,
+      );
+    }
+
+    return PageRouteBuilder<T>(
+      pageBuilder: (_, __, ___) => child,
+      transitionDuration: AppMotion.medium,
+      reverseTransitionDuration: AppMotion.fast,
+      transitionsBuilder: (context, animation, secondaryAnimation, page) {
+        final curved = CurvedAnimation(
+          parent: animation,
+          curve: AppMotion.emphasized,
+        );
+        return FadeTransition(
+          opacity: curved,
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, 0.02),
+              end: Offset.zero,
+            ).animate(curved),
+            child: page,
+          ),
         );
       },
     );

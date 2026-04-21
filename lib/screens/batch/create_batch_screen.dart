@@ -4,6 +4,7 @@ import 'package:batchit/providers/batch_provider.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/common/app_primary_button.dart';
 import 'package:batchit/widgets/common/app_screen_container.dart';
+import 'package:batchit/widgets/common/app_staggered_fade.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -73,49 +74,60 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
           key: _formKey,
           child: ListView(
             children: [
-              Text(
-                l10n.createBatch,
-                style: theme.textTheme.headlineSmall,
-              ),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                l10n.welcomeSubtitle,
-                style: theme.textTheme.bodyMedium,
+              AppStaggeredFade(
+                index: 0,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.createBatch,
+                      style: theme.textTheme.headlineSmall,
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      l10n.welcomeSubtitle,
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: AppSpacing.md),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        controller: _productController,
-                        decoration: InputDecoration(labelText: l10n.productName),
-                        validator: (value) =>
-                            value == null || value.trim().isEmpty ? l10n.productName : null,
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      TextFormField(
-                        controller: _bulkController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(labelText: l10n.bulkSize),
-                        validator: (value) =>
-                            value == null || value.trim().isEmpty ? l10n.bulkSize : null,
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      TextFormField(
-                        controller: _locationController,
-                        decoration: InputDecoration(labelText: l10n.location),
-                        validator: (value) =>
-                            value == null || value.trim().isEmpty ? l10n.location : null,
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      AppPrimaryButton(
-                        label: l10n.submit,
-                        icon: Icons.add_task_rounded,
-                        onPressed: _createBatch,
-                      ),
-                    ],
+              AppStaggeredFade(
+                index: 1,
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSpacing.md),
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: _productController,
+                          decoration: InputDecoration(labelText: l10n.productName),
+                          validator: (value) =>
+                              value == null || value.trim().isEmpty ? l10n.productName : null,
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        TextFormField(
+                          controller: _bulkController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(labelText: l10n.bulkSize),
+                          validator: (value) =>
+                              value == null || value.trim().isEmpty ? l10n.bulkSize : null,
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        TextFormField(
+                          controller: _locationController,
+                          decoration: InputDecoration(labelText: l10n.location),
+                          validator: (value) =>
+                              value == null || value.trim().isEmpty ? l10n.location : null,
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        AppPrimaryButton(
+                          label: l10n.submit,
+                          icon: Icons.add_task_rounded,
+                          onPressed: _createBatch,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
