@@ -1,13 +1,13 @@
-import 'package:batchit/core/router/app_routes.dart';
+import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/providers/batch_provider.dart';
 import 'package:batchit/themes/app_colors.dart';
 import 'package:batchit/themes/app_radius.dart';
 import 'package:batchit/themes/app_shadows.dart';
 import 'package:batchit/themes/app_spacing.dart';
-import 'package:batchit/widgets/batch/batch_card.dart';
-import 'package:batchit/widgets/common/app_screen_container.dart';
-import 'package:batchit/widgets/common/app_staggered_fade.dart';
+import 'package:batchit/widgets/batch_card.dart';
+import 'package:batchit/widgets/app_screen_container.dart';
+import 'package:batchit/widgets/app_staggered_fade.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

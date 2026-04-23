@@ -2,8 +2,8 @@ import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/providers/app_settings_provider.dart';
 import 'package:batchit/providers/auth_provider.dart';
 import 'package:batchit/themes/app_spacing.dart';
-import 'package:batchit/widgets/common/app_screen_container.dart';
-import 'package:batchit/widgets/common/app_staggered_fade.dart';
+import 'package:batchit/widgets/app_screen_container.dart';
+import 'package:batchit/widgets/app_staggered_fade.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

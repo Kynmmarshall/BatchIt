@@ -2,9 +2,9 @@ import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/models/order.dart';
 import 'package:batchit/providers/order_provider.dart';
 import 'package:batchit/themes/app_spacing.dart';
-import 'package:batchit/widgets/common/app_screen_container.dart';
-import 'package:batchit/widgets/common/app_staggered_fade.dart';
-import 'package:batchit/widgets/orders/order_card.dart';
+import 'package:batchit/widgets/app_screen_container.dart';
+import 'package:batchit/widgets/app_staggered_fade.dart';
+import 'package:batchit/widgets/order_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

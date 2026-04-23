@@ -1,4 +1,4 @@
-import 'package:batchit/core/router/app_routes.dart';
+import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/providers/app_settings_provider.dart';
 import 'package:batchit/providers/auth_provider.dart';
@@ -10,7 +10,7 @@ import 'package:batchit/screens/batch/batch_details_screen.dart';
 import 'package:batchit/screens/batch/join_batch_screen.dart';
 import 'package:batchit/themes/app_motion.dart';
 import 'package:batchit/themes/app_theme.dart';
-import 'package:batchit/widgets/navigation/main_navigation_shell.dart';
+import 'package:batchit/widgets/main_navigation_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';

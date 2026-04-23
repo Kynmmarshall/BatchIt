@@ -1,4 +1,4 @@
-import 'package:batchit/core/utils/formatters.dart';
+import 'package:batchit/core/formatters.dart';
 import 'package:batchit/models/batch.dart';
 import 'package:batchit/themes/app_colors.dart';
 import 'package:batchit/themes/app_icons.dart';
