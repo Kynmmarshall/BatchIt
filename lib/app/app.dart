@@ -1,13 +1,16 @@
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
+import 'package:batchit/models/auth/verification_code_args.dart';
 import 'package:batchit/providers/app_settings_provider.dart';
 import 'package:batchit/providers/auth_provider.dart';
 import 'package:batchit/providers/batch_provider.dart';
 import 'package:batchit/providers/order_provider.dart';
 import 'package:batchit/screens/auth/login_screen.dart';
 import 'package:batchit/screens/auth/register_screen.dart';
+import 'package:batchit/screens/auth/verification_code_screen.dart';
 import 'package:batchit/screens/batch/batch_details_screen.dart';
 import 'package:batchit/screens/batch/join_batch_screen.dart';
+import 'package:batchit/screens/splash/splash_screen.dart';
 import 'package:batchit/themes/app_motion.dart';
 import 'package:batchit/themes/app_theme.dart';
 import 'package:batchit/widgets/main_navigation_shell.dart';
@@ -41,13 +44,24 @@ class BatchItApp extends StatelessWidget {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          initialRoute: auth.isAuthenticated ? AppRoutes.shell : AppRoutes.login,
+          initialRoute: auth.isAuthenticated
+              ? AppRoutes.shell
+              : AppRoutes.splashscreen,
           onGenerateRoute: (settingsRoute) {
             switch (settingsRoute.name) {
+              case AppRoutes.splashscreen:
+                return _buildRoute(const SplashScreen());
               case AppRoutes.login:
                 return _buildRoute(const LoginScreen());
               case AppRoutes.register:
                 return _buildRoute(const RegisterScreen());
+              case AppRoutes.verification:
+                final args = settingsRoute.arguments as VerificationCodeArgs?;
+                return _buildRoute(
+                  VerificationCodeScreen(
+                    maskedEmail: args?.maskedEmail ?? 'sha....@gmail.com',
+                  ),
+                );
               case AppRoutes.shell:
                 return _buildRoute(const MainNavigationShell(), isRoot: true);
               case AppRoutes.batchDetails:
@@ -105,9 +119,8 @@ class BatchItApp extends StatelessWidget {
 
   MaterialPageRoute<void> _fallbackRoute() {
     return MaterialPageRoute(
-      builder: (_) => const Scaffold(
-        body: Center(child: Text('Route not found')),
-      ),
+      builder: (_) =>
+          const Scaffold(body: Center(child: Text('Route not found'))),
     );
   }
 }
