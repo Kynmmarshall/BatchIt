@@ -62,8 +62,8 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               DecoratedBox(
-                decoration: const BoxDecoration(
-                  color: fieldBackground,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.7),
                   shape: BoxShape.circle,
                 ),
                 child: IconButton(
@@ -309,8 +309,9 @@ class _LoginField extends StatelessWidget {
     return Container(
       height: 60,
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: Colors.white.withValues(alpha: 0.68),
         borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.35)),
       ),
       child: TextFormField(
         controller: controller,
@@ -364,8 +365,9 @@ class _SocialButton extends StatelessWidget {
       height: 60,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: backgroundColor,
+          color: Colors.white.withValues(alpha: 0.72),
           borderRadius: BorderRadius.circular(30),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.35)),
         ),
         child: TextButton.icon(
           onPressed: onPressed,
