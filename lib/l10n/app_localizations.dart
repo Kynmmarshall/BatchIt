@@ -146,6 +146,222 @@ abstract class AppLocalizations {
   /// **'Continue with Google'**
   String get continueWithGoogle;
 
+  /// No description provided for @continueCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueCta;
+
+  /// No description provided for @getStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get getStarted;
+
+  /// No description provided for @signInCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
+  String get signInCta;
+
+  /// No description provided for @signUpCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up'**
+  String get signUpCta;
+
+  /// No description provided for @orContinueWith.
+  ///
+  /// In en, this message translates to:
+  /// **'Or continue with'**
+  String get orContinueWith;
+
+  /// No description provided for @emailAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Address'**
+  String get emailAddress;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirmPassword;
+
+  /// No description provided for @savePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Save password'**
+  String get savePassword;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password?'**
+  String get forgotPassword;
+
+  /// No description provided for @alreadyHaveAnAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account?'**
+  String get alreadyHaveAnAccount;
+
+  /// No description provided for @didntHaveAnAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Didn\'t have an account?'**
+  String get didntHaveAnAccount;
+
+  /// No description provided for @welcomeBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back'**
+  String get welcomeBack;
+
+  /// No description provided for @loginSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Access your account securely by using your\nemail and password'**
+  String get loginSubtitle;
+
+  /// No description provided for @registerNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Register Now'**
+  String get registerNow;
+
+  /// No description provided for @registerSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign up with your email and password to\ncontinue'**
+  String get registerSubtitle;
+
+  /// No description provided for @verificationCodeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification Code'**
+  String get verificationCodeTitle;
+
+  /// No description provided for @verificationCodeSent.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ve sent the code to your mail address that\nyou include: {email}'**
+  String verificationCodeSent(String email);
+
+  /// No description provided for @resendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend Code'**
+  String get resendCode;
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @onboardingTitle1.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to BatchIt'**
+  String get onboardingTitle1;
+
+  /// No description provided for @onboardingDesc1.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy together, save together. Join local buyers and reach bulk targets faster.'**
+  String get onboardingDesc1;
+
+  /// No description provided for @onboardingTitle2.
+  ///
+  /// In en, this message translates to:
+  /// **'Introducing Smart Local Batches'**
+  String get onboardingTitle2;
+
+  /// No description provided for @onboardingDesc2.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover nearby batches within your area and collaborate with trusted community hubs.'**
+  String get onboardingDesc2;
+
+  /// No description provided for @onboardingTitle3.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Daily Grocery Partner'**
+  String get onboardingTitle3;
+
+  /// No description provided for @onboardingDesc3.
+  ///
+  /// In en, this message translates to:
+  /// **'Track live progress, get notified when thresholds are reached, and collect with ease.'**
+  String get onboardingDesc3;
+
+  /// No description provided for @open.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get open;
+
+  /// No description provided for @dailyDealsHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily\nBatchIt Deals'**
+  String get dailyDealsHeadline;
+
+  /// No description provided for @popularBatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular Batches'**
+  String get popularBatches;
+
+  /// No description provided for @seeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get seeAll;
+
+  /// No description provided for @noBatchesForFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'No batches found for this filter.'**
+  String get noBatchesForFilter;
+
+  /// No description provided for @batchProgressFilled.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% filled'**
+  String batchProgressFilled(int percent);
+
+  /// No description provided for @perKg.
+  ///
+  /// In en, this message translates to:
+  /// **'/kg'**
+  String get perKg;
+
+  /// No description provided for @batchNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Batch not found'**
+  String get batchNotFound;
+
+  /// No description provided for @routeNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Route not found'**
+  String get routeNotFound;
+
+  /// No description provided for @profileDefaultName.
+  ///
+  /// In en, this message translates to:
+  /// **'BatchIt User'**
+  String get profileDefaultName;
+
+  /// No description provided for @profileDefaultEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'user@batchit.app'**
+  String get profileDefaultEmail;
+
   /// No description provided for @home.
   ///
   /// In en, this message translates to:

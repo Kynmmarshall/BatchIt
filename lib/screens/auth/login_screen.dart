@@ -73,8 +73,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              const Text(
-                'Welcome back',
+              Text(
+                l10n.welcomeBack,
                 style: TextStyle(
                   color: primaryText,
                   fontSize: 38,
@@ -83,8 +83,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              const Text(
-                'Access your account securely by using your\nemail and password',
+              Text(
+                l10n.loginSubtitle,
                 style: TextStyle(
                   color: secondaryText,
                   fontSize: 16,
@@ -95,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 28),
               _LoginField(
                 controller: _emailController,
-                hintText: '${l10n.email} Address',
+                hintText: l10n.emailAddress,
                 keyboardType: TextInputType.emailAddress,
                 prefixIcon: Icons.mail_outline_rounded,
                 backgroundColor: fieldBackground,
@@ -152,8 +152,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        const Text(
-                          'Save password',
+                        Text(
+                          l10n.savePassword,
                           style: TextStyle(
                             color: secondaryText,
                             fontSize: 16,
@@ -173,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    child: const Text('Forgot password?'),
+                    child: Text(l10n.forgotPassword),
                   ),
                 ],
               ),
@@ -199,8 +199,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: Colors.white,
                           ),
                         )
-                      : const Text(
-                          'Sign In',
+                        : Text(
+                          l10n.signInCta,
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 18,
@@ -210,20 +210,20 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 28),
               Row(
-                children: const [
-                  Expanded(child: Divider(color: Color(0xFFE0E4EA))),
+                children: [
+                  const Expanded(child: Divider(color: Color(0xFFE0E4EA))),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Text(
-                      'Or continue with',
-                      style: TextStyle(
+                      l10n.orContinueWith,
+                      style: const TextStyle(
                         color: primaryText,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
-                  Expanded(child: Divider(color: Color(0xFFE0E4EA))),
+                  const Expanded(child: Divider(color: Color(0xFFE0E4EA))),
                 ],
               ),
               const SizedBox(height: 22),
@@ -252,7 +252,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       fontWeight: FontWeight.w500,
                     ),
                     children: [
-                      const TextSpan(text: "Didn't have an account? "),
+                      TextSpan(text: '${l10n.didntHaveAnAccount} '),
                       WidgetSpan(
                         alignment: PlaceholderAlignment.baseline,
                         baseline: TextBaseline.alphabetic,
@@ -260,8 +260,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           onTap: () {
                             Navigator.pushNamed(context, AppRoutes.register);
                           },
-                          child: const Text(
-                            'Sign Up.',
+                          child: Text(
+                            '${l10n.signUpCta}.',
                             style: TextStyle(
                               color: primaryText,
                               fontWeight: FontWeight.w700,

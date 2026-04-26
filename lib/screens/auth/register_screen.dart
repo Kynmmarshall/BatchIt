@@ -32,8 +32,8 @@ class RegisterScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Register Now',
+            Text(
+              l10n.registerNow,
               style: TextStyle(
                 color: primaryText,
                 fontSize: 42,
@@ -42,8 +42,8 @@ class RegisterScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            const Text(
-              'Sign up with your email and password to\ncontinue',
+            Text(
+              l10n.registerSubtitle,
               style: TextStyle(
                 color: secondaryText,
                 fontSize: 16,
@@ -53,7 +53,7 @@ class RegisterScreen extends StatelessWidget {
             ),
             const SizedBox(height: 28),
             _RegisterField(
-              hintText: '${l10n.email} Address',
+              hintText: l10n.emailAddress,
               prefixIcon: Icons.mail_outline_rounded,
               backgroundColor: fieldBackground,
             ),
@@ -65,8 +65,8 @@ class RegisterScreen extends StatelessWidget {
               backgroundColor: fieldBackground,
             ),
             const SizedBox(height: 14),
-            const _RegisterField(
-              hintText: 'Confirm Password',
+            _RegisterField(
+              hintText: l10n.confirmPassword,
               prefixIcon: Icons.lock_outline_rounded,
               suffixIcon: Icons.visibility_off_outlined,
               backgroundColor: fieldBackground,
@@ -92,28 +92,28 @@ class RegisterScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(29),
                   ),
                 ),
-                child: const Text(
-                  'Sign Up',
+                child: Text(
+                  l10n.signUpCta,
                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
                 ),
               ),
             ),
             const SizedBox(height: 28),
             Row(
-              children: const [
-                Expanded(child: Divider(color: Color(0xFFE0E4EA))),
+              children: [
+                const Expanded(child: Divider(color: Color(0xFFE0E4EA))),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
-                    'Or continue with',
-                    style: TextStyle(
+                    l10n.orContinueWith,
+                    style: const TextStyle(
                       color: primaryText,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
-                Expanded(child: Divider(color: Color(0xFFE0E4EA))),
+                const Expanded(child: Divider(color: Color(0xFFE0E4EA))),
               ],
             ),
             const SizedBox(height: 22),
@@ -134,7 +134,7 @@ class RegisterScreen extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                   children: [
-                    const TextSpan(text: 'Already have an account? '),
+                    TextSpan(text: '${l10n.alreadyHaveAnAccount} '),
                     WidgetSpan(
                       alignment: PlaceholderAlignment.baseline,
                       baseline: TextBaseline.alphabetic,
@@ -142,8 +142,8 @@ class RegisterScreen extends StatelessWidget {
                         onTap: () {
                           Navigator.pushNamed(context, AppRoutes.login);
                         },
-                        child: const Text(
-                          'Sign In.',
+                        child: Text(
+                          '${l10n.signInCta}.',
                           style: TextStyle(
                             color: primaryText,
                             fontWeight: FontWeight.w700,

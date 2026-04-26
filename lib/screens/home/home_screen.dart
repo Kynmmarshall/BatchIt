@@ -49,8 +49,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final filters = <(_BatchFilter, String)>[
       (_BatchFilter.nearby, l10n.nearbyBatches),
-      (_BatchFilter.open, 'Open'),
-      (_BatchFilter.full, 'Full'),
+      (_BatchFilter.open, l10n.open),
+      (_BatchFilter.full, l10n.full),
     ];
 
     return Scaffold(
@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Expanded(
                       child: Text(
-                        'Daily\nBatchIt Deals',
+                        l10n.dailyDealsHeadline,
                         style: theme.textTheme.headlineSmall?.copyWith(
                           color: scheme.onSurface,
                           fontWeight: FontWeight.w800,
@@ -131,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Row(
                 children: [
                   Text(
-                    'Popular Batches',
+                    l10n.popularBatches,
                     style: theme.textTheme.titleLarge?.copyWith(
                       color: scheme.onSurface,
                       fontWeight: FontWeight.w800,
@@ -141,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   TextButton(
                     onPressed: () {},
                     child: Text(
-                      'See all',
+                      l10n.seeAll,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: scheme.primary,
                         fontWeight: FontWeight.w600,
@@ -159,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     : filteredBatches.isEmpty
                         ? Center(
                             child: Text(
-                              'No batches found for this filter.',
+                              l10n.noBatchesForFilter,
                               style: theme.textTheme.bodyLarge?.copyWith(
                                 color: scheme.onSurfaceVariant,
                               ),

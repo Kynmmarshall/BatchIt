@@ -1,4 +1,5 @@
 import 'package:batchit/core/app_routes.dart';
+import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/widgets/auth/auth_screen_shell.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +13,7 @@ class VerificationCodeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     const fieldBackground = Color(0xFFF1F1F1);
     const primaryText = Color(0xFF1E2B46);
     const secondaryText = Color(0xFF91A0B2);
@@ -34,8 +36,8 @@ class VerificationCodeScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Verification Code',
+            Text(
+              l10n.verificationCodeTitle,
               style: TextStyle(
                 color: primaryText,
                 fontSize: 34,
@@ -45,7 +47,7 @@ class VerificationCodeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              'We\'ve sent the code to your mail address that\nyou include: $maskedEmail',
+              l10n.verificationCodeSent(maskedEmail),
               style: const TextStyle(
                 color: secondaryText,
                 fontSize: 16,
@@ -77,7 +79,7 @@ class VerificationCodeScreen extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                child: const Text('Resend Code'),
+                child: Text(l10n.resendCode),
               ),
             ),
             const Spacer(),
@@ -95,8 +97,8 @@ class VerificationCodeScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(29),
                   ),
                 ),
-                child: const Text(
-                  'Confirm',
+                child: Text(
+                  l10n.confirm,
                   style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
                 ),
               ),

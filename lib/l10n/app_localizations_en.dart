@@ -34,6 +34,123 @@ class AppLocalizationsEn extends AppLocalizations {
   String get continueWithGoogle => 'Continue with Google';
 
   @override
+  String get continueCta => 'Continue';
+
+  @override
+  String get getStarted => 'Get Started';
+
+  @override
+  String get signInCta => 'Sign In';
+
+  @override
+  String get signUpCta => 'Sign Up';
+
+  @override
+  String get orContinueWith => 'Or continue with';
+
+  @override
+  String get emailAddress => 'Email Address';
+
+  @override
+  String get confirmPassword => 'Confirm Password';
+
+  @override
+  String get savePassword => 'Save password';
+
+  @override
+  String get forgotPassword => 'Forgot password?';
+
+  @override
+  String get alreadyHaveAnAccount => 'Already have an account?';
+
+  @override
+  String get didntHaveAnAccount => 'Didn\'t have an account?';
+
+  @override
+  String get welcomeBack => 'Welcome back';
+
+  @override
+  String get loginSubtitle =>
+      'Access your account securely by using your\nemail and password';
+
+  @override
+  String get registerNow => 'Register Now';
+
+  @override
+  String get registerSubtitle =>
+      'Sign up with your email and password to\ncontinue';
+
+  @override
+  String get verificationCodeTitle => 'Verification Code';
+
+  @override
+  String verificationCodeSent(String email) {
+    return 'We\'ve sent the code to your mail address that\nyou include: $email';
+  }
+
+  @override
+  String get resendCode => 'Resend Code';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get onboardingTitle1 => 'Welcome to BatchIt';
+
+  @override
+  String get onboardingDesc1 =>
+      'Buy together, save together. Join local buyers and reach bulk targets faster.';
+
+  @override
+  String get onboardingTitle2 => 'Introducing Smart Local Batches';
+
+  @override
+  String get onboardingDesc2 =>
+      'Discover nearby batches within your area and collaborate with trusted community hubs.';
+
+  @override
+  String get onboardingTitle3 => 'Your Daily Grocery Partner';
+
+  @override
+  String get onboardingDesc3 =>
+      'Track live progress, get notified when thresholds are reached, and collect with ease.';
+
+  @override
+  String get open => 'Open';
+
+  @override
+  String get dailyDealsHeadline => 'Daily\nBatchIt Deals';
+
+  @override
+  String get popularBatches => 'Popular Batches';
+
+  @override
+  String get seeAll => 'See all';
+
+  @override
+  String get noBatchesForFilter => 'No batches found for this filter.';
+
+  @override
+  String batchProgressFilled(int percent) {
+    return '$percent% filled';
+  }
+
+  @override
+  String get perKg => '/kg';
+
+  @override
+  String get batchNotFound => 'Batch not found';
+
+  @override
+  String get routeNotFound => 'Route not found';
+
+  @override
+  String get profileDefaultName => 'BatchIt User';
+
+  @override
+  String get profileDefaultEmail => 'user@batchit.app';
+
+  @override
   String get home => 'Home';
 
   @override

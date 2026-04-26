@@ -1,4 +1,5 @@
 import 'package:batchit/core/app_routes.dart';
+import 'package:batchit/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -12,29 +13,28 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  static const List<_OnboardingSlide> _slides = [
-    _OnboardingSlide(
-      title: 'Welcome to BatchIt',
-      description:
-          'Buy together, save together. Join local buyers and reach bulk targets faster.',
-      buttonLabel: 'Continue',
-      imagePath: 'assets/onboaring/onbaording1.png',
-    ),
-    _OnboardingSlide(
-      title: 'Introducing Smart Local Batches',
-      description:
-          'Discover nearby batches within your area and collaborate with trusted community hubs.',
-      buttonLabel: 'Continue',
-      imagePath: 'assets/onboaring/onboarding2.png',
-    ),
-    _OnboardingSlide(
-      title: 'Your Daily Grocery Partner',
-      description:
-          'Track live progress, get notified when thresholds are reached, and collect with ease.',
-      buttonLabel: 'Get Started',
-      imagePath: 'assets/onboaring/onboarding3.png',
-    ),
-  ];
+  List<_OnboardingSlide> _slidesFor(AppLocalizations l10n) {
+    return [
+      _OnboardingSlide(
+        title: l10n.onboardingTitle1,
+        description: l10n.onboardingDesc1,
+        buttonLabel: l10n.continueCta,
+        imagePath: 'assets/onboaring/onbaording1.png',
+      ),
+      _OnboardingSlide(
+        title: l10n.onboardingTitle2,
+        description: l10n.onboardingDesc2,
+        buttonLabel: l10n.continueCta,
+        imagePath: 'assets/onboaring/onboarding2.png',
+      ),
+      _OnboardingSlide(
+        title: l10n.onboardingTitle3,
+        description: l10n.onboardingDesc3,
+        buttonLabel: l10n.getStarted,
+        imagePath: 'assets/onboaring/onboarding3.png',
+      ),
+    ];
+  }
 
   @override
   void dispose() {
@@ -43,8 +43,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Future<void> _handleContinue() async {
+    final slidesLength = _slidesFor(AppLocalizations.of(context)!).length;
     debugPrint('[BatchIt][onboarding] continue tapped currentPage=$_currentPage');
-    if (_currentPage == _slides.length - 1) {
+    if (_currentPage == slidesLength - 1) {
       debugPrint('[BatchIt][onboarding] navigating -> ${AppRoutes.login}');
       Navigator.pushReplacementNamed(context, AppRoutes.login);
       return;
@@ -60,6 +61,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     debugPrint('[BatchIt][onboarding] build currentPage=$_currentPage');
+    final l10n = AppLocalizations.of(context)!;
+    final slides = _slidesFor(l10n);
     const darkPanel = Color(0xFF16274D);
 
     return Scaffold(
@@ -68,14 +71,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         bottom: false,
         child: PageView.builder(
           controller: _pageController,
-          itemCount: _slides.length,
+          itemCount: slides.length,
           onPageChanged: (index) {
             setState(() {
               _currentPage = index;
             });
           },
           itemBuilder: (context, index) {
-            final slide = _slides[index];
+            final slide = slides[index];
             return Column(
               children: [
                 Expanded(
@@ -98,7 +101,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     child: Column(
                       children: [
                         _DotsIndicator(
-                          length: _slides.length,
+                          length: slides.length,
                           selectedIndex: _currentPage,
                         ),
                         const SizedBox(height: 42),

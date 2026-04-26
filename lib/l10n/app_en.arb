@@ -8,6 +8,56 @@
   "email": "Email",
   "password": "Password",
   "continueWithGoogle": "Continue with Google",
+  "continueCta": "Continue",
+  "getStarted": "Get Started",
+  "signInCta": "Sign In",
+  "signUpCta": "Sign Up",
+  "orContinueWith": "Or continue with",
+  "emailAddress": "Email Address",
+  "confirmPassword": "Confirm Password",
+  "savePassword": "Save password",
+  "forgotPassword": "Forgot password?",
+  "alreadyHaveAnAccount": "Already have an account?",
+  "didntHaveAnAccount": "Didn't have an account?",
+  "welcomeBack": "Welcome back",
+  "loginSubtitle": "Access your account securely by using your\nemail and password",
+  "registerNow": "Register Now",
+  "registerSubtitle": "Sign up with your email and password to\ncontinue",
+  "verificationCodeTitle": "Verification Code",
+  "verificationCodeSent": "We've sent the code to your mail address that\nyou include: {email}",
+  "@verificationCodeSent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "resendCode": "Resend Code",
+  "confirm": "Confirm",
+  "onboardingTitle1": "Welcome to BatchIt",
+  "onboardingDesc1": "Buy together, save together. Join local buyers and reach bulk targets faster.",
+  "onboardingTitle2": "Introducing Smart Local Batches",
+  "onboardingDesc2": "Discover nearby batches within your area and collaborate with trusted community hubs.",
+  "onboardingTitle3": "Your Daily Grocery Partner",
+  "onboardingDesc3": "Track live progress, get notified when thresholds are reached, and collect with ease.",
+  "open": "Open",
+  "dailyDealsHeadline": "Daily\nBatchIt Deals",
+  "popularBatches": "Popular Batches",
+  "seeAll": "See all",
+  "noBatchesForFilter": "No batches found for this filter.",
+  "batchProgressFilled": "{percent}% filled",
+  "@batchProgressFilled": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "perKg": "/kg",
+  "batchNotFound": "Batch not found",
+  "routeNotFound": "Route not found",
+  "profileDefaultName": "BatchIt User",
+  "profileDefaultEmail": "user@batchit.app",
   "home": "Home",
   "createBatch": "Create Batch",
   "batchDetails": "Batch Details",

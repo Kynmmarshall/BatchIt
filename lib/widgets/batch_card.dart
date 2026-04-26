@@ -1,4 +1,5 @@
 import 'package:batchit/core/formatters.dart';
+import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/models/batch.dart';
 import 'package:flutter/material.dart';
 
@@ -15,9 +16,9 @@ class BatchCard extends StatelessWidget {
   final VoidCallback onTap;
 
   static const _cardImages = [
-    'assets/onboaring/onbaording1.png',
-    'assets/onboaring/onboarding2.png',
-    'assets/onboaring/onboarding3.png',
+    'assets/batches/potatoes.jpg',
+    'assets/batches/tomatoes.jpg',
+    'assets/batches/onions.jpg',
   ];
 
   String _resolveImagePath() {
@@ -29,6 +30,7 @@ class BatchCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
     final imagePath = _resolveImagePath();
     final progressPct = (batch.progress * 100).round();
 
@@ -72,7 +74,7 @@ class BatchCard extends StatelessWidget {
               ),
               const SizedBox(height: 2),
               Text(
-                '$progressPct% filled',
+                l10n.batchProgressFilled(progressPct),
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: scheme.onSurfaceVariant,
                 ),
@@ -93,7 +95,7 @@ class BatchCard extends StatelessWidget {
                             ),
                           ),
                           TextSpan(
-                            text: '/kg',
+                            text: l10n.perKg,
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: scheme.onSurfaceVariant,
                               fontWeight: FontWeight.w700,

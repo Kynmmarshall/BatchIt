@@ -156,8 +156,9 @@ class BatchItApp extends StatelessWidget {
 
   MaterialPageRoute<void> _fallbackRoute() {
     return MaterialPageRoute(
-      builder: (_) =>
-          const Scaffold(body: Center(child: Text('Route not found'))),
+      builder: (context) => Scaffold(
+        body: Center(child: Text(AppLocalizations.of(context)!.routeNotFound)),
+      ),
     );
   }
 }

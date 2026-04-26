@@ -24,7 +24,7 @@ class BatchDetailsScreen extends StatelessWidget {
     if (batch == null) {
       return Scaffold(
         appBar: AppBar(title: Text(l10n.batchDetails)),
-        body: const Center(child: Text('Batch not found')),
+        body: Center(child: Text(l10n.batchNotFound)),
       );
     }
 

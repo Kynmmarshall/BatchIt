@@ -31,11 +31,11 @@ class ProfileScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        auth.user?.name ?? 'BatchIt User',
+                        auth.user?.name ?? l10n.profileDefaultName,
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       const SizedBox(height: AppSpacing.xxs),
-                      Text(auth.user?.email ?? 'user@batchit.app'),
+                      Text(auth.user?.email ?? l10n.profileDefaultEmail),
                     ],
                   ),
                 ),
