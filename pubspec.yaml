@@ -1,10 +1,10 @@
 name: batchit
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: ^3.9.2
+  sdk: ">=3.8.1 <4.0.0"
 
 dependencies:
   flutter:
@@ -15,6 +15,7 @@ dependencies:
   provider: ^6.1.2
   intl: ^0.20.2
   google_fonts: ^6.3.0
+  image_picker: ^1.2.0
 
 dev_dependencies:
   flutter_test:
@@ -33,4 +34,3 @@ flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/icon/logo.png"
- 
