@@ -3,14 +3,21 @@
   "build_number": "local-preview",
   "job_name": "jenkins/batchit",
   "build_url": "#",
-  "deployed_at_utc": "not-deployed-yet",
+  "last_deployed": "not-deployed-yet",
+  "deployed_at_cameroon": "not-deployed-yet",
+  "timezone": "Africa/Douala (UTC+1)",
+  "timestamp": 0,
   "artifacts": {
     "apk": {
       "path": "download/BatchIt.apk",
+      "size_bytes": 0,
+      "size_human": "Unknown",
       "sha256": "pending"
     },
     "aab": {
       "path": "download/BatchIt.aab",
+      "size_bytes": 0,
+      "size_human": "Unknown",
       "sha256": "pending"
     }
   }
