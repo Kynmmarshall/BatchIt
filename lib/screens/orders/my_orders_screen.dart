@@ -49,21 +49,20 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // AppStaggeredFade(
-            //   index: 0,
-            //   child: Text(
-            //     l10n.myOrders,
-            //     style: Theme.of(context).textTheme.headlineSmall,
-            //   ),
-            // ),
+            AppStaggeredFade(
+              index: 0,
+              child: Text(
+                l10n.myOrders,
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+            ),
             const SizedBox(height: AppSpacing.sm),
             Expanded(
               child: orderProvider.isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : ListView.separated(
                       itemCount: orderProvider.orders.length,
-                      separatorBuilder: (_, __) =>
-                          const SizedBox(height: AppSpacing.sm),
+                      separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.sm),
                       itemBuilder: (context, index) {
                         final order = orderProvider.orders[index];
                         return AppStaggeredFade(

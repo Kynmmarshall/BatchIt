@@ -51,11 +51,15 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
     }
 
     final l10n = AppLocalizations.of(context)!;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(l10n.batchCreated)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(l10n.batchCreated)),
+    );
 
-    Navigator.pushNamed(context, AppRoutes.batchDetails, arguments: batch.id);
+    Navigator.pushNamed(
+      context,
+      AppRoutes.batchDetails,
+      arguments: batch.id,
+    );
   }
 
   @override
@@ -75,11 +79,11 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Text(
-                    //   l10n.createBatch,
-                    //   style: theme.textTheme.headlineSmall,
-                    // ),
-                    // const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      l10n.createBatch,
+                      style: theme.textTheme.headlineSmall,
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
                     Text(
                       l10n.welcomeSubtitle,
                       style: theme.textTheme.bodyMedium,
@@ -97,13 +101,9 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
                       children: [
                         TextFormField(
                           controller: _productController,
-                          decoration: InputDecoration(
-                            labelText: l10n.productName,
-                          ),
+                          decoration: InputDecoration(labelText: l10n.productName),
                           validator: (value) =>
-                              value == null || value.trim().isEmpty
-                              ? l10n.productName
-                              : null,
+                              value == null || value.trim().isEmpty ? l10n.productName : null,
                         ),
                         const SizedBox(height: AppSpacing.sm),
                         TextFormField(
@@ -111,18 +111,14 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(labelText: l10n.bulkSize),
                           validator: (value) =>
-                              value == null || value.trim().isEmpty
-                              ? l10n.bulkSize
-                              : null,
+                              value == null || value.trim().isEmpty ? l10n.bulkSize : null,
                         ),
                         const SizedBox(height: AppSpacing.sm),
                         TextFormField(
                           controller: _locationController,
                           decoration: InputDecoration(labelText: l10n.location),
                           validator: (value) =>
-                              value == null || value.trim().isEmpty
-                              ? l10n.location
-                              : null,
+                              value == null || value.trim().isEmpty ? l10n.location : null,
                         ),
                         const SizedBox(height: AppSpacing.md),
                         AppPrimaryButton(
