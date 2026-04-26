@@ -27,6 +27,7 @@ flutter:
   assets:
     - assets/icon/
     - assets/background/
+    - assets/onboaring/
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true

@@ -18,24 +18,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       description:
           'Buy together, save together. Join local buyers and reach bulk targets faster.',
       buttonLabel: 'Continue',
-      heroIcon: Icons.shopping_basket_rounded,
-      accentColor: Color(0xFFEF5350),
+      imagePath: 'assets/onboaring/onbaording1.png',
     ),
     _OnboardingSlide(
       title: 'Introducing Smart Local Batches',
       description:
           'Discover nearby batches within your area and collaborate with trusted community hubs.',
       buttonLabel: 'Continue',
-      heroIcon: Icons.location_on_rounded,
-      accentColor: Color(0xFF8D6E63),
+      imagePath: 'assets/onboaring/onboarding2.png',
     ),
     _OnboardingSlide(
       title: 'Your Daily Grocery Partner',
       description:
           'Track live progress, get notified when thresholds are reached, and collect with ease.',
       buttonLabel: 'Get Started',
-      heroIcon: Icons.auto_graph_rounded,
-      accentColor: Color(0xFF42A5F5),
+      imagePath: 'assets/onboaring/onboarding3.png',
     ),
   ];
 
@@ -46,11 +43,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Future<void> _handleContinue() async {
+    debugPrint('[BatchIt][onboarding] continue tapped currentPage=$_currentPage');
     if (_currentPage == _slides.length - 1) {
+      debugPrint('[BatchIt][onboarding] navigating -> ${AppRoutes.login}');
       Navigator.pushReplacementNamed(context, AppRoutes.login);
       return;
     }
 
+    debugPrint('[BatchIt][onboarding] nextPage -> ${_currentPage + 1}');
     await _pageController.nextPage(
       duration: const Duration(milliseconds: 260),
       curve: Curves.easeOut,
@@ -59,6 +59,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('[BatchIt][onboarding] build currentPage=$_currentPage');
     const darkPanel = Color(0xFF16274D);
 
     return Scaffold(
@@ -160,15 +161,13 @@ class _OnboardingSlide {
     required this.title,
     required this.description,
     required this.buttonLabel,
-    required this.heroIcon,
-    required this.accentColor,
+    required this.imagePath,
   });
 
   final String title;
   final String description;
   final String buttonLabel;
-  final IconData heroIcon;
-  final Color accentColor;
+  final String imagePath;
 }
 
 class _OnboardingHero extends StatelessWidget {
@@ -181,81 +180,15 @@ class _OnboardingHero extends StatelessWidget {
     return Stack(
       children: [
         Positioned.fill(
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: RadialGradient(
-                center: const Alignment(0, -0.15),
-                radius: 0.9,
-                colors: [
-                  Colors.white,
-                  slide.accentColor.withValues(alpha: 0.11),
-                ],
-              ),
-            ),
+          child: Image.asset(
+            slide.imagePath,
+            fit: BoxFit.contain,
           ),
         ),
         const Positioned(top: 10, left: 20, child: _Particle(size: 12)),
         const Positioned(top: 84, right: 30, child: _Particle(size: 10)),
         const Positioned(bottom: 90, left: 28, child: _Particle(size: 14)),
         const Positioned(bottom: 56, right: 24, child: _Particle(size: 16)),
-        Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 250,
-                height: 250,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      slide.accentColor.withValues(alpha: 0.20),
-                      slide.accentColor.withValues(alpha: 0.08),
-                    ],
-                  ),
-                ),
-                child: Center(
-                  child: Container(
-                    width: 190,
-                    height: 190,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(28),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0x22000000),
-                          blurRadius: 32,
-                          offset: Offset(0, 14),
-                        ),
-                      ],
-                    ),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Positioned(
-                          top: 16,
-                          right: 16,
-                          child: Icon(
-                            slide.heroIcon,
-                            color: slide.accentColor,
-                            size: 34,
-                          ),
-                        ),
-                        Image.asset(
-                          'assets/icon/logo.png',
-                          width: 120,
-                          fit: BoxFit.contain,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
       ],
     );
   }

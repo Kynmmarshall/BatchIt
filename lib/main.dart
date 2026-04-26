@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  debugPrint('[BatchIt][main] App starting...');
   runApp(
     MultiProvider(
       providers: [

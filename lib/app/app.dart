@@ -31,6 +31,13 @@ class BatchItApp extends StatelessWidget {
       OrderProvider
     >(
       builder: (context, settings, auth, _, __, child) {
+        final startupRoute = auth.isAuthenticated
+            ? AppRoutes.shell
+            : AppRoutes.splashscreen;
+        debugPrint(
+          '[BatchIt][app] build auth.isAuthenticated=${auth.isAuthenticated} locale=${settings.locale.languageCode} themeMode=${settings.themeMode} initialRoute=$startupRoute',
+        );
+
         return MaterialApp(
           title: 'BatchIt',
           debugShowCheckedModeBanner: false,
@@ -45,10 +52,37 @@ class BatchItApp extends StatelessWidget {
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          initialRoute: auth.isAuthenticated
-              ? AppRoutes.shell
-              : AppRoutes.splashscreen,
+          builder: (context, child) {
+            if (child == null) {
+              return const SizedBox.shrink();
+            }
+
+            return Stack(
+              children: [
+                child,
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: SafeArea(
+                    child: _LanguageSwitcherButton(
+                      onPressed: () {
+                        final provider = context.read<AppSettingsProvider>();
+                        final nextLocale = provider.locale.languageCode == 'en'
+                            ? const Locale('fr')
+                            : const Locale('en');
+                        provider.setLocale(nextLocale);
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+          initialRoute: startupRoute,
           onGenerateRoute: (settingsRoute) {
+            debugPrint(
+              '[BatchIt][routes] onGenerateRoute name=${settingsRoute.name} args=${settingsRoute.arguments}',
+            );
             switch (settingsRoute.name) {
               case AppRoutes.splashscreen:
                 return _buildRoute(const SplashScreen());
@@ -124,6 +158,32 @@ class BatchItApp extends StatelessWidget {
     return MaterialPageRoute(
       builder: (_) =>
           const Scaffold(body: Center(child: Text('Route not found'))),
+    );
+  }
+}
+
+class _LanguageSwitcherButton extends StatelessWidget {
+  const _LanguageSwitcherButton({required this.onPressed});
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
+    return Material(
+      color: Colors.transparent,
+      child: Ink(
+        decoration: BoxDecoration(
+          color: scheme.surface.withValues(alpha: 0.94),
+          shape: BoxShape.circle,
+          border: Border.all(color: scheme.outlineVariant),
+        ),
+        child: IconButton(
+          onPressed: onPressed,
+          icon: Icon(Icons.language_rounded, color: scheme.onSurface),
+        ),
+      ),
     );
   }
 }
