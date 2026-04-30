@@ -19,4 +19,12 @@ class Batch {
       bulkSizeKg == 0 ? 0 : (currentQuantityKg / bulkSizeKg).clamp(0, 1);
 
   bool get isFull => currentQuantityKg >= bulkSizeKg;
+
+  String get imageAssetPath {
+    final name = productName
+        .toLowerCase()
+        .replaceAll(RegExp(r"[^a-z0-9]+"), '_')
+        .replaceAll(RegExp(r'^_+|_+\$'), '');
+    return 'assets/batches/$name.jpg';
+  }
 }

@@ -17,7 +17,8 @@ class OrderProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    _orders = await _orderService.fetchOrders();
+    final fetched = await _orderService.fetchOrders();
+    _orders = List<Order>.from(fetched);
 
     _isLoading = false;
     notifyListeners();
@@ -25,6 +26,29 @@ class OrderProvider extends ChangeNotifier {
 
   void addOrder(Order order) {
     _orders = [order, ..._orders];
+    notifyListeners();
+  }
+
+  Order? findById(String id) {
+    try {
+      return _orders.firstWhere((o) => o.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  void updateOrderStatus(String id, OrderStatus status) {
+    final index = _orders.indexWhere((o) => o.id == id);
+    if (index == -1) return;
+    final old = _orders[index];
+    final updated = Order(
+      id: old.id,
+      productName: old.productName,
+      quantityKg: old.quantityKg,
+      status: status,
+      hubName: old.hubName,
+    );
+    _orders[index] = updated;
     notifyListeners();
   }
 }

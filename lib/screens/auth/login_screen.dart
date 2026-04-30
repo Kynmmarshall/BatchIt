@@ -129,39 +129,45 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              Row(
+              Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 12,
+                runSpacing: 6,
                 children: [
-                  Expanded(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(
-                          width: 22,
-                          height: 22,
-                          child: Checkbox(
-                            value: _savePassword,
-                            onChanged: (value) {
-                              setState(() {
-                                _savePassword = value ?? false;
-                              });
-                            },
-                            side: const BorderSide(color: Color(0xFFD7DDE5)),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: Checkbox(
+                          value: _savePassword,
+                          onChanged: (value) {
+                            setState(() {
+                              _savePassword = value ?? false;
+                            });
+                          },
+                          side: const BorderSide(color: Color(0xFFD7DDE5)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Text(
+                      ),
+                      const SizedBox(width: 8),
+                      Flexible(
+                        child: Text(
                           l10n.savePassword,
                           style: TextStyle(
                             color: secondaryText,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   TextButton(
                     onPressed: () {},
@@ -241,8 +247,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
               ),
               const SizedBox(height: 12),
-              const Spacer(),
-              const SizedBox(height: 22),
+              const SizedBox(height: 18),
               Center(
                 child: Text.rich(
                   TextSpan(

@@ -1,5 +1,5 @@
 import 'package:batchit/l10n/app_localizations.dart';
-import 'package:batchit/providers/app_settings_provider.dart';
+import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/providers/auth_provider.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
@@ -13,7 +13,6 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final settings = context.watch<AppSettingsProvider>();
     final auth = context.watch<AuthProvider>();
 
     return Scaffold(
@@ -50,26 +49,15 @@ class ProfileScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(l10n.changeLanguage, style: Theme.of(context).textTheme.titleMedium),
-                      const SizedBox(height: AppSpacing.xs),
-                      SegmentedButton<String>(
-                        segments: [
-                          ButtonSegment<String>(value: 'en', label: Text(l10n.english)),
-                          ButtonSegment<String>(value: 'fr', label: Text(l10n.french)),
-                        ],
-                        selected: {settings.locale.languageCode},
-                        onSelectionChanged: (value) {
-                          context.read<AppSettingsProvider>().setLocale(Locale(value.first));
-                        },
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      SwitchListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: Text(l10n.switchTheme),
-                        value: settings.themeMode == ThemeMode.dark,
-                        onChanged: (_) {
-                          context.read<AppSettingsProvider>().toggleTheme();
-                        },
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          onPressed: () {
+                            Navigator.pushNamed(context, AppRoutes.settings);
+                          },
+                          icon: const Icon(Icons.tune_rounded),
+                          label: Text(l10n.openSettings),
+                        ),
                       ),
                     ],
                   ),

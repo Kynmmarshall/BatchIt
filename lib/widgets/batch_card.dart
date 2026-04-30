@@ -15,15 +15,10 @@ class BatchCard extends StatelessWidget {
   final String joinLabel;
   final VoidCallback onTap;
 
-  static const _cardImages = [
-    'assets/batches/potatoes.jpg',
-    'assets/batches/tomatoes.jpg',
-    'assets/batches/onions.jpg',
-  ];
 
   String _resolveImagePath() {
-    final hash = batch.id.hashCode.abs();
-    return _cardImages[hash % _cardImages.length];
+    // Use the batch model's image path to map product -> asset filename.
+    return batch.imageAssetPath;
   }
 
   @override
@@ -59,6 +54,10 @@ class BatchCard extends StatelessWidget {
                   child: Image.asset(
                     imagePath,
                     fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      color: scheme.surfaceContainerHighest,
+                      child: Icon(Icons.inventory_2_outlined, color: scheme.onSurfaceVariant),
+                    ),
                   ),
                 ),
               ),

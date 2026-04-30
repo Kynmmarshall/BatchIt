@@ -1,159 +1,190 @@
 # BatchIt Frontend Task Checklist
 
-Use this checklist to build the BatchIt customer app in a controlled order. The goal is to satisfy the system plan while keeping the UI polished, consistent, bilingual, and theme-aware across every screen.
+Use this checklist to build the BatchIt customer app in a controlled order. It tracks the requirements from the walkthrough and keeps the frontend aligned with the system plan, bilingual support, and the shared design language.
 
-## Global Requirements
+## Current Done Items
 
-- [ ] Define shared design tokens for color, typography, spacing, radius, shadows, and motion.
-- [ ] Verify all primary screens work in both light and dark themes.
-- [ ] Add full English and French localization coverage for visible UI text.
-- [ ] Remove hardcoded strings from screens, widgets, buttons, labels, empty states, and fallbacks.
-- [ ] Use reusable components instead of designing each screen independently.
-- [ ] Create loading, empty, error, and offline-friendly states in the shared design system.
-- [ ] Keep navigation and screen flow consistent across the entire app.
+- [x] Add a dedicated settings screen for theme and language.
+- [x] Remove theme and language controls from the profile screen.
+- [x] Redesign the home dashboard to use a richer app shell style.
+- [x] Rework batch details to match the dashboard visual language.
+- [x] Add questionnaire flow between onboarding and login.
+- [x] Add English and French localization keys for the current UI.
 
-## Phase 1: App Foundation
+## 1. Global Foundation
 
-- [ ] Lock the final screen map for the customer app MVP.
-- [ ] Set up route constants for all screens in the plan.
-- [ ] Configure the main app shell and startup flow.
-- [ ] Add splash screen behavior for first launch and returning users.
-- [ ] Add onboarding flow with 2 to 3 slides.
-- [ ] Add the questionnaire screen if it is part of the current release.
-- [ ] Add a global language switcher that works from every screen.
-- [ ] Add a global theme switcher that works from every screen.
+- [ ] Finalize the shared design tokens for colors, typography, spacing, radius, shadows, and motion.
+- [ ] Confirm the light theme and dark theme palettes work on all existing screens.
+- [ ] Keep all screens using the same rounded, layered, polished visual language.
+- [ ] Make loading, empty, and error states part of the same design system.
+- [ ] Verify every visible label, button, helper text, and fallback is localized.
+- [ ] Keep reusable components as the default approach instead of one-off screen styling.
+- [ ] Ensure the app uses a single navigation language and no screen feels isolated.
 
-## Phase 2: Authentication
+## 2. App Structure
 
-- [ ] Build the login screen with the shared auth shell.
-- [ ] Build the register screen with the shared auth shell.
-- [ ] Build the verification code screen if signup requires verification.
-- [ ] Add forgot password flow or a temporary placeholder if deferred.
-- [ ] Wire login navigation to the main shell.
-- [ ] Wire register navigation to verification or next-step onboarding.
-- [ ] Wire sign-in and sign-up links so users can switch between them in one tap.
-- [ ] Localize all auth labels, hints, validation text, and CTA labels.
+- [ ] Lock the final MVP screen map from the system plan.
+- [ ] Confirm the route constants for onboarding, auth, questionnaire, home, batch, orders, profile, settings, map, and chat.
+- [ ] Keep the startup flow stable for splash, onboarding, and authenticated shell entry.
+- [ ] Review the shared auth shell so login, register, and questionnaire stay visually consistent.
+- [ ] Review the main shell layout so home, create batch, orders, and profile work as one app.
 
-## Phase 3: Home and Browsing
+## 3. Splash and Onboarding
 
-- [ ] Build the home screen as the app’s main dashboard.
-- [ ] Add a header area with brand, notifications, and profile access.
-- [ ] Add search entry or search mode toggle if included in MVP.
-- [ ] Add active batches or recommended batches sections.
-- [ ] Add popular providers or nearby batch sections if supported.
-- [ ] Add bottom navigation for the core app flow.
-- [ ] Create empty and loading states for the home feed.
-- [ ] Ensure section titles and buttons are localized.
+- [x] Keep the splash screen as the first launch entry.
+- [x] Keep onboarding slides localized in English and French.
+- [ ] Polish onboarding copy so it clearly explains batches, providers, and savings.
+- [ ] Verify onboarding CTA behavior on every slide.
+- [x] Route the final onboarding action into the questionnaire step.
+- [ ] Confirm onboarding backgrounds, image assets, and layout feel consistent in both themes.
 
-## Phase 4: Batch Core Components
+## 4. Questionnaire
 
-- [ ] Build a reusable batch card component.
-- [ ] Include product image, product name, provider or hub name, progress, and CTA.
-- [ ] Show quantity progress in a clear and consistent format.
-- [ ] Make the batch card reusable across home, search, provider, and notification views.
-- [ ] Ensure the batch card respects both light and dark themes.
-- [ ] Add truncation rules for long product and provider names.
+- [x] Add the questionnaire screen.
+- [ ] Refine questionnaire categories so they feel like product preferences, not placeholder chips.
+- [ ] Add or adjust preference chips for shopping frequency, region, and budget range.
+- [ ] Keep questionnaire labels and actions localized in both languages.
+- [ ] Make sure the questionnaire can be skipped cleanly without breaking the flow.
+- [ ] Store selected preferences in a proper model or provider when backend state is ready.
 
-## Phase 5: Batch Flow
+## 5. Authentication
 
-- [ ] Build create batch screen.
-- [ ] Add product selection UI.
-- [ ] Add quantity input UI.
-- [ ] Add provider selection or batch destination selection UI.
-- [ ] Add optional note or deadline input.
-- [ ] Build batch details screen.
-- [ ] Show product info, quantity progress, participants, provider info, and join CTA.
-- [ ] Build join batch screen.
-- [ ] Add quantity entry and confirmation actions.
-- [ ] Show success and pending states after joining.
-- [ ] Add status states such as open, filled, confirmed, fulfilled, and expired.
+- [x] Keep the login screen connected to the shell.
+- [x] Keep the register screen connected to the verification flow.
+- [ ] Polish login spacing and text wrapping for French copy.
+- [ ] Confirm auth labels, hints, validation messages, and footer text are localized.
+- [ ] Add or confirm the forgot password behavior.
+- [ ] Verify login and register transitions remain smooth on smaller screens.
+- [ ] Keep the auth shell background and translucent card styling consistent.
 
-## Phase 6: Orders and Participation
+## 6. Home Dashboard
 
-- [ ] Build My Batches or My Orders screen.
-- [ ] Show active, pending, fulfilled, and completed items clearly.
-- [ ] Add order details screen if included in current scope.
+- [x] Keep the home screen in the new dashboard style.
+- [ ] Review the hero summary card for spacing, contrast, and clarity.
+- [ ] Keep the search affordance visible and easy to scan.
+- [ ] Keep active batches visible as a horizontal rail.
+- [ ] Keep the filters for nearby, open, and full batches.
+- [ ] Keep the recommended batch feed responsive for smaller devices.
+- [ ] Add or confirm proper empty and loading states for the dashboard sections.
+- [ ] Keep home section titles and buttons localized.
+
+## 7. Batch Card Component
+
+- [x] Keep the reusable batch card in place.
+- [ ] Confirm the card works in list and grid layouts.
+- [ ] Make sure the card supports long product and provider names without overflow.
+- [ ] Keep the progress label, quantity summary, and CTA consistent.
+- [ ] Verify the card stays theme-aware in both light and dark modes.
+- [ ] Reuse the same card structure in home, details, orders, and future provider views.
+
+## 8. Batch Lifecycle Screens
+
+- [x] Keep batch details aligned with the dashboard visual style.
+- [ ] Build the create batch screen.
+- [ ] Add product selection UI to the create batch flow.
+- [ ] Add quantity entry and validation to the create batch flow.
+- [ ] Add provider or destination selection to the create batch flow.
+- [ ] Add optional note or deadline fields if the plan keeps them in MVP.
+- [ ] Build the join batch screen.
+- [ ] Add quantity entry and confirm actions in the join flow.
+- [ ] Make batch status states visible: open, full, confirmed, fulfilled, expired.
+- [ ] Keep the quantity format consistent everywhere, for example 23 kg / 50 kg.
+
+## 9. Orders and Participation
+
+- [ ] Build the My Orders / My Batches screen.
+- [ ] Show active, pending, fulfilled, and completed states clearly.
+- [ ] Add an order details screen if it remains in the MVP scope.
 - [ ] Show pickup or fulfillment status where relevant.
-- [ ] Add empty state when the user has no active orders.
+- [ ] Add a strong empty state for users with no orders.
 - [ ] Keep all order status labels localized.
 
-## Phase 7: Notifications and Empty States
+## 10. Notifications and Empty States
 
 - [ ] Build the notifications screen.
-- [ ] Group notifications by date such as Today, Yesterday, and Earlier.
-- [ ] Show notification icon, summary, timestamp, and destination link.
-- [ ] Add unread/read styling.
-- [ ] Add mark-all-read behavior if included in scope.
-- [ ] Localize all notification titles and system messages.
-- [ ] Add reusable empty-state components for batches, orders, and notifications.
+- [ ] Group notifications by date buckets such as Today, Yesterday, and Earlier.
+- [ ] Show the notification icon, summary, timestamp, and tap destination.
+- [ ] Add unread styling and a mark-all-read action if needed.
+- [ ] Keep notification copy localized.
+- [ ] Reuse one empty-state style across notifications, orders, and batch lists.
 
-## Phase 8: Profile and Settings
+## 11. Profile and Settings
 
-- [ ] Build the profile screen.
-- [ ] Add user identity, avatar, and basic account summary.
-- [ ] Add settings entry points for theme and language.
-- [ ] Add subscription management entry if the screen is in scope.
-- [ ] Add notification preferences if the screen is in scope.
-- [ ] Add edit profile screen if required by the MVP.
-- [ ] Add order history access from profile.
-- [ ] Localize all profile labels and helper text.
+- [x] Keep profile focused on identity and account actions.
+- [x] Move theme and language controls into settings.
+- [x] Keep a dedicated settings screen reachable from profile.
+- [ ] Add order history access from profile if needed.
+- [ ] Add subscription management entry if the MVP includes it.
+- [ ] Add notification preferences if the plan includes them now.
+- [ ] Make profile labels and helper text fully localized.
 
-## Phase 9: Provider Surfaces
+## 12. Provider Discovery and Related Surfaces
 
-- [ ] Build provider profile screen if included in the frontend scope.
-- [ ] Build provider discovery screen if needed.
-- [ ] Show provider branding, description, and active batches.
-- [ ] Add subscription actions and status.
-- [ ] Make provider surfaces visually consistent with customer surfaces.
+- [ ] Build provider profile screen if the frontend scope includes it now.
+- [ ] Build provider discovery if it is needed for MVP browsing.
+- [ ] Show provider branding, description, and active batches consistently.
+- [ ] Add subscription actions and visible subscription state.
+- [ ] Keep provider surfaces visually aligned with customer surfaces.
 
-## Phase 10: Maps and Discovery
+## 13. Maps and Discovery
 
-- [ ] Build map screen after the core batch flow is stable.
-- [ ] Show nearby batches, providers, and hubs using privacy-safe approximate locations.
-- [ ] Add map marker detail sheet with quick join or view action.
-- [ ] Make the map UI match the app’s theme and spacing system.
-- [ ] Localize map labels, tooltips, and sheet actions.
+- [ ] Build the map screen after the core batch flow is stable.
+- [ ] Show nearby batches, providers, and hubs with privacy-safe approximate locations.
+- [ ] Add a map marker bottom sheet or detail popup with quick join or view action.
+- [ ] Keep map labels, tooltips, and sheet actions localized.
+- [ ] Make map visuals match the same theme and spacing system as the rest of the app.
 
-## Phase 11: Chat and Advanced Features
+## 14. Chat and Advanced Real-Time Features
 
-- [ ] Add chat list screen if it is part of the current phase.
-- [ ] Build chat room screen with sender bubbles and input area.
+- [ ] Add the chat list screen if it becomes part of the next phase.
+- [ ] Build the chat room screen with message bubbles and a composer.
 - [ ] Add typing, sending, and empty-message states.
-- [ ] Add smart notification or in-app message states if required.
 - [ ] Keep chat UI lightweight and readable in both themes.
+- [ ] Localize system messages and empty-state copy.
 
-## Phase 12: Quality and Polish
+## 15. Accessibility and Polish
 
 - [ ] Validate responsive layouts on small, medium, and large screens.
-- [ ] Check contrast in light mode and dark mode.
-- [ ] Verify accessibility basics such as tap targets, labels, and readable text sizes.
-- [ ] Ensure every screen has a coherent visual style.
-- [ ] Verify English and French translations on all visible screens.
-- [ ] Verify global language switching does not break navigation.
-- [ ] Verify global theme switching does not break layout or contrast.
-- [ ] Test the main flow: splash → onboarding → auth → home → batch → join → order/status.
+- [ ] Check color contrast in light mode and dark mode.
+- [ ] Verify tap targets, labels, and text size readability.
+- [ ] Make sure animations support the experience instead of distracting from it.
+- [ ] Keep every screen coherent with the same visual language.
 
-## MVP Release Gate
+## 16. Localization QA
 
-The frontend is ready for MVP launch when all of the following are true:
+- [ ] Verify every visible screen has English and French coverage.
+- [ ] Check that switching locale does not break navigation or layouts.
+- [ ] Re-run localization generation whenever new text is added.
+- [ ] Avoid hardcoded strings in any new widget or screen.
+- [ ] Keep dynamic or plural strings as localization keys.
 
-- [ ] Login, register, home, create batch, batch details, join batch, orders, profile, and notifications screens are complete.
-- [ ] Every visible text string has English and French support.
-- [ ] Light and dark themes work consistently across all completed screens.
-- [ ] Shared components are reused instead of duplicated.
-- [ ] Loading, empty, and error states are styled and tested.
-- [ ] Navigation flows match the BatchIt system plan.
+## 17. Theme QA
 
-## Suggested Build Order
+- [ ] Verify the app starts in the expected theme mode.
+- [ ] Confirm the theme toggle works from settings.
+- [ ] Confirm theme changes update all visible screens.
+- [ ] Check that cards, inputs, chips, and progress bars remain readable in dark mode.
+- [ ] Keep the same component shapes and surfaces in both themes.
 
-1. Design system and global tokens
+## 18. Release Gate
+
+- [ ] Confirm login, register, questionnaire, home, create batch, batch details, join batch, orders, profile, and notifications are all present.
+- [ ] Confirm every visible string is localized in English and French.
+- [ ] Confirm light and dark themes are stable across all completed screens.
+- [ ] Confirm shared components are reused instead of duplicated.
+- [ ] Confirm loading, empty, and error states are implemented for the main flows.
+- [ ] Confirm navigation matches the BatchIt system plan.
+
+## 19. Suggested Build Order
+
+1. Design system and shared tokens
 2. Routing and app shell
 3. Localization and theme controls
 4. Splash and onboarding
-5. Login, register, and verification
-6. Home and batch card
-7. Batch create, details, and join
-8. My orders and notifications
-9. Profile and settings
+5. Questionnaire
+6. Login, register, and verification
+7. Home dashboard
+8. Batch card and batch lifecycle screens
+9. Orders, notifications, and profile/settings
 10. Provider, map, and chat screens
 11. Polish, accessibility, and QA

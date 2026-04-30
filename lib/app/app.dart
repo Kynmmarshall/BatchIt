@@ -10,8 +10,10 @@ import 'package:batchit/screens/auth/register_screen.dart';
 import 'package:batchit/screens/auth/verification_code_screen.dart';
 import 'package:batchit/screens/batch/batch_details_screen.dart';
 import 'package:batchit/screens/batch/join_batch_screen.dart';
+import 'package:batchit/screens/splash/questionnaire_screen.dart';
 import 'package:batchit/screens/splash/onboarding_screen.dart';
 import 'package:batchit/screens/splash/splash_screen.dart';
+import 'package:batchit/screens/profile/settings_screen.dart';
 import 'package:batchit/themes/app_motion.dart';
 import 'package:batchit/themes/app_theme.dart';
 import 'package:batchit/widgets/main_navigation_shell.dart';
@@ -92,6 +94,8 @@ class BatchItApp extends StatelessWidget {
                 return _buildRoute(const LoginScreen());
               case AppRoutes.register:
                 return _buildRoute(const RegisterScreen());
+              case AppRoutes.questionnaire:
+                return _buildRoute(const QuestionnaireScreen());
               case AppRoutes.verification:
                 final args = settingsRoute.arguments as VerificationCodeArgs?;
                 return _buildRoute(
@@ -113,6 +117,8 @@ class BatchItApp extends StatelessWidget {
                   return _fallbackRoute();
                 }
                 return _buildRoute(JoinBatchScreen(batchId: id));
+              case AppRoutes.settings:
+                return _buildRoute(const SettingsScreen());
               default:
                 return _fallbackRoute();
             }

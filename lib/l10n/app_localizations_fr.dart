@@ -81,6 +81,58 @@ class AppLocalizationsFr extends AppLocalizations {
       'Inscrivez-vous avec votre e-mail et mot de passe\npour continuer';
 
   @override
+  String get questionnaireTitle => 'Dites-nous ce que vous achetez';
+
+  @override
+  String get questionnaireSubtitle =>
+      'Aidez BatchIt a recommander de meilleurs batches selon vos habitudes et preferences.';
+
+  @override
+  String get productCategories => 'Categories de produits';
+
+  @override
+  String get shoppingFrequency => 'Frequence d\'achat';
+
+  @override
+  String get preferredRegions => 'Regions preferees';
+
+  @override
+  String get budgetRange => 'Budget';
+
+  @override
+  String get questionnaireContinue => 'Continuer vers la connexion';
+
+  @override
+  String get questionnaireSkip => 'Passer pour le moment';
+
+  @override
+  String get questionnaireChipGroceries => 'Courses';
+
+  @override
+  String get questionnaireChipHousehold => 'Maison';
+
+  @override
+  String get questionnaireChipSnacks => 'Snacks';
+
+  @override
+  String get questionnaireChipWeekly => 'Hebdomadaire';
+
+  @override
+  String get questionnaireChipBiweekly => 'Toutes les deux semaines';
+
+  @override
+  String get questionnaireChipMonthly => 'Mensuel';
+
+  @override
+  String get questionnaireChipNearby => 'Proche';
+
+  @override
+  String get questionnaireChipCitywide => 'Toute la ville';
+
+  @override
+  String get questionnaireChipFlexible => 'Flexible';
+
+  @override
   String get verificationCodeTitle => 'Code de verification';
 
   @override
@@ -151,16 +203,104 @@ class AppLocalizationsFr extends AppLocalizations {
   String get profileDefaultEmail => 'user@batchit.app';
 
   @override
+  String get dashboardSubtitle =>
+      'Trouvez des batches proches et rejoignez-les plus vite.';
+
+  @override
+  String get searchBatches => 'Rechercher des batches';
+
+  @override
   String get home => 'Accueil';
 
   @override
   String get createBatch => 'Creer un batch';
 
   @override
+  String get createBatchTitle => 'Creer un nouveau batch';
+
+  @override
+  String get createBatchSubtitle =>
+      'Choisissez un produit, definissez la quantite cible et envoyez-le a un hub.';
+
+  @override
+  String get productSelection => 'Choisir un produit';
+
+  @override
+  String get bulkSelection => 'Choisir la quantite';
+
+  @override
+  String get providerSelection => 'Choisir un hub';
+
+  @override
+  String get batchNoteOptional => 'Note facultative';
+
+  @override
+  String get batchNoteHint =>
+      'Ajoutez une date limite ou un message pour les participants';
+
+  @override
+  String get customProduct => 'Produit personnalise';
+
+  @override
+  String get providerAuto => 'Hub attribue automatiquement';
+
+  @override
+  String get providerAinSebaa => 'Hub Ain Sebaa';
+
+  @override
+  String get providerCentre => 'Hub Centre';
+
+  @override
+  String get providerEast => 'Hub Est';
+
+  @override
+  String get productPotatoes => 'Pommes de terre';
+
+  @override
+  String get productTomatoes => 'Tomates';
+
+  @override
+  String get productOnions => 'Oignons';
+
+  @override
+  String get bulkKg50 => '50 kg';
+
+  @override
+  String get bulkKg30 => '30 kg';
+
+  @override
+  String get bulkKg40 => '40 kg';
+
+  @override
+  String get batchCreated => 'Batch cree avec succes';
+
+  @override
   String get batchDetails => 'Details du batch';
 
   @override
   String get joinBatch => 'Rejoindre le batch';
+
+  @override
+  String get joinBatchTitle => 'Rejoindre ce batch';
+
+  @override
+  String get joinBatchSubtitle =>
+      'Choisissez la quantite que vous souhaitez prendre et confirmez votre participation.';
+
+  @override
+  String get joinQuantityHint => 'Saisir la quantite en kg';
+
+  @override
+  String get joinConfirm => 'Confirmer la participation';
+
+  @override
+  String get joinSuccess => 'Vous avez rejoint le batch';
+
+  @override
+  String get claimedQuantity => 'Quantite demandee';
+
+  @override
+  String get batchSnapshot => 'Apercu du batch';
 
   @override
   String get myOrders => 'Mes commandes';
@@ -235,6 +375,21 @@ class AppLocalizationsFr extends AppLocalizations {
   String get switchTheme => 'Changer le theme';
 
   @override
+  String get settings => 'Parametres';
+
+  @override
+  String get appPreferences => 'Preferences de l\'application';
+
+  @override
+  String get accountPreferences => 'Preferences du compte';
+
+  @override
+  String get notificationsPreferences => 'Preferences de notifications';
+
+  @override
+  String get openSettings => 'Ouvrir les parametres';
+
+  @override
   String get mvpBadge => 'MVP';
 
   @override
@@ -247,8 +402,24 @@ class AppLocalizationsFr extends AppLocalizations {
   String get requested => 'Demande';
 
   @override
-  String get batchCreated => 'Batch cree avec succes';
+  String get joinedBatch => 'Vous avez rejoint le batch';
 
   @override
-  String get joinedBatch => 'Vous avez rejoint le batch';
+  String get orderDetails => 'Détails de la commande';
+
+  @override
+  String get createOrder => 'Créer une commande';
+
+  @override
+  String get createOrderTitle => 'Créer une nouvelle commande';
+
+  @override
+  String get createOrderCta => 'Passer la commande';
+
+  @override
+  String get orderEmptyTitle => 'Aucune commande';
+
+  @override
+  String get orderEmptySubtitle =>
+      'Passez votre première commande pour commencer';
 }
