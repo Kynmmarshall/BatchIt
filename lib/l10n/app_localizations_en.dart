@@ -203,6 +203,114 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileDefaultEmail => 'user@batchit.app';
 
   @override
+  String get profileSubtitle =>
+      'Manage your account, orders, and preferences in one place.';
+
+  @override
+  String get profileOrdersSubtitle =>
+      'Review your order history and jump back into active orders.';
+
+  @override
+  String get providerPreferences => 'Provider Preferences';
+
+  @override
+  String get providerPreferencesSubtitle =>
+      'Follow the hubs you want to receive updates from.';
+
+  @override
+  String get profileLanguageSubtitle =>
+      'Choose your preferred language for the app.';
+
+  @override
+  String get profileThemeSubtitle =>
+      'Switch between light and dark appearances.';
+
+  @override
+  String get profileNotificationsSubtitle =>
+      'Control which alerts should reach this device.';
+
+  @override
+  String get notificationsScreenTitle => 'Notifications';
+
+  @override
+  String get notificationsScreenSubtitle =>
+      'Review alerts, mark them read, and tune the devices you want to hear from.';
+
+  @override
+  String get notificationsScreenLead =>
+      'Keep track of batch changes, order updates, and provider activity in one place.';
+
+  @override
+  String get markAllRead => 'Mark all read';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get yesterday => 'Yesterday';
+
+  @override
+  String get thisWeek => 'This Week';
+
+  @override
+  String get unreadOnly => 'Unread only';
+
+  @override
+  String get noNotificationsTitle => 'You\'re all caught up';
+
+  @override
+  String get noNotificationsSubtitle =>
+      'New batch and order alerts will appear here.';
+
+  @override
+  String get batchFilledNotification => 'A batch you follow was filled';
+
+  @override
+  String get orderReadyNotification => 'Your order is ready for pickup';
+
+  @override
+  String get providerUpdatedNotification =>
+      'A provider you follow posted an update';
+
+  @override
+  String get batchExpiredNotification => 'An active batch expired';
+
+  @override
+  String get profileReminderNotification =>
+      'Complete your profile to improve recommendations';
+
+  @override
+  String get viewDetails => 'View details';
+
+  @override
+  String get openBatch => 'Open batch';
+
+  @override
+  String get openOrder => 'Open order';
+
+  @override
+  String get openProfile => 'Open profile';
+
+  @override
+  String get batchAlerts => 'Batch alerts';
+
+  @override
+  String get batchAlertsSubtitle => 'Get notified when batch status changes.';
+
+  @override
+  String get orderAlerts => 'Order alerts';
+
+  @override
+  String get orderAlertsSubtitle => 'Track ready and completed order updates.';
+
+  @override
+  String get providerAlerts => 'Provider alerts';
+
+  @override
+  String get providerAlertsSubtitle =>
+      'Receive news from the providers you follow.';
+
+  @override
   String get dashboardSubtitle => 'Find nearby batches and join faster.';
 
   @override

@@ -10,6 +10,7 @@ import 'package:batchit/screens/auth/register_screen.dart';
 import 'package:batchit/screens/auth/verification_code_screen.dart';
 import 'package:batchit/screens/batch/batch_details_screen.dart';
 import 'package:batchit/screens/batch/join_batch_screen.dart';
+import 'package:batchit/screens/notifications/notifications_screen.dart';
 import 'package:batchit/screens/splash/questionnaire_screen.dart';
 import 'package:batchit/screens/splash/onboarding_screen.dart';
 import 'package:batchit/screens/splash/splash_screen.dart';
@@ -117,6 +118,8 @@ class BatchItApp extends StatelessWidget {
                   return _fallbackRoute();
                 }
                 return _buildRoute(JoinBatchScreen(batchId: id));
+              case AppRoutes.notifications:
+                return _buildRoute(const NotificationsScreen());
               case AppRoutes.settings:
                 return _buildRoute(const SettingsScreen());
               default:

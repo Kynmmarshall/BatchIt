@@ -203,6 +203,117 @@ class AppLocalizationsFr extends AppLocalizations {
   String get profileDefaultEmail => 'user@batchit.app';
 
   @override
+  String get profileSubtitle =>
+      'Gerez votre compte, vos commandes et vos preferences au meme endroit.';
+
+  @override
+  String get profileOrdersSubtitle =>
+      'Consultez l\'historique de vos commandes et revenez aux commandes actives.';
+
+  @override
+  String get providerPreferences => 'Preferences des fournisseurs';
+
+  @override
+  String get providerPreferencesSubtitle =>
+      'Suivez les hubs dont vous voulez recevoir les mises a jour.';
+
+  @override
+  String get profileLanguageSubtitle =>
+      'Choisissez la langue preferree de l\'application.';
+
+  @override
+  String get profileThemeSubtitle =>
+      'Basculez entre les apparences claire et sombre.';
+
+  @override
+  String get profileNotificationsSubtitle =>
+      'Controlez les alertes qui doivent arriver sur cet appareil.';
+
+  @override
+  String get notificationsScreenTitle => 'Notifications';
+
+  @override
+  String get notificationsScreenSubtitle =>
+      'Consultez les alertes, marquez-les comme lues et ajustez les appareils a notifier.';
+
+  @override
+  String get notificationsScreenLead =>
+      'Suivez en un seul endroit les changements de batch, les mises a jour de commande et l\'activite des fournisseurs.';
+
+  @override
+  String get markAllRead => 'Tout marquer comme lu';
+
+  @override
+  String get today => 'Aujourd\'hui';
+
+  @override
+  String get yesterday => 'Hier';
+
+  @override
+  String get thisWeek => 'Cette semaine';
+
+  @override
+  String get unreadOnly => 'Non lues uniquement';
+
+  @override
+  String get noNotificationsTitle => 'Vous êtes a jour';
+
+  @override
+  String get noNotificationsSubtitle =>
+      'Les nouvelles alertes de batch et de commande apparaitront ici.';
+
+  @override
+  String get batchFilledNotification => 'Un batch que vous suivez est complet';
+
+  @override
+  String get orderReadyNotification =>
+      'Votre commande est prete pour le retrait';
+
+  @override
+  String get providerUpdatedNotification =>
+      'Un fournisseur que vous suivez a publie une mise a jour';
+
+  @override
+  String get batchExpiredNotification => 'Un batch actif a expire';
+
+  @override
+  String get profileReminderNotification =>
+      'Completez votre profil pour améliorer les recommandations';
+
+  @override
+  String get viewDetails => 'Voir les details';
+
+  @override
+  String get openBatch => 'Ouvrir le batch';
+
+  @override
+  String get openOrder => 'Ouvrir la commande';
+
+  @override
+  String get openProfile => 'Ouvrir le profil';
+
+  @override
+  String get batchAlerts => 'Alertes de batch';
+
+  @override
+  String get batchAlertsSubtitle =>
+      'Recevez une notification lorsque le statut d\'un batch change.';
+
+  @override
+  String get orderAlerts => 'Alertes de commande';
+
+  @override
+  String get orderAlertsSubtitle =>
+      'Suivez les mises a jour des commandes prêtes et terminees.';
+
+  @override
+  String get providerAlerts => 'Alertes des fournisseurs';
+
+  @override
+  String get providerAlertsSubtitle =>
+      'Recevez les nouvelles des fournisseurs que vous suivez.';
+
+  @override
   String get dashboardSubtitle =>
       'Trouvez des batches proches et rejoignez-les plus vite.';
 

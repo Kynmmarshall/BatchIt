@@ -464,6 +464,198 @@ abstract class AppLocalizations {
   /// **'user@batchit.app'**
   String get profileDefaultEmail;
 
+  /// No description provided for @profileSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your account, orders, and preferences in one place.'**
+  String get profileSubtitle;
+
+  /// No description provided for @profileOrdersSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review your order history and jump back into active orders.'**
+  String get profileOrdersSubtitle;
+
+  /// No description provided for @providerPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider Preferences'**
+  String get providerPreferences;
+
+  /// No description provided for @providerPreferencesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow the hubs you want to receive updates from.'**
+  String get providerPreferencesSubtitle;
+
+  /// No description provided for @profileLanguageSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your preferred language for the app.'**
+  String get profileLanguageSubtitle;
+
+  /// No description provided for @profileThemeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch between light and dark appearances.'**
+  String get profileThemeSubtitle;
+
+  /// No description provided for @profileNotificationsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Control which alerts should reach this device.'**
+  String get profileNotificationsSubtitle;
+
+  /// No description provided for @notificationsScreenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsScreenTitle;
+
+  /// No description provided for @notificationsScreenSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review alerts, mark them read, and tune the devices you want to hear from.'**
+  String get notificationsScreenSubtitle;
+
+  /// No description provided for @notificationsScreenLead.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep track of batch changes, order updates, and provider activity in one place.'**
+  String get notificationsScreenLead;
+
+  /// No description provided for @markAllRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all read'**
+  String get markAllRead;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterday;
+
+  /// No description provided for @thisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This Week'**
+  String get thisWeek;
+
+  /// No description provided for @unreadOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Unread only'**
+  String get unreadOnly;
+
+  /// No description provided for @noNotificationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re all caught up'**
+  String get noNotificationsTitle;
+
+  /// No description provided for @noNotificationsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New batch and order alerts will appear here.'**
+  String get noNotificationsSubtitle;
+
+  /// No description provided for @batchFilledNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'A batch you follow was filled'**
+  String get batchFilledNotification;
+
+  /// No description provided for @orderReadyNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Your order is ready for pickup'**
+  String get orderReadyNotification;
+
+  /// No description provided for @providerUpdatedNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'A provider you follow posted an update'**
+  String get providerUpdatedNotification;
+
+  /// No description provided for @batchExpiredNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'An active batch expired'**
+  String get batchExpiredNotification;
+
+  /// No description provided for @profileReminderNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete your profile to improve recommendations'**
+  String get profileReminderNotification;
+
+  /// No description provided for @viewDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'View details'**
+  String get viewDetails;
+
+  /// No description provided for @openBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Open batch'**
+  String get openBatch;
+
+  /// No description provided for @openOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Open order'**
+  String get openOrder;
+
+  /// No description provided for @openProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Open profile'**
+  String get openProfile;
+
+  /// No description provided for @batchAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Batch alerts'**
+  String get batchAlerts;
+
+  /// No description provided for @batchAlertsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Get notified when batch status changes.'**
+  String get batchAlertsSubtitle;
+
+  /// No description provided for @orderAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Order alerts'**
+  String get orderAlerts;
+
+  /// No description provided for @orderAlertsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Track ready and completed order updates.'**
+  String get orderAlertsSubtitle;
+
+  /// No description provided for @providerAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider alerts'**
+  String get providerAlerts;
+
+  /// No description provided for @providerAlertsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive news from the providers you follow.'**
+  String get providerAlertsSubtitle;
+
   /// No description provided for @dashboardSubtitle.
   ///
   /// In en, this message translates to:

@@ -114,8 +114,16 @@ class _HomeScreenState extends State<HomeScreen> {
                               shape: BoxShape.circle,
                               border: Border.all(color: scheme.outlineVariant),
                             ),
-                            child: Icon(Icons.notifications_none_rounded,
-                                color: scheme.onSurface),
+                            child: IconButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, AppRoutes.notifications);
+                              },
+                              icon: Icon(
+                                Icons.notifications_none_rounded,
+                                color: scheme.onSurface,
+                              ),
+                              tooltip: l10n.notificationsPreferences,
+                            ),
                           ),
                         ],
                       ),

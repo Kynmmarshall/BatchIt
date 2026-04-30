@@ -8,6 +8,7 @@ class AppRoutes {
   static const String shell = '/';
   static const String batchDetails = '/batch-details';
   static const String joinBatch = '/join-batch';
+  static const String notifications = '/notifications';
   static const String settings = '/settings';
 }
 

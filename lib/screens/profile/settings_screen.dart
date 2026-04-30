@@ -1,4 +1,5 @@
 import 'package:batchit/l10n/app_localizations.dart';
+import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/providers/app_settings_provider.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
@@ -77,6 +78,10 @@ class SettingsScreen extends StatelessWidget {
                       leading: const Icon(Icons.notifications_none_rounded),
                       title: Text(l10n.notificationsPreferences),
                       subtitle: Text(l10n.notificationsPreferences),
+                      trailing: const Icon(Icons.chevron_right_rounded),
+                      onTap: () {
+                        Navigator.pushNamed(context, AppRoutes.notifications);
+                      },
                     ),
                     ListTile(
                       contentPadding: EdgeInsets.zero,
