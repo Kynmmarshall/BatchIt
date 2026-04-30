@@ -36,9 +36,81 @@ class BatchDetailsScreen extends StatelessWidget {
           children: [
             AppStaggeredFade(
               index: 0,
-              child: Text(
-                batch.productName,
-                style: Theme.of(context).textTheme.headlineSmall,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Theme.of(context).colorScheme.primary.withValues(alpha: 0.18),
+                      Theme.of(context).colorScheme.secondaryContainer.withValues(alpha: 0.94),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(28),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.outlineVariant,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        batch.imageAssetPath,
+                        width: 96,
+                        height: 96,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Container(
+                          width: 96,
+                          height: 96,
+                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                          child: const Icon(Icons.inventory_2_outlined),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            batch.productName,
+                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.w800,
+                                ),
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          Text(
+                            '${batch.locationName} • ${batch.hubName}',
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                ),
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _DetailStatChip(
+                                  label: l10n.progress,
+                                  value: '${(batch.progress * 100).round()}%',
+                                ),
+                              ),
+                              const SizedBox(width: AppSpacing.xs),
+                              Expanded(
+                                child: _DetailStatChip(
+                                  label: l10n.quantity,
+                                  value: '${formatKg(batch.currentQuantityKg)} / ${formatKg(batch.bulkSizeKg)}',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: AppSpacing.sm),
@@ -50,11 +122,6 @@ class BatchDetailsScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        '${formatKg(batch.currentQuantityKg)} / ${formatKg(batch.bulkSizeKg)}',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
                       TweenAnimationBuilder<double>(
                         duration: AppMotion.slow,
                         curve: AppMotion.emphasized,
@@ -71,7 +138,12 @@ class BatchDetailsScreen extends StatelessWidget {
                         children: [
                           const Icon(Icons.place_outlined, size: AppIcons.md),
                           const SizedBox(width: AppSpacing.xs),
-                          Expanded(child: Text('${l10n.location}: ${batch.locationName}')),
+                          Expanded(
+                            child: Text(
+                              '${l10n.location}: ${batch.locationName}',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: AppSpacing.xs),
@@ -79,7 +151,12 @@ class BatchDetailsScreen extends StatelessWidget {
                         children: [
                           const Icon(Icons.storefront_outlined, size: AppIcons.md),
                           const SizedBox(width: AppSpacing.xs),
-                          Expanded(child: Text('${l10n.hub}: ${batch.hubName}')),
+                          Expanded(
+                            child: Text(
+                              '${l10n.hub}: ${batch.hubName}',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -104,6 +181,46 @@ class BatchDetailsScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _DetailStatChip extends StatelessWidget {
+  const _DetailStatChip({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: scheme.surface.withValues(alpha: 0.82),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: scheme.outlineVariant),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: scheme.onSurface,
+                ),
+          ),
+        ],
       ),
     );
   }

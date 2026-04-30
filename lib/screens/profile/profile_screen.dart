@@ -1,6 +1,10 @@
+import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
+import 'package:batchit/models/order.dart';
 import 'package:batchit/providers/app_settings_provider.dart';
 import 'package:batchit/providers/auth_provider.dart';
+import 'package:batchit/providers/order_provider.dart';
+import 'package:batchit/screens/orders/my_orders_screen.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
 import 'package:batchit/widgets/app_staggered_fade.dart';
@@ -114,8 +118,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final settings = context.watch<AppSettingsProvider>();
     final auth = context.watch<AuthProvider>();
+    final settings = context.watch<AppSettingsProvider>();
+    final orders = context.watch<OrderProvider>().orders;
+
+    final userName = auth.user?.name ?? l10n.profileDefaultName;
+    final userEmail = auth.user?.email ?? l10n.profileDefaultEmail;
+    final localeLabel = settings.locale.languageCode == 'fr' ? l10n.french : l10n.english;
+    final themeLabel = settings.themeMode == ThemeMode.dark ? l10n.dark : l10n.light;
+    final totalOrders = orders.length;
+    final completedOrders = orders.where((order) => order.status == OrderStatus.completed).length;
 
     final displayName = auth.user?.name ?? l10n.profileDefaultName;
     final displayEmail = auth.user?.email ?? l10n.profileDefaultEmail;
@@ -330,6 +342,69 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  void _toggleProvider(String providerId, bool selected) {
+    if (selected) {
+      _followedProviderIds.add(providerId);
+    } else {
+      _followedProviderIds.remove(providerId);
+    }
+  }
+
+  String _initials(String name) {
+    final parts = name.trim().split(RegExp(r'\s+'));
+    if (parts.isEmpty || parts.first.isEmpty) {
+      return 'B';
+    }
+
+    final buffer = StringBuffer();
+    for (final part in parts.take(2)) {
+      if (part.isNotEmpty) {
+        buffer.write(part[0].toUpperCase());
+      }
+    }
+
+    final initials = buffer.toString();
+    return initials.isEmpty ? 'B' : initials;
+  }
+}
+
+class _MetricCard extends StatelessWidget {
+  const _MetricCard({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
+    return Card(
+      margin: EdgeInsets.zero,
+      color: scheme.surfaceContainerHighest,
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.sm),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              value,
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+            ),
+            const SizedBox(height: AppSpacing.xxs),
+            Text(
+              label,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: scheme.onSurfaceVariant,
+                  ),
+            ),
+          ],
         ),
       ),
     );
