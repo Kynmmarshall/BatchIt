@@ -16,8 +16,13 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => AppSettingsProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider(AuthService())),
-        ChangeNotifierProvider(create: (_) => BatchProvider(BatchService())),
         ChangeNotifierProvider(create: (_) => OrderProvider(OrderService())),
+        ChangeNotifierProvider(
+          create: (context) => BatchProvider(
+            BatchService(),
+            context.read<OrderProvider>(),
+          ),
+        ),
       ],
       child: const BatchItApp(),
     ),

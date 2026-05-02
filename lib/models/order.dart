@@ -7,6 +7,7 @@ class Order {
     required this.quantityKg,
     required this.status,
     required this.hubName,
+    this.batchId,
   });
 
   final String id;
@@ -14,4 +15,5 @@ class Order {
   final double quantityKg;
   final OrderStatus status;
   final String hubName;
+  final String? batchId;
 }
