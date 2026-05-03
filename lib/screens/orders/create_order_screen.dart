@@ -38,8 +38,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.md),
               child: Column(children: [
-                DropdownButtonFormField<String>(
-                  value: _product,
+                 DropdownButtonFormField<String>(
+                   initialValue: _product,
                   items: const [
                     DropdownMenuItem(value: 'Potatoes', child: Text('Potatoes')),
                     DropdownMenuItem(value: 'Tomatoes', child: Text('Tomatoes')),
@@ -55,8 +55,8 @@ class _CreateOrderScreenState extends State<CreateOrderScreen> {
                   decoration: InputDecoration(labelText: l10n.quantity),
                 ),
                 const SizedBox(height: AppSpacing.sm),
-                DropdownButtonFormField<String>(
-                  value: _hub,
+                 DropdownButtonFormField<String>(
+                   initialValue: _hub,
                   items: const [
                     DropdownMenuItem(value: 'Hub Ain Sebaa', child: Text('Hub Ain Sebaa')),
                     DropdownMenuItem(value: 'Hub Centre', child: Text('Hub Centre')),

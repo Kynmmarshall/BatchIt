@@ -398,7 +398,7 @@ class _NotificationGroupSection extends StatelessWidget {
               ),
             ),
           );
-        }).toList(),
+         }),
       ],
     );
   }

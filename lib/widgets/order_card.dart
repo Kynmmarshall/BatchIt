@@ -56,7 +56,7 @@ class OrderCard extends StatelessWidget {
                       errorBuilder: (_, __, ___) => Container(
                         width: 56,
                         height: 56,
-                        color: theme.colorScheme.surfaceVariant,
+                         color: theme.colorScheme.surfaceContainerHighest,
                         child: Icon(Icons.inventory_2_outlined, color: theme.colorScheme.onSurfaceVariant),
                       ),
                     ),
