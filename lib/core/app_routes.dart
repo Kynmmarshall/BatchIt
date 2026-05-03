@@ -6,11 +6,13 @@ class AppRoutes {
   static const String questionnaire = '/questionnaire';
   static const String verification = '/verification-code';
   static const String shell = '/';
+  static const String search = '/search';
   static const String batchDetails = '/batch-details';
   static const String joinBatch = '/join-batch';
   static const String notifications = '/notifications';
   static const String settings = '/settings';
   static const String mapView = '/map-view';
   static const String chat = '/chat';
+  static const String providerDiscovery = '/provider-discovery';
 }
 

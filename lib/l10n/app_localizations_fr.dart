@@ -318,7 +318,22 @@ class AppLocalizationsFr extends AppLocalizations {
       'Trouvez des batches proches et rejoignez-les plus vite.';
 
   @override
+  String get search => 'Recherche';
+
+  @override
   String get searchBatches => 'Rechercher des batches';
+
+  @override
+  String get searchHint => 'Rechercher des batches ou fournisseurs';
+
+  @override
+  String get searchModeBatches => 'Batches';
+
+  @override
+  String get searchModeProviders => 'Fournisseurs';
+
+  @override
+  String get noSearchResults => 'Aucun resultat pour votre recherche.';
 
   @override
   String get home => 'Accueil';

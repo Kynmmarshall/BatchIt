@@ -32,7 +32,7 @@ class MoreScreen extends StatelessWidget {
               icon: Icons.storefront_outlined,
               title: l10n.providerDiscovery,
               subtitle: l10n.providerDiscoverySubtitle,
-              onTap: () => _showComingSoon(context, l10n),
+              onTap: () => Navigator.pushNamed(context, AppRoutes.providerDiscovery),
             ),
             _MoreOptionTile(
               icon: Icons.notifications_none_rounded,
@@ -49,12 +49,6 @@ class MoreScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  void _showComingSoon(BuildContext context, AppLocalizations l10n) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l10n.comingSoon)),
     );
   }
 }

@@ -128,29 +128,36 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-                        decoration: BoxDecoration(
-                          color: scheme.surface.withValues(alpha: 0.92),
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: scheme.outlineVariant),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(Icons.search_rounded, color: scheme.onSurfaceVariant),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Text(
-                                l10n.searchBatches,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: scheme.onSurfaceVariant,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
+                          onTap: () => Navigator.pushNamed(context, AppRoutes.search),
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                            decoration: BoxDecoration(
+                              color: scheme.surface.withValues(alpha: 0.92),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: scheme.outlineVariant),
                             ),
-                            Icon(Icons.tune_rounded, color: scheme.onSurfaceVariant),
-                          ],
+                            child: Row(
+                              children: [
+                                Icon(Icons.search_rounded, color: scheme.onSurfaceVariant),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    l10n.searchHint,
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      color: scheme.onSurfaceVariant,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                Icon(Icons.tune_rounded, color: scheme.onSurfaceVariant),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 14),

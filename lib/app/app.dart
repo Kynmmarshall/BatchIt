@@ -13,6 +13,8 @@ import 'package:batchit/screens/batch/join_batch_screen.dart';
 import 'package:batchit/screens/more/chat_screen.dart';
 import 'package:batchit/screens/more/map_view_screen.dart';
 import 'package:batchit/screens/notifications/notifications_screen.dart';
+import 'package:batchit/screens/providers/provider_discovery_screen.dart';
+import 'package:batchit/screens/search/search_results_screen.dart';
 import 'package:batchit/screens/splash/questionnaire_screen.dart';
 import 'package:batchit/screens/splash/onboarding_screen.dart';
 import 'package:batchit/screens/splash/splash_screen.dart';
@@ -108,6 +110,8 @@ class BatchItApp extends StatelessWidget {
                 );
               case AppRoutes.shell:
                 return _buildRoute(const MainNavigationShell(), isRoot: true);
+              case AppRoutes.search:
+                return _buildRoute(const SearchResultsScreen());
               case AppRoutes.batchDetails:
                 final id = settingsRoute.arguments as String?;
                 if (id == null) {
@@ -128,6 +132,8 @@ class BatchItApp extends StatelessWidget {
                 return _buildRoute(const MapViewScreen());
               case AppRoutes.chat:
                 return _buildRoute(const ChatScreen());
+              case AppRoutes.providerDiscovery:
+                return _buildRoute(const ProviderDiscoveryScreen());
               default:
                 return _fallbackRoute();
             }

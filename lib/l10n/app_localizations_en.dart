@@ -314,7 +314,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dashboardSubtitle => 'Find nearby batches and join faster.';
 
   @override
+  String get search => 'Search';
+
+  @override
   String get searchBatches => 'Search batches';
+
+  @override
+  String get searchHint => 'Search batches or providers';
+
+  @override
+  String get searchModeBatches => 'Batches';
+
+  @override
+  String get searchModeProviders => 'Providers';
+
+  @override
+  String get noSearchResults => 'No results found for your search.';
 
   @override
   String get home => 'Home';

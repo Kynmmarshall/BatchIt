@@ -83,12 +83,6 @@ class SettingsScreen extends StatelessWidget {
                         Navigator.pushNamed(context, AppRoutes.notifications);
                       },
                     ),
-                    ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: const Icon(Icons.language_rounded),
-                      title: Text(l10n.language),
-                      subtitle: Text(l10n.changeLanguage),
-                    ),
                   ],
                 ),
               ),

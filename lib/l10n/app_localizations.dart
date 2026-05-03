@@ -662,11 +662,41 @@ abstract class AppLocalizations {
   /// **'Find nearby batches and join faster.'**
   String get dashboardSubtitle;
 
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
   /// No description provided for @searchBatches.
   ///
   /// In en, this message translates to:
   /// **'Search batches'**
   String get searchBatches;
+
+  /// No description provided for @searchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search batches or providers'**
+  String get searchHint;
+
+  /// No description provided for @searchModeBatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Batches'**
+  String get searchModeBatches;
+
+  /// No description provided for @searchModeProviders.
+  ///
+  /// In en, this message translates to:
+  /// **'Providers'**
+  String get searchModeProviders;
+
+  /// No description provided for @noSearchResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found for your search.'**
+  String get noSearchResults;
 
   /// No description provided for @home.
   ///

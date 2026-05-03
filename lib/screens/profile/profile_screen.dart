@@ -19,10 +19,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  bool _batchAlerts = true;
-  bool _orderAlerts = true;
-  bool _providerAlerts = false;
-
   final Set<String> _followedProviderIds = {
     'ainSebaa',
     'centre',
@@ -209,58 +205,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        l10n.appPreferences,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        l10n.profileLanguageSubtitle,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            ),
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      SegmentedButton<String>(
-                        segments: [
-                          ButtonSegment<String>(
-                            value: 'en',
-                            label: Text(l10n.english),
-                          ),
-                          ButtonSegment<String>(
-                            value: 'fr',
-                            label: Text(l10n.french),
-                          ),
-                        ],
-                        selected: {settings.locale.languageCode},
-                        onSelectionChanged: (value) {
-                          context.read<AppSettingsProvider>().setLocale(Locale(value.first));
-                        },
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      SwitchListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: Text(l10n.switchTheme),
-                        subtitle: Text(l10n.profileThemeSubtitle),
-                        value: settings.themeMode == ThemeMode.dark,
-                        onChanged: (_) {
-                          context.read<AppSettingsProvider>().toggleTheme();
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.md),
-            AppStaggeredFade(
-              index: 4,
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
                         l10n.providerPreferences,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
@@ -306,64 +250,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: AppSpacing.md),
             AppStaggeredFade(
-              index: 5,
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.notificationsPreferences,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        l10n.profileNotificationsSubtitle,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            ),
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: const Icon(Icons.notifications_none_rounded),
-                        title: Text(l10n.notificationsPreferences),
-                        subtitle: Text(l10n.notificationsScreenSubtitle),
-                        trailing: const Icon(Icons.chevron_right_rounded),
-                        onTap: () {
-                          Navigator.pushNamed(context, AppRoutes.notifications);
-                        },
-                      ),
-                      SwitchListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: Text(l10n.batchAlerts),
-                        subtitle: Text(l10n.batchAlertsSubtitle),
-                        value: _batchAlerts,
-                        onChanged: (value) => setState(() => _batchAlerts = value),
-                      ),
-                      SwitchListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: Text(l10n.orderAlerts),
-                        subtitle: Text(l10n.orderAlertsSubtitle),
-                        value: _orderAlerts,
-                        onChanged: (value) => setState(() => _orderAlerts = value),
-                      ),
-                      SwitchListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: Text(l10n.providerAlerts),
-                        subtitle: Text(l10n.providerAlertsSubtitle),
-                        value: _providerAlerts,
-                        onChanged: (value) => setState(() => _providerAlerts = value),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            AppStaggeredFade(
-              index: 6,
+              index: 4,
               child: SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(

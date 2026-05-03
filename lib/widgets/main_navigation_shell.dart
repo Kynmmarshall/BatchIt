@@ -2,7 +2,7 @@ import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/screens/batch/create_batch_screen.dart';
 import 'package:batchit/screens/home/home_screen.dart';
 import 'package:batchit/screens/more/more_screen.dart';
-import 'package:batchit/screens/orders/my_batches_screen.dart';
+import 'package:batchit/screens/notifications/notifications_screen.dart';
 import 'package:batchit/screens/profile/profile_screen.dart';
 import 'package:batchit/themes/app_icons.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
     final screens = [
       const HomeScreen(),
       const CreateBatchScreen(),
-      const MyBatchesScreen(),
+      const NotificationsScreen(),
       const ProfileScreen(),
       const MoreScreen(),
     ];
@@ -61,9 +61,9 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
                 label: l10n.createBatch,
               ),
               NavigationDestination(
-                icon: const Icon(Icons.shopping_bag_outlined, size: AppIcons.lg),
-                selectedIcon: const Icon(Icons.shopping_bag_rounded, size: AppIcons.lg),
-                label: l10n.myOrders,
+                icon: const Icon(Icons.notifications_none_rounded, size: AppIcons.lg),
+                selectedIcon: const Icon(Icons.notifications_rounded, size: AppIcons.lg),
+                label: l10n.notificationsScreenTitle,
               ),
               NavigationDestination(
                 icon: const Icon(Icons.person_outline, size: AppIcons.lg),
