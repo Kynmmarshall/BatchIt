@@ -1,7 +1,8 @@
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/screens/batch/create_batch_screen.dart';
 import 'package:batchit/screens/home/home_screen.dart';
-import 'package:batchit/screens/orders/my_orders_screen.dart';
+import 'package:batchit/screens/more/more_screen.dart';
+import 'package:batchit/screens/orders/my_batches_screen.dart';
 import 'package:batchit/screens/profile/profile_screen.dart';
 import 'package:batchit/themes/app_icons.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +24,9 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
     final screens = [
       const HomeScreen(),
       const CreateBatchScreen(),
-      const MyOrdersScreen(),
+      const MyBatchesScreen(),
       const ProfileScreen(),
+      const MoreScreen(),
     ];
 
     return Scaffold(
@@ -67,6 +69,11 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
                 icon: const Icon(Icons.person_outline, size: AppIcons.lg),
                 selectedIcon: const Icon(Icons.person, size: AppIcons.lg),
                 label: l10n.profile,
+              ),
+              NavigationDestination(
+                icon: const Icon(Icons.grid_view_outlined, size: AppIcons.lg),
+                selectedIcon: const Icon(Icons.grid_view_rounded, size: AppIcons.lg),
+                label: l10n.more,
               ),
             ],
           ),

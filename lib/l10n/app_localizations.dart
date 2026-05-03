@@ -851,8 +851,92 @@ abstract class AppLocalizations {
   /// No description provided for @myOrders.
   ///
   /// In en, this message translates to:
-  /// **'My Orders'**
+  /// **'My Batches'**
   String get myOrders;
+
+  /// No description provided for @more.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get more;
+
+  /// No description provided for @mapViewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Map View'**
+  String get mapViewTitle;
+
+  /// No description provided for @mapViewLead.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse providers and batches on a map.'**
+  String get mapViewLead;
+
+  /// No description provided for @mapViewPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Interactive map integration is next.'**
+  String get mapViewPlaceholder;
+
+  /// No description provided for @chatTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat'**
+  String get chatTitle;
+
+  /// No description provided for @chatLead.
+  ///
+  /// In en, this message translates to:
+  /// **'Open conversations with participants and providers.'**
+  String get chatLead;
+
+  /// No description provided for @chatProviderSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider support conversation'**
+  String get chatProviderSubtitle;
+
+  /// No description provided for @chatBatchGroupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Batch Group'**
+  String get chatBatchGroupTitle;
+
+  /// No description provided for @chatBatchGroupSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Updates with batch participants'**
+  String get chatBatchGroupSubtitle;
+
+  /// No description provided for @providerDiscovery.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider Discovery'**
+  String get providerDiscovery;
+
+  /// No description provided for @providerDiscoverySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Find and follow providers near you.'**
+  String get providerDiscoverySubtitle;
+
+  /// No description provided for @moreNotificationsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review alert history and preferences.'**
+  String get moreNotificationsSubtitle;
+
+  /// No description provided for @moreSettingsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage app preferences and account options.'**
+  String get moreSettingsSubtitle;
+
+  /// No description provided for @comingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get comingSoon;
 
   /// No description provided for @profile.
   ///

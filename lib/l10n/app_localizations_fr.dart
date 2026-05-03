@@ -414,7 +414,56 @@ class AppLocalizationsFr extends AppLocalizations {
   String get batchSnapshot => 'Apercu du batch';
 
   @override
-  String get myOrders => 'Mes commandes';
+  String get myOrders => 'Mes batches';
+
+  @override
+  String get more => 'Plus';
+
+  @override
+  String get mapViewTitle => 'Vue carte';
+
+  @override
+  String get mapViewLead =>
+      'Parcourez les fournisseurs et batches sur une carte.';
+
+  @override
+  String get mapViewPlaceholder =>
+      'L\'integration de la carte interactive arrive bientot.';
+
+  @override
+  String get chatTitle => 'Chat';
+
+  @override
+  String get chatLead =>
+      'Ouvrez des conversations avec les participants et les fournisseurs.';
+
+  @override
+  String get chatProviderSubtitle => 'Conversation support fournisseur';
+
+  @override
+  String get chatBatchGroupTitle => 'Groupe du batch';
+
+  @override
+  String get chatBatchGroupSubtitle =>
+      'Mises a jour avec les participants du batch';
+
+  @override
+  String get providerDiscovery => 'Decouverte des fournisseurs';
+
+  @override
+  String get providerDiscoverySubtitle =>
+      'Trouvez et suivez des fournisseurs pres de vous.';
+
+  @override
+  String get moreNotificationsSubtitle =>
+      'Consultez l\'historique des alertes et les preferences.';
+
+  @override
+  String get moreSettingsSubtitle =>
+      'Gerez les preferences de l\'application et du compte.';
+
+  @override
+  String get comingSoon => 'Bientot disponible';
 
   @override
   String get profile => 'Profil';

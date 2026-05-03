@@ -10,5 +10,7 @@ class AppRoutes {
   static const String joinBatch = '/join-batch';
   static const String notifications = '/notifications';
   static const String settings = '/settings';
+  static const String mapView = '/map-view';
+  static const String chat = '/chat';
 }
 

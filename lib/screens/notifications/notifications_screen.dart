@@ -1,6 +1,6 @@
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
-import 'package:batchit/screens/orders/my_orders_screen.dart';
+import 'package:batchit/screens/orders/my_batches_screen.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
 import 'package:batchit/widgets/app_staggered_fade.dart';
@@ -428,7 +428,7 @@ class _NotificationGroupSection extends StatelessWidget {
       case _NotificationAction.orders:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => const MyOrdersScreen()),
+          MaterialPageRoute(builder: (_) => const MyBatchesScreen()),
         );
         break;
       case _NotificationAction.settings:

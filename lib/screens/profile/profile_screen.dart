@@ -4,7 +4,7 @@ import 'package:batchit/models/order.dart';
 import 'package:batchit/providers/app_settings_provider.dart';
 import 'package:batchit/providers/auth_provider.dart';
 import 'package:batchit/providers/order_provider.dart';
-import 'package:batchit/screens/orders/my_orders_screen.dart';
+import 'package:batchit/screens/orders/my_batches_screen.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
 import 'package:batchit/widgets/app_staggered_fade.dart';
@@ -179,7 +179,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => const MyOrdersScreen(),
+                              builder: (_) => const MyBatchesScreen(),
                             ),
                           );
                         },

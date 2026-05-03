@@ -10,6 +10,8 @@ import 'package:batchit/screens/auth/register_screen.dart';
 import 'package:batchit/screens/auth/verification_code_screen.dart';
 import 'package:batchit/screens/batch/batch_details_screen.dart';
 import 'package:batchit/screens/batch/join_batch_screen.dart';
+import 'package:batchit/screens/more/chat_screen.dart';
+import 'package:batchit/screens/more/map_view_screen.dart';
 import 'package:batchit/screens/notifications/notifications_screen.dart';
 import 'package:batchit/screens/splash/questionnaire_screen.dart';
 import 'package:batchit/screens/splash/onboarding_screen.dart';
@@ -122,6 +124,10 @@ class BatchItApp extends StatelessWidget {
                 return _buildRoute(const NotificationsScreen());
               case AppRoutes.settings:
                 return _buildRoute(const SettingsScreen());
+              case AppRoutes.mapView:
+                return _buildRoute(const MapViewScreen());
+              case AppRoutes.chat:
+                return _buildRoute(const ChatScreen());
               default:
                 return _fallbackRoute();
             }

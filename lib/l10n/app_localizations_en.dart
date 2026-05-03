@@ -409,7 +409,51 @@ class AppLocalizationsEn extends AppLocalizations {
   String get batchSnapshot => 'Batch snapshot';
 
   @override
-  String get myOrders => 'My Orders';
+  String get myOrders => 'My Batches';
+
+  @override
+  String get more => 'More';
+
+  @override
+  String get mapViewTitle => 'Map View';
+
+  @override
+  String get mapViewLead => 'Browse providers and batches on a map.';
+
+  @override
+  String get mapViewPlaceholder => 'Interactive map integration is next.';
+
+  @override
+  String get chatTitle => 'Chat';
+
+  @override
+  String get chatLead => 'Open conversations with participants and providers.';
+
+  @override
+  String get chatProviderSubtitle => 'Provider support conversation';
+
+  @override
+  String get chatBatchGroupTitle => 'Batch Group';
+
+  @override
+  String get chatBatchGroupSubtitle => 'Updates with batch participants';
+
+  @override
+  String get providerDiscovery => 'Provider Discovery';
+
+  @override
+  String get providerDiscoverySubtitle => 'Find and follow providers near you.';
+
+  @override
+  String get moreNotificationsSubtitle =>
+      'Review alert history and preferences.';
+
+  @override
+  String get moreSettingsSubtitle =>
+      'Manage app preferences and account options.';
+
+  @override
+  String get comingSoon => 'Coming soon';
 
   @override
   String get profile => 'Profile';
