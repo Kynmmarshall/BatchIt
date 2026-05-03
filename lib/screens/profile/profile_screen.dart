@@ -1,3 +1,30 @@
+/// ============================================================================
+/// [ProfileScreen] - User account dashboard and preferences
+/// ============================================================================
+/// StatefulWidget displaying authenticated user's profile, order history, and
+/// app preferences. Provides navigation to settings and My Batches screens.
+///
+/// Responsibilities:
+/// - Display user identity (name, email, initials avatar)
+/// - Show order metrics (total orders, completed orders)
+/// - Display current app settings (theme, locale)
+/// - Provide navigation to My Batches order list
+/// - Provide navigation to Settings screen
+/// - Manage followed/subscribed provider list (local state)
+/// - Display provider preferences (FilterChips for subscribed providers)
+/// - Handle logout action via AuthProvider
+///
+/// State:
+/// - _followedProviderIds: Set of provider IDs user is subscribed to
+/// - Watches AuthProvider for user identity
+/// - Watches AppSettingsProvider for theme/locale
+/// - Watches OrderProvider for order metrics
+///
+/// Architecture:
+/// - Orders loaded on mount (addPostFrameCallback)
+/// - UI reflects settings reactively via Provider consumers
+/// - Logout navigates back to splash screen via AppRoutes
+/// ============================================================================
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/models/order.dart';
@@ -18,12 +45,15 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
+/// Manages profile screen state including followed provider set.
 class _ProfileScreenState extends State<ProfileScreen> {
   final Set<String> _followedProviderIds = {
     'ainSebaa',
     'centre',
   };
 
+  /// Loads user orders on first render for metrics display.
+  /// Safe check: verifies mounted before using context.
   @override
   void initState() {
     super.initState();

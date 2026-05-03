@@ -1,8 +1,37 @@
+/// ============================================================================
+/// [ProviderDiscoveryScreen] - Browse and discover marketplace providers
+/// ============================================================================
+/// StatefulWidget for discovering, filtering, and subscribing to providers.
+/// Provides category-based filtering (All/Groceries/Household/Snacks) and
+/// search functionality across provider name and location.
+///
+/// Responsibilities:
+/// - Display all available providers (groceries, households, snacks)
+/// - Filter by category via FilterChip selection
+/// - Filter by search query (name/location text match)
+/// - Show provider cards with name, category, location, rating, subscribers
+/// - Track subscribed providers in local state (_subscribedProviderIds)
+/// - Handle subscribe/unsubscribe button taps (toggle subscription)
+/// - Persist subscription state (TODO: backend sync)
+///
+/// State:
+/// - _selectedCategory: Active filter (all/groceries/household/snacks)
+/// - _query: Search input text (empty = show all)
+/// - _subscribedProviderIds: Set of IDs user is subscribed to
+/// - Static _providers: Mock provider data (TODO: backend API)
+///
+/// Architecture:
+/// - Filter logic is client-side (all providers always fetched)
+/// - Search is case-insensitive substring match
+/// - Subscription state is local (no backend sync yet)
+/// - Layout uses ListView + Card for scrollable provider list
+/// ============================================================================
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
 import 'package:flutter/material.dart';
 
+/// Private enum for provider category filters.
 enum _ProviderCategory { all, groceries, household, snacks }
 
 class ProviderDiscoveryScreen extends StatefulWidget {
@@ -12,6 +41,7 @@ class ProviderDiscoveryScreen extends StatefulWidget {
   State<ProviderDiscoveryScreen> createState() => _ProviderDiscoveryScreenState();
 }
 
+/// Manages provider discovery state including category filter and search.
 class _ProviderDiscoveryScreenState extends State<ProviderDiscoveryScreen> {
   _ProviderCategory _selectedCategory = _ProviderCategory.all;
   String _query = '';

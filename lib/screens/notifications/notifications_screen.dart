@@ -1,3 +1,30 @@
+/// ============================================================================
+/// [NotificationsScreen] - Centralized alert and notification hub
+/// ============================================================================
+/// StatefulWidget displaying grouped notifications with filtering and read/unread
+/// state management. Notifications are grouped by date (Today/Yesterday/This Week/Earlier).
+///
+/// Responsibilities:
+/// - Display mock notifications grouped by date
+/// - Filter notifications by type (Batch/Order/Provider alerts)
+/// - Toggle read/unread state for each notification
+/// - Show unread-only view when enabled
+/// - Provide type-specific filters (toggle switches)
+/// - Route notifications to appropriate detail screens on tap
+/// - Maintain local read state (_readNotificationIds set)
+///
+/// Notification types:
+/// - batch: Batch status changes (filled, expired, etc.)
+/// - order: Order status updates (ready, delivered, etc.)
+/// - provider: Provider inventory/offer updates
+/// - reminder: Personalization and profile reminders
+///
+/// State:
+/// - _batchAlerts, _orderAlerts, _providerAlerts: Filter toggles
+/// - _showUnreadOnly: Show only unread notifications
+/// - _readNotificationIds: Set of notification IDs marked as read
+/// - Static _items: Mock notification data (TODO: backend API)
+/// ============================================================================
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/screens/orders/my_batches_screen.dart';
@@ -6,6 +33,7 @@ import 'package:batchit/widgets/app_screen_container.dart';
 import 'package:batchit/widgets/app_staggered_fade.dart';
 import 'package:flutter/material.dart';
 
+/// Private enums for notification categorization and routing.
 enum _NotificationType { batch, order, provider, reminder }
 enum _NotificationAction { batchDetails, orders, settings, none }
 
@@ -16,6 +44,7 @@ class NotificationsScreen extends StatefulWidget {
   State<NotificationsScreen> createState() => _NotificationsScreenState();
 }
 
+/// Manages notification display state including filter toggles and read state.
 class _NotificationsScreenState extends State<NotificationsScreen> {
   bool _batchAlerts = true;
   bool _orderAlerts = true;

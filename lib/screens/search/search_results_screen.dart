@@ -1,3 +1,29 @@
+/// ============================================================================
+/// [SearchResultsScreen] - Unified search interface for batches and providers
+/// ============================================================================
+/// StatefulWidget that provides a dual-mode search experience:
+/// - "Batches" mode: Search batches by product, location, hub name
+/// - "Providers" mode: Search providers by name, category, location
+///
+/// Responsibilities:
+/// - Render search input field and mode toggle (SegmentedButton)
+/// - Filter results in real-time based on query text
+/// - Display results as scrollable ListView with tap-to-navigate
+/// - Show empty state if no results match query
+/// - Load nearby batches on mount (if not cached)
+/// - Switch between batch/provider result views
+///
+/// State:
+/// - _searchMode: Current view mode (batches or providers)
+/// - _query: User search input text (trimmed)
+/// - Watches BatchProvider for live batches list
+/// - Static _providerResults: Mock provider data (TODO: backend)
+///
+/// Architecture:
+/// - Search filtering is local/client-side (no backend search API yet)
+/// - Results update immediately as user types (reactive)
+/// - Empty state shown when no results match current mode + query
+/// ============================================================================
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/models/batch.dart';
@@ -7,6 +33,7 @@ import 'package:batchit/widgets/app_screen_container.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// Private enum for search result modes.
 enum _SearchMode { batches, providers }
 
 class SearchResultsScreen extends StatefulWidget {
@@ -16,6 +43,7 @@ class SearchResultsScreen extends StatefulWidget {
   State<SearchResultsScreen> createState() => _SearchResultsScreenState();
 }
 
+/// Manages search state including query text and mode selection.
 class _SearchResultsScreenState extends State<SearchResultsScreen> {
   _SearchMode _searchMode = _SearchMode.batches;
   String _query = '';
@@ -28,6 +56,9 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
     _ProviderResult(name: 'Marjane', category: 'Household', location: 'Citywide', subscribers: 367),
   ];
 
+  /// Ensures nearby batches are loaded on first render.
+  /// Checks if BatchProvider already has batches to avoid redundant fetch.
+  /// Safe check: verifies mounted before using context.
   @override
   void initState() {
     super.initState();
@@ -133,6 +164,9 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
     );
   }
 
+  /// Filters batch list based on query string (case-insensitive).
+  /// Searches across productName, locationName, and hubName fields.
+  /// Returns empty list if query matches nothing.
   List<Batch> _filterBatches(List<Batch> batches, String query) {
     if (query.isEmpty) return batches;
     final q = query.toLowerCase();
@@ -144,6 +178,9 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
     }).toList(growable: false);
   }
 
+  /// Filters provider list based on query string (case-insensitive).
+  /// Searches across name, category, and location fields.
+  /// Returns empty list if query matches nothing.
   List<_ProviderResult> _filterProviders(List<_ProviderResult> providers, String query) {
     if (query.isEmpty) return providers;
     final q = query.toLowerCase();

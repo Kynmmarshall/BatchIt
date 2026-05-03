@@ -1,3 +1,28 @@
+/// ============================================================================
+/// [MainNavigationShell] - Root-level tab navigator for authenticated users
+/// ============================================================================
+/// StatefulWidget that manages bottom navigation bar (5 tabs) and IndexedStack
+/// for tab-based screen switching after user authentication.
+///
+/// Tab structure (in order, index 0-4):
+/// 0. Home - Browse nearby batches and active batch carousel
+/// 1. Create Batch - Form to create new bulk purchasing batch
+/// 2. Notifications - Alert feed grouped by date
+/// 3. Profile - User account dashboard and settings
+/// 4. More - Additional features (Map, Chat, Provider Discovery)
+///
+/// State management:
+/// - Local _index tracks selected tab (0-4)
+/// - IndexedStack houses all 5 screens (only selected renders)
+/// - setState on tab selection to update _index
+/// - All screens persist state while not visible
+///
+/// Key responsibilities:
+/// - Render bottom NavigationBar with localized labels
+/// - Switch between tab screens via IndexedStack
+/// - Maintain visual selection state (icon/label highlighting)
+/// - Apply platform-consistent bottom safe area
+/// ============================================================================
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/screens/batch/create_batch_screen.dart';
 import 'package:batchit/screens/home/home_screen.dart';
@@ -14,6 +39,8 @@ class MainNavigationShell extends StatefulWidget {
   State<MainNavigationShell> createState() => _MainNavigationShellState();
 }
 
+/// Holds mutable tab state and renders bottom navigation UI.
+/// Updates _index on destination selection to trigger rebuild.
 class _MainNavigationShellState extends State<MainNavigationShell> {
   int _index = 0;
 

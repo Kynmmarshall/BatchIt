@@ -1,3 +1,26 @@
+/// ============================================================================
+/// [HomeScreen] - Main dashboard for browsing and discovering batches
+/// ============================================================================
+/// StatefulWidget that displays a personalized dashboard with:
+/// - Welcome header with quick notification button
+/// - Tappable search box that navigates to SearchResultsScreen
+/// - Quick stats (active batches count, open batches count)
+/// - Active batches carousel (top 3 batches)
+/// - Filter chips to view all/open/full batches
+/// - Full list of filtered batches with cards and progress indicators
+///
+/// Responsibilities:
+/// - Load nearby batches on mount (via addPostFrameCallback)
+/// - Apply local filter to batch list based on user selection
+/// - Render gradient hero header with MetaCh brand messaging
+/// - Display batch cards with tap → batch details navigation
+/// - Provide batch info summary (progress %, join button, etc.)
+///
+/// State:
+/// - _selectedFilter: Current view (nearby/open/full) - default nearby
+/// - Watches BatchProvider for batches list and loading state
+/// - Uses AppLocalizations for EN/FR text labels
+/// ============================================================================
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/models/batch.dart';
@@ -8,6 +31,7 @@ import 'package:batchit/widgets/app_staggered_fade.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/// Private filter enum for home screen batch visibility modes.
 enum _BatchFilter { nearby, open, full }
 
 class HomeScreen extends StatefulWidget {
@@ -17,9 +41,13 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
+/// Manages home screen state including filter selection.
 class _HomeScreenState extends State<HomeScreen> {
   _BatchFilter _selectedFilter = _BatchFilter.nearby;
 
+  /// Fetches nearby batches on first render.
+  /// Uses addPostFrameCallback to load after widget tree ready.
+  /// Without this, batches list remains empty until user manually refreshes.
   @override
   void initState() {
     super.initState();
@@ -28,6 +56,10 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  /// Filters batch list based on selected filter criteria.
+  /// Returns the complete list for 'nearby' mode.
+  /// Returns only open batches (!isFull) for 'open' mode.
+  /// Returns only full batches (isFull) for 'full' mode.
   List<Batch> _applyFilter(List<Batch> batches) {
     switch (_selectedFilter) {
       case _BatchFilter.open:
