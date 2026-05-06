@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    options {
+        skipDefaultCheckout(true)
+    }
     
     // Webhook triggers
     triggers {
@@ -238,8 +241,13 @@ pipeline {
                     flutter pub get || true
                     flutter clean || true
                     flutter build apk --release
-                    flutter build appbundle --release
                 '''
+                catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {
+                    sh '''
+                        echo "=== Building AppBundle ==="
+                        flutter build appbundle --release
+                    '''
+                }
             }
         }
         
