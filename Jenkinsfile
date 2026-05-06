@@ -17,9 +17,24 @@ pipeline {
     stages {
         stage('Checkout Main Branch') {
             steps {
-                // Use regular git checkout instead of checkout scm
-                git branch: 'main', 
-                url: 'https://github.com/Kynmmarshall/BatchIt.git'
+                // Ensure workspace is clean and we checkout the latest main
+                deleteDir()
+                // Use a full checkout with clean before checkout to avoid stale files
+                checkout([$class: 'GitSCM',
+                    branches: [[name: 'refs/heads/main']],
+                    userRemoteConfigs: [[url: 'https://github.com/Kynmmarshall/BatchIt.git']],
+                    extensions: [[$class: 'CleanBeforeCheckout'], [$class: 'CloneOption', noTags: false, shallow: false]]
+                ])
+                sh '''
+                    echo "=== Git diagnostics ==="
+                    git fetch --all
+                    echo "Remote refs for origin/main:"
+                    git ls-remote origin refs/heads/main || true
+                    echo "Local HEAD:" $(git rev-parse --short HEAD) || true
+                    echo "Last commit:" && git log -1 --pretty=oneline || true
+                    git reset --hard origin/main || true
+                    echo "After reset, HEAD:" $(git rev-parse --short HEAD) || true
+                '''
             }
         }
         
@@ -219,6 +234,9 @@ pipeline {
             steps {
                 sh '''
                     echo "=== Building Release Version ==="
+                    echo "Running pub get and cleaning build artifacts"
+                    flutter pub get || true
+                    flutter clean || true
                     flutter build apk --release
                     flutter build appbundle --release
                 '''
