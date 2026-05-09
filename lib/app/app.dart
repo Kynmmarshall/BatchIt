@@ -51,6 +51,7 @@ import 'package:batchit/screens/splash/questionnaire_screen.dart';
 import 'package:batchit/screens/splash/onboarding_screen.dart';
 import 'package:batchit/screens/splash/splash_screen.dart';
 import 'package:batchit/screens/profile/settings_screen.dart';
+import 'package:batchit/services/auto_update_service.dart';
 import 'package:batchit/themes/app_motion.dart';
 import 'package:batchit/themes/app_theme.dart';
 import 'package:batchit/widgets/main_navigation_shell.dart';
@@ -60,6 +61,9 @@ import 'package:provider/provider.dart';
 
 class BatchItApp extends StatelessWidget {
   const BatchItApp({super.key});
+
+  // Flag to ensure the update check runs only once per app lifecycle.
+  static bool _updateCheckScheduled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +98,14 @@ class BatchItApp extends StatelessWidget {
           builder: (context, child) {
             if (child == null) {
               return const SizedBox.shrink();
+            }
+
+            // Schedule auto-update check after first frame (once only).
+            if (!BatchItApp._updateCheckScheduled) {
+              BatchItApp._updateCheckScheduled = true;
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _checkForUpdates(context);
+              });
             }
 
             return Stack(
@@ -173,6 +185,12 @@ class BatchItApp extends StatelessWidget {
         );
       },
     );
+  }
+
+  /// Triggers the auto-update check on the current [BuildContext].
+  void _checkForUpdates(BuildContext context) {
+    final updateService = AutoUpdateService();
+    updateService.checkForUpdates(context);
   }
 
   /// Constructs PageRoute with custom transitions for non-root screens.

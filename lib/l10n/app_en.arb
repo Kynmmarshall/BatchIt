@@ -197,5 +197,13 @@
   "createOrderTitle": "Create a new order",
   "createOrderCta": "Place order",
   "orderEmptyTitle": "No orders yet",
-  "orderEmptySubtitle": "Place your first order to get started"
+  "orderEmptySubtitle": "Place your first order to get started",
+  "updateAvailable": "Update Available",
+  "updateRequired": "Update Required",
+  "updateAvailableMessage": "A new version of the app is available.",
+  "updateRequiredMessage": "A mandatory update is required to continue using the app.",
+  "yourVersion": "Your version",
+  "latestVersion": "Latest version",
+  "remindLater": "Remind me later",
+  "update": "Update"
 }

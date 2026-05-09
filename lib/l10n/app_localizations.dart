@@ -1201,6 +1201,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Place your first order to get started'**
   String get orderEmptySubtitle;
+
+  /// No description provided for @updateAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Available'**
+  String get updateAvailable;
+
+  /// No description provided for @updateRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Required'**
+  String get updateRequired;
+
+  /// No description provided for @updateAvailableMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'A new version of the app is available.'**
+  String get updateAvailableMessage;
+
+  /// No description provided for @updateRequiredMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'A mandatory update is required to continue using the app.'**
+  String get updateRequiredMessage;
+
+  /// No description provided for @yourVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Your version'**
+  String get yourVersion;
+
+  /// No description provided for @latestVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest version'**
+  String get latestVersion;
+
+  /// No description provided for @remindLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind me later'**
+  String get remindLater;
+
+  /// No description provided for @update.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get update;
 }
 
 class _AppLocalizationsDelegate
