@@ -586,4 +586,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get orderEmptySubtitle => 'Place your first order to get started';
+
+  @override
+  String get updateAvailable => 'Update Available';
+
+  @override
+  String get updateRequired => 'Update Required';
+
+  @override
+  String get updateAvailableMessage =>
+      'A new version of the app is available.';
+
+  @override
+  String get updateRequiredMessage =>
+      'A mandatory update is required to continue using the app.';
+
+  @override
+  String get yourVersion => 'Your version';
+
+  @override
+  String get latestVersion => 'Latest version';
+
+  @override
+  String get remindLater => 'Remind me later';
+
+  @override
+  String get update => 'Update';
 }

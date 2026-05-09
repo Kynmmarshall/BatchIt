@@ -597,4 +597,30 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get orderEmptySubtitle =>
       'Passez votre première commande pour commencer';
+
+  @override
+  String get updateAvailable => 'Mise à jour disponible';
+
+  @override
+  String get updateRequired => 'Mise à jour requise';
+
+  @override
+  String get updateAvailableMessage =>
+      'Une nouvelle version de l\'application est disponible.';
+
+  @override
+  String get updateRequiredMessage =>
+      'Une mise à jour obligatoire est requise pour continuer à utiliser l\'application.';
+
+  @override
+  String get yourVersion => 'Votre version';
+
+  @override
+  String get latestVersion => 'Dernière version';
+
+  @override
+  String get remindLater => 'Rappelez-moi plus tard';
+
+  @override
+  String get update => 'Mettre à jour';
 }

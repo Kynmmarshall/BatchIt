@@ -197,5 +197,13 @@
   "createOrderTitle": "Créer une nouvelle commande",
   "createOrderCta": "Passer la commande",
   "orderEmptyTitle": "Aucune commande",
-  "orderEmptySubtitle": "Passez votre première commande pour commencer"
+  "orderEmptySubtitle": "Passez votre première commande pour commencer",
+  "updateAvailable": "Mise à jour disponible",
+  "updateRequired": "Mise à jour requise",
+  "updateAvailableMessage": "Une nouvelle version de l'application est disponible.",
+  "updateRequiredMessage": "Une mise à jour obligatoire est requise pour continuer à utiliser l'application.",
+  "yourVersion": "Votre version",
+  "latestVersion": "Dernière version",
+  "remindLater": "Rappelez-moi plus tard",
+  "update": "Mettre à jour"
 }
