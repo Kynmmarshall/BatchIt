@@ -138,6 +138,8 @@ class BatchItApp extends StatelessWidget {
                 return _buildRoute(
                   VerificationCodeScreen(
                     maskedEmail: args?.maskedEmail ?? 'sha....@gmail.com',
+                    email: args?.email,
+                    registrationData: args?.registrationData,
                   ),
                 );
               case AppRoutes.shell:

@@ -201,21 +201,29 @@ class _JoinBatchScreenState extends State<JoinBatchScreen> {
                       AppPrimaryButton(
                         label: l10n.joinConfirm,
                         icon: Icons.check_circle_outline,
-                        onPressed: () {
+                        onPressed: () async {
                           final value = double.tryParse(_quantityController.text.trim());
                           final quantity = value ?? _selectedQuantityKg;
                           if (quantity <= 0) {
                             return;
                           }
 
-                          context.read<BatchProvider>().joinBatch(
-                                batchId: widget.batchId,
-                                quantityKg: quantity,
-                              );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(l10n.joinSuccess)),
-                          );
-                          Navigator.pop(context);
+                          try {
+                            await context.read<BatchProvider>().joinBatch(
+                                  batchId: widget.batchId,
+                                  quantityKg: quantity,
+                                );
+                            if (!mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(l10n.joinSuccess)),
+                            );
+                            Navigator.pop(context);
+                          } catch (e) {
+                            if (!mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(l10n.errorMessage)),
+                            );
+                          }
                         },
                       ),
                     ],

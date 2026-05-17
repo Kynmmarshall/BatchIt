@@ -78,43 +78,52 @@ class BatchProvider extends ChangeNotifier {
     return batch;
   }
 
-  /// Updates a batch's currentQuantityKg when user joins.
+  /// Joins a batch by calling the backend service and updating local state.
   /// If batch reaches full threshold after join, creates Order and notifies OrderProvider.
   /// This implements the business logic: batch full → auto-trigger order.
   ///
   /// Parameters:
   ///   - batchId: ID of batch to update
   ///   - quantityKg: Amount user is committing to this batch
-  void joinBatch({required String batchId, required double quantityKg}) {
-    Batch? updatedBatch;
-    _batches = _batches
-        .map(
-          (batch) => batch.id == batchId
-              ? Batch(
-                  id: batch.id,
-                  productName: batch.productName,
-                  bulkSizeKg: batch.bulkSizeKg,
-                  currentQuantityKg: batch.currentQuantityKg + quantityKg,
-                  locationName: batch.locationName,
-                  hubName: batch.hubName,
-                )
-              : batch,
-        )
-        .toList(growable: false);
-    updatedBatch = findById(batchId);
-    
-    if (updatedBatch != null && updatedBatch.isFull) {
-      final order = Order(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        productName: updatedBatch.productName,
-        quantityKg: updatedBatch.currentQuantityKg,
-        status: OrderStatus.triggered,
-        hubName: updatedBatch.hubName,
-        batchId: updatedBatch.id,
-      );
-      _orderProvider.addOrder(order);
+  Future<void> joinBatch({required String batchId, required double quantityKg}) async {
+    try {
+      // Call backend API to join batch
+      await _batchService.joinBatch(batchId, quantityKg);
+      
+      // Update local state
+      Batch? updatedBatch;
+      _batches = _batches
+          .map(
+            (batch) => batch.id == batchId
+                ? Batch(
+                    id: batch.id,
+                    productName: batch.productName,
+                    bulkSizeKg: batch.bulkSizeKg,
+                    currentQuantityKg: batch.currentQuantityKg + quantityKg,
+                    locationName: batch.locationName,
+                    hubName: batch.hubName,
+                  )
+                : batch,
+          )
+          .toList(growable: false);
+      updatedBatch = findById(batchId);
+      
+      if (updatedBatch != null && updatedBatch.isFull) {
+        final order = Order(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          productName: updatedBatch.productName,
+          quantityKg: updatedBatch.currentQuantityKg,
+          status: OrderStatus.triggered,
+          hubName: updatedBatch.hubName,
+          batchId: updatedBatch.id,
+        );
+        _orderProvider.addOrder(order);
+      }
+      
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Failed to join batch: $e');
+      rethrow;
     }
-    
-    notifyListeners();
   }
 }

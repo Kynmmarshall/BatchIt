@@ -284,8 +284,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
-                  onPressed: () {
-                    context.read<AuthProvider>().logout();
+                  onPressed: () async {
+                    await context.read<AuthProvider>().logout();
+                    if (context.mounted) {
+                      Navigator.pushReplacementNamed(
+                        context,
+                        AppRoutes.splashscreen,
+                      );
+                    }
                   },
                   icon: const Icon(Icons.logout_rounded),
                   label: Text(l10n.logout),

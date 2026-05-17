@@ -4,6 +4,7 @@ import 'package:batchit/providers/auth_provider.dart';
 import 'package:batchit/widgets/auth/auth_screen_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -31,17 +32,72 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    final auth = context.read<AuthProvider>();
-    await auth.loginWithEmail(
-      email: _emailController.text.trim(),
-      password: _passwordController.text,
-    );
+    try {
+      final auth = context.read<AuthProvider>();
+      await auth.loginWithEmail(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
 
-    if (!mounted) {
-      return;
+      if (!mounted) {
+        return;
+      }
+
+      Navigator.pushReplacementNamed(context, AppRoutes.shell);
+    } catch (e) {
+      if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
+      final errorText = _extractErrorMessage(e, l10n.errorMessage);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorText)),
+      );
     }
+  }
 
-    Navigator.pushReplacementNamed(context, AppRoutes.shell);
+  /// Extract specific error message from exception, falling back to generic.
+  /// Handles both simple string errors and field-specific error objects.
+  String _extractErrorMessage(Object error, String fallback) {
+    final errorStr = error.toString();
+    
+    // Handle ApiException with detailed error body
+    if (errorStr.contains('ApiException:')) {
+      // Try to extract message from "ApiException: [statusCode] message"
+      final parts = errorStr.split('] ');
+      if (parts.length > 1) {
+        var message = parts[1];
+        // If it looks like JSON, try to parse it for field errors
+        if (message.startsWith('{')) {
+          try {
+            final decoded = jsonDecode(message) as Map<String, dynamic>;
+            // Check for field-specific errors
+            if (decoded.containsKey('email') && decoded['email'] is List) {
+              return (decoded['email'] as List).first.toString();
+            }
+            if (decoded.containsKey('password') && decoded['password'] is List) {
+              return (decoded['password'] as List).first.toString();
+            }
+            if (decoded.containsKey('non_field_errors') && decoded['non_field_errors'] is List) {
+              return (decoded['non_field_errors'] as List).first.toString();
+            }
+            // Fallback: return first available error
+            for (final key in decoded.keys) {
+              if (decoded[key] is List && (decoded[key] as List).isNotEmpty) {
+                return decoded[key][0].toString();
+              }
+            }
+          } catch (_) {
+            // If parsing fails, use the raw message
+            return message;
+          }
+        }
+        return message;
+      }
+    }
+    
+    if (errorStr.isNotEmpty && errorStr != 'Exception') {
+      return errorStr;
+    }
+    return fallback;
   }
 
   @override

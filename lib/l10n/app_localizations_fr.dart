@@ -597,4 +597,10 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get orderEmptySubtitle =>
       'Passez votre première commande pour commencer';
+
+  @override
+  String get errorMessage => 'Une erreur s\'est produite. Veuillez réessayer.';
+
+  @override
+  String get errorOccurred => 'Erreur';
 }

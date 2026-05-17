@@ -586,4 +586,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get orderEmptySubtitle => 'Place your first order to get started';
+
+  @override
+  String get errorMessage => 'An error occurred. Please try again.';
+
+  @override
+  String get errorOccurred => 'Error';
 }

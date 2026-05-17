@@ -197,5 +197,7 @@
   "createOrderTitle": "Créer une nouvelle commande",
   "createOrderCta": "Passer la commande",
   "orderEmptyTitle": "Aucune commande",
-  "orderEmptySubtitle": "Passez votre première commande pour commencer"
+  "orderEmptySubtitle": "Passez votre première commande pour commencer",
+  "errorMessage": "Une erreur s'est produite. Veuillez réessayer.",
+  "errorOccurred": "Erreur"
 }

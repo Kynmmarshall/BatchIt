@@ -63,27 +63,35 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
       return;
     }
 
-    final provider = context.read<BatchProvider>();
-    final batch = await provider.createBatch(
-      productName: _productController.text.trim(),
-      bulkSizeKg: bulk,
-      location: _locationController.text.trim(),
-    );
+    try {
+      final provider = context.read<BatchProvider>();
+      final batch = await provider.createBatch(
+        productName: _productController.text.trim(),
+        bulkSizeKg: bulk,
+        location: _locationController.text.trim(),
+      );
 
-    if (!mounted) {
-      return;
+      if (!mounted) {
+        return;
+      }
+
+      final l10n = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.batchCreated)),
+      );
+
+      Navigator.pushNamed(
+        context,
+        AppRoutes.batchDetails,
+        arguments: batch.id,
+      );
+    } catch (e) {
+      if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.errorMessage)),
+      );
     }
-
-    final l10n = AppLocalizations.of(context)!;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l10n.batchCreated)),
-    );
-
-    Navigator.pushNamed(
-      context,
-      AppRoutes.batchDetails,
-      arguments: batch.id,
-    );
   }
 
   @override

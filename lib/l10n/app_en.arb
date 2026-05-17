@@ -197,5 +197,7 @@
   "createOrderTitle": "Create a new order",
   "createOrderCta": "Place order",
   "orderEmptyTitle": "No orders yet",
-  "orderEmptySubtitle": "Place your first order to get started"
+  "orderEmptySubtitle": "Place your first order to get started",
+  "errorMessage": "An error occurred. Please try again.",
+  "errorOccurred": "Error"
 }
