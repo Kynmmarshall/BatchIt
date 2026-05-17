@@ -72,7 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final settings = context.watch<AppSettingsProvider>();
     final orders = context.watch<OrderProvider>().orders;
 
-    final userName = auth.user?.name ?? l10n.profileDefaultName;
+    final userName = auth.user?.displayName ?? l10n.profileDefaultName;
     final userEmail = auth.user?.email ?? l10n.profileDefaultEmail;
     final localeLabel = settings.locale.languageCode == 'fr' ? l10n.french : l10n.english;
     final themeLabel = settings.themeMode == ThemeMode.dark ? l10n.dark : l10n.light;

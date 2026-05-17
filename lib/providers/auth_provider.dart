@@ -18,17 +18,13 @@
 /// - ApiClient: Singleton for HTTP requests (token injection)
 /// ============================================================================
 import 'package:batchit/models/user_profile.dart';
-import 'package:batchit/services/api_client.dart';
 import 'package:batchit/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 class AuthProvider extends ChangeNotifier {
-  AuthProvider(this._authService) {
-    _apiClient = ApiClient();
-  }
+  AuthProvider(this._authService);
 
   final AuthService _authService;
-  late ApiClient _apiClient;
 
   UserProfile? _user;
   bool _isLoading = false;

@@ -151,7 +151,35 @@ class ApiClient {
     }
 
     final errorBody = _tryParseErrorBody(response.body);
-    final errorMessage = errorBody['detail'] ?? errorBody['message'] ?? response.reasonPhrase ?? 'Unknown error';
+    
+    // Try to extract a meaningful error message
+    String errorMessage = 'Unknown error';
+    
+    // First, check for 'detail' field (generic error message)
+    if (errorBody['detail'] != null) {
+      errorMessage = errorBody['detail'].toString();
+    }
+    // Otherwise, look for field-specific errors (e.g., {'email': '...', 'password': '...'})
+    else {
+      final fieldErrors = <String>[];
+      errorBody.forEach((key, value) {
+        if (key != 'message' && value != null) {
+          // Handle both list and string error formats
+          if (value is List && value.isNotEmpty) {
+            fieldErrors.add(value.first.toString());
+          } else if (value is String) {
+            fieldErrors.add(value);
+          }
+        }
+      });
+      if (fieldErrors.isNotEmpty) {
+        errorMessage = fieldErrors.join(' ');
+      } else if (errorBody['message'] != null) {
+        errorMessage = errorBody['message'].toString();
+      } else {
+        errorMessage = response.reasonPhrase ?? 'Unknown error';
+      }
+    }
 
     throw ApiException(
       statusCode: response.statusCode,

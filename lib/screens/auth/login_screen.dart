@@ -49,7 +49,10 @@ class _LoginScreenState extends State<LoginScreen> {
       final l10n = AppLocalizations.of(context)!;
       final errorText = _extractErrorMessage(e, l10n.errorMessage);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorText)),
+        SnackBar(
+          content: Text(errorText),
+          behavior: SnackBarBehavior.fixed,
+        ),
       );
     }
   }
@@ -295,11 +298,23 @@ class _LoginScreenState extends State<LoginScreen> {
                 icon: const _GoogleMark(),
                 textColor: secondaryText,
                 onPressed: () async {
-                  await context.read<AuthProvider>().loginWithGoogle();
-                  if (!context.mounted) {
-                    return;
+                  try {
+                    await context.read<AuthProvider>().loginWithGoogle();
+                    if (!context.mounted) {
+                      return;
+                    }
+                    Navigator.pushReplacementNamed(context, AppRoutes.shell);
+                  } catch (e) {
+                    if (!context.mounted) return;
+                    final l10n = AppLocalizations.of(context)!;
+                    final errorText = _extractErrorMessage(e, l10n.errorMessage);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(errorText),
+                        behavior: SnackBarBehavior.fixed,
+                      ),
+                    );
                   }
-                  Navigator.pushReplacementNamed(context, AppRoutes.shell);
                 },
               ),
               const SizedBox(height: 12),

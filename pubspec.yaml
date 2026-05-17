@@ -17,6 +17,7 @@ dependencies:
   google_fonts: ^6.3.0
   image_picker: ^1.2.0
   http: ^1.1.0
+  google_sign_in: ^6.2.0
 
 dev_dependencies:
   flutter_test:

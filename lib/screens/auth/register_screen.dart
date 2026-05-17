@@ -2,9 +2,11 @@ import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/models/auth/verification_code_args.dart';
 import 'package:batchit/models/auth/registration_data.dart';
+import 'package:batchit/providers/auth_provider.dart';
 import 'package:batchit/services/auth_service.dart';
 import 'package:batchit/widgets/auth/auth_screen_shell.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'dart:convert';
 
 class RegisterScreen extends StatefulWidget {
@@ -25,8 +27,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _obscurePassword = true;
   bool _obscureConfirm = true;
   bool _isLoading = false;
+  int _passwordStrength = 0;
 
   final _authService = AuthService();
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordController.addListener(_updatePasswordStrength);
+  }
 
   @override
   void dispose() {
@@ -34,9 +43,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _usernameController.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
+    _passwordController.removeListener(_updatePasswordStrength);
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  void _updatePasswordStrength() {
+    final pwd = _passwordController.text;
+    var score = 0;
+    if (pwd.length >= 8) score++;
+    if (RegExp(r'(?=.*[A-Za-z])(?=.*\d)').hasMatch(pwd)) score++;
+    if (RegExp(r'[!@#\$%\^&\*(),.?":{}|<>]').hasMatch(pwd)) score++;
+    if (mounted) setState(() => _passwordStrength = score);
   }
 
   Future<void> _submit() async {
@@ -177,7 +196,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) return 'Email is required';
-                  if (!value.contains('@')) return 'Please enter a valid email';
+                  final pattern = RegExp(r'^[A-Za-z0-9][A-Za-z0-9._%+\-]*@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$');
+                  if (!pattern.hasMatch(value.trim())) return 'Please enter a valid email';
                   return null;
                 },
               ),
@@ -234,9 +254,41 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 onSuffixTap: () => setState(() => _obscurePassword = !_obscurePassword),
                 validator: (value) {
                   if (value == null || value.isEmpty) return 'Password is required';
-                  if (value.length < 6) return 'Password must be at least 6 characters';
+                  if (value.length < 8) return 'Password must be at least 8 characters';
+                  if (RegExp(r'^\d+$').hasMatch(value)) return 'Password cannot be only numbers';
                   return null;
                 },
+              ),
+              const SizedBox(height: 8),
+              // Password strength indicator
+              Row(
+                children: [
+                  Expanded(
+                    child: LinearProgressIndicator(
+                      value: _passwordStrength / 3.0,
+                      color: _passwordStrength == 0
+                          ? Colors.red.withOpacity(0.6)
+                          : _passwordStrength == 1
+                              ? Colors.orange
+                              : _passwordStrength == 2
+                                  ? Colors.lightGreen
+                                  : Colors.green,
+                      backgroundColor: Colors.grey.shade200,
+                      minHeight: 6,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    _passwordStrength == 0
+                        ? 'Weak'
+                        : _passwordStrength == 1
+                            ? 'Fair'
+                            : _passwordStrength == 2
+                                ? 'Good'
+                                : 'Strong',
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                  ),
+                ],
               ),
               const SizedBox(height: 12),
               _RegisterField(
@@ -280,7 +332,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ],
               ),
               const SizedBox(height: 16),
-              _SocialButton(label: l10n.continueWithGoogle, backgroundColor: fieldBackground, icon: const _GoogleMark()),
+              _SocialButton(
+                label: l10n.continueWithGoogle,
+                backgroundColor: fieldBackground,
+                icon: const _GoogleMark(),
+                onPressed: () async {
+                  try {
+                    setState(() => _isLoading = true);
+                    await context.read<AuthProvider>().loginWithGoogle();
+                    if (!context.mounted) {
+                      return;
+                    }
+                    Navigator.pushReplacementNamed(context, AppRoutes.shell);
+                  } catch (e) {
+                    if (!context.mounted) return;
+                    _showError(_extractErrorMessage(e));
+                  } finally {
+                    if (mounted) setState(() => _isLoading = false);
+                  }
+                },
+              ),
               const SizedBox(height: 12),
               const Spacer(),
               const SizedBox(height: 16),
@@ -364,11 +435,17 @@ class _RegisterField extends StatelessWidget {
 }
 
 class _SocialButton extends StatelessWidget {
-  const _SocialButton({required this.label, required this.icon, required this.backgroundColor});
+  const _SocialButton({
+    required this.label,
+    required this.icon,
+    required this.backgroundColor,
+    this.onPressed,
+  });
 
   final String label;
   final Widget icon;
   final Color backgroundColor;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -382,7 +459,7 @@ class _SocialButton extends StatelessWidget {
           border: Border.all(color: Colors.white.withOpacity(0.35)),
         ),
         child: TextButton.icon(
-          onPressed: () {},
+          onPressed: onPressed ?? () {},
           style: TextButton.styleFrom(foregroundColor: const Color(0xFF93A2B4), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
           icon: icon,
           label: Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),

@@ -1,6 +1,7 @@
 import 'package:batchit/models/user_profile.dart';
 import 'package:batchit/services/api_client.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 /// ============================================================================
 /// [AuthService] - Handles user authentication with Django backend
@@ -48,9 +49,12 @@ class AuthService {
       }
 
       return UserProfile(
-        id: userData['id'] as String? ?? 'unknown',
-        name: userData['name'] as String? ?? userData['email'] ?? 'User',
+        id: userData['customer_id'] as String? ?? userData['id'] as String? ?? 'unknown',
+        username: userData['username'] as String? ?? '',
         email: userData['email'] as String? ?? '',
+        firstName: userData['first_name'] as String?,
+        lastName: userData['last_name'] as String?,
+        avatarUrl: userData['profile_photo_url'] as String?,
       );
     } on ApiException catch (e) {
       rethrow;
@@ -87,19 +91,88 @@ class AuthService {
       }
 
       return UserProfile(
-        id: userData['id'] as String? ?? 'unknown',
-        name: '${userData['first_name'] ?? ''} ${userData['last_name'] ?? ''}'.trim(),
+        id: userData['customer_id'] as String? ?? userData['id'] as String? ?? 'unknown',
+        username: userData['username'] as String? ?? '',
         email: userData['email'] as String? ?? '',
+        firstName: userData['first_name'] as String?,
+        lastName: userData['last_name'] as String?,
+        avatarUrl: userData['profile_photo_url'] as String?,
       );
     } on ApiException catch (e) {
       rethrow;
     }
   }
 
-  /// Logs in with Google OAuth (TODO: implement with Firebase or similar).
-  /// For now, this is a placeholder.
+  /// Logs in or registers with Google OAuth.
+  /// Uses google_sign_in to open Google login dialog, gets ID token,
+  /// and sends it to backend for authentication/registration.
+  /// Returns user profile and stores auth token on success.
   Future<UserProfile> loginWithGoogle() async {
-    throw UnimplementedError('Google login not yet implemented');
+    try {
+      final googleSignIn = GoogleSignIn(
+        scopes: [
+          'email',
+          'profile',
+        ],
+      );
+
+      // Sign in with Google
+      final googleUser = await googleSignIn.signIn();
+      if (googleUser == null) {
+        throw ApiException(statusCode: 0, message: 'Google sign-in cancelled by user');
+      }
+
+      // Get authentication object and ID token
+      final googleAuth = await googleUser.authentication;
+      final idToken = googleAuth.idToken;
+
+      if (idToken == null) {
+        throw ApiException(statusCode: 0, message: 'Failed to get Google ID token');
+      }
+
+      // Send ID token to backend
+      final response = await _apiClient.post(
+        '/auth/google-login/',
+        body: {
+          'id_token': idToken,
+        },
+      );
+
+      // Extract token and user data from response
+      final token = response['token'] as String?;
+      if (token != null) {
+        _apiClient.setAuthToken(token);
+      }
+
+      final userData = response['user'] as Map<String, dynamic>?;
+      if (userData == null) {
+        throw ApiException(statusCode: 0, message: 'Invalid response: missing user data');
+      }
+
+      return UserProfile(
+        id: userData['customer_id'] as String? ?? userData['id'] as String? ?? 'unknown',
+        username: userData['username'] as String? ?? '',
+        email: userData['email'] as String? ?? '',
+        firstName: userData['first_name'] as String?,
+        lastName: userData['last_name'] as String?,
+        avatarUrl: userData['profile_photo_url'] as String?,
+      );
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      final errorMsg = e.toString();
+      // Better error messages for common issues
+      if (errorMsg.contains('channel-error') || errorMsg.contains('PlatformException')) {
+        throw ApiException(
+          statusCode: 0,
+          message: 'Google Play Services not available. Please use a device with Google Play Services or try logging in with email instead.',
+        );
+      }
+      throw ApiException(
+        statusCode: 0,
+        message: 'Google login failed: ${e.toString()}',
+      );
+    }
   }
 
   /// Fetches the currently authenticated user's profile.
@@ -114,9 +187,12 @@ class AuthService {
       }
 
       return UserProfile(
-        id: userData['id'] as String? ?? 'unknown',
-        name: '${userData['first_name'] ?? ''} ${userData['last_name'] ?? ''}'.trim(),
+        id: userData['customer_id'] as String? ?? userData['id'] as String? ?? 'unknown',
+        username: userData['username'] as String? ?? '',
         email: userData['email'] as String? ?? '',
+        firstName: userData['first_name'] as String?,
+        lastName: userData['last_name'] as String?,
+        avatarUrl: userData['profile_photo_url'] as String?,
       );
     } on ApiException catch (e) {
       rethrow;
@@ -199,8 +275,11 @@ class AuthService {
 
       return UserProfile(
         id: userData['customer_id'] as String? ?? userData['id'] as String? ?? 'unknown',
-        name: '${userData['first_name'] ?? ''} ${userData['last_name'] ?? ''}'.trim(),
+        username: userData['username'] as String? ?? '',
         email: userData['email'] as String? ?? '',
+        firstName: userData['first_name'] as String?,
+        lastName: userData['last_name'] as String?,
+        avatarUrl: userData['profile_photo_url'] as String?,
       );
     } on ApiException catch (e) {
       rethrow;
