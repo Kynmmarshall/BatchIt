@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:batchit/models/user_profile.dart';
 import 'package:batchit/services/api_client.dart';
 import 'package:flutter/material.dart';
@@ -304,6 +305,46 @@ class AuthService {
         avatarUrl: userData['profile_photo_url'] as String?,
       );
     } on ApiException catch (_) {
+      rethrow;
+    }
+  }
+
+  /// Updates the authenticated user's profile (name and optional photo).
+  /// Returns the updated UserProfile on success.
+  Future<UserProfile> updateProfile({
+    required String firstName,
+    required String lastName,
+    File? profileImage,
+  }) async {
+    try {
+      final dynamic response;
+      if (profileImage != null) {
+        response = await _apiClient.patchMultipart(
+          '/auth/update-profile/',
+          fields: {'first_name': firstName, 'last_name': lastName},
+          file: profileImage,
+        );
+      } else {
+        response = await _apiClient.patch(
+          '/auth/update-profile/',
+          body: {'first_name': firstName, 'last_name': lastName},
+        );
+      }
+
+      final userData = response as Map<String, dynamic>?;
+      if (userData == null) {
+        throw ApiException(statusCode: 0, message: 'Invalid response from server');
+      }
+
+      return UserProfile(
+        id: userData['customer_id'] as String? ?? userData['id'] as String? ?? 'unknown',
+        username: userData['username'] as String? ?? '',
+        email: userData['email'] as String? ?? '',
+        firstName: userData['first_name'] as String?,
+        lastName: userData['last_name'] as String?,
+        avatarUrl: userData['profile_photo_url'] as String?,
+      );
+    } on ApiException {
       rethrow;
     }
   }

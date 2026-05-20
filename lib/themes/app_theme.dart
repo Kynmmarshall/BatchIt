@@ -3,7 +3,6 @@ import 'package:batchit/themes/app_motion.dart';
 import 'package:batchit/themes/app_radius.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   static ThemeData light() => _build(Brightness.light);
@@ -24,36 +23,35 @@ class AppTheme {
       outlineVariant: isDark ? AppColors.darkStroke : AppColors.lightStroke,
     );
 
-    final textTheme = GoogleFonts.plusJakartaSansTextTheme(
-      ThemeData(brightness: brightness).textTheme,
-    ).copyWith(
-      headlineMedium: GoogleFonts.plusJakartaSans(
+    final baseTextTheme = ThemeData(brightness: brightness).textTheme;
+    final textTheme = baseTextTheme.copyWith(
+      headlineMedium: baseTextTheme.headlineMedium?.copyWith(
         fontSize: 30,
         fontWeight: FontWeight.w700,
         height: 1.08,
       ),
-      headlineSmall: GoogleFonts.plusJakartaSans(
+      headlineSmall: baseTextTheme.headlineSmall?.copyWith(
         fontSize: 24,
         fontWeight: FontWeight.w700,
         height: 1.12,
       ),
-      titleLarge: GoogleFonts.plusJakartaSans(
+      titleLarge: baseTextTheme.titleLarge?.copyWith(
         fontSize: 20,
         fontWeight: FontWeight.w700,
       ),
-      titleMedium: GoogleFonts.plusJakartaSans(
+      titleMedium: baseTextTheme.titleMedium?.copyWith(
         fontSize: 16,
         fontWeight: FontWeight.w700,
       ),
-      bodyLarge: GoogleFonts.plusJakartaSans(
+      bodyLarge: baseTextTheme.bodyLarge?.copyWith(
         fontSize: 16,
         fontWeight: FontWeight.w500,
       ),
-      bodyMedium: GoogleFonts.plusJakartaSans(
+      bodyMedium: baseTextTheme.bodyMedium?.copyWith(
         fontSize: 14,
         fontWeight: FontWeight.w500,
       ),
-      bodySmall: GoogleFonts.plusJakartaSans(
+      bodySmall: baseTextTheme.bodySmall?.copyWith(
         fontSize: 12,
         fontWeight: FontWeight.w500,
         color: isDark ? AppColors.darkMuted : AppColors.lightMuted,

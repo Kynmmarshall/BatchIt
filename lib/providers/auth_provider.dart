@@ -17,6 +17,7 @@
 /// - AuthService: Provides actual authentication backend logic
 /// - ApiClient: Singleton for HTTP requests (token injection)
 /// ============================================================================
+import 'dart:io';
 import 'package:batchit/models/user_profile.dart';
 import 'package:batchit/services/auth_service.dart';
 import 'package:flutter/material.dart';
@@ -104,6 +105,29 @@ class AuthProvider extends ChangeNotifier {
       _user = null;
       notifyListeners();
       rethrow;
+    }
+  }
+
+  /// Updates the authenticated user's first name, last name, and optional photo.
+  /// Delegates to AuthService, then refreshes the cached _user on success.
+  Future<void> updateUserProfile({
+    required String firstName,
+    required String lastName,
+    File? profileImage,
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final updated = await _authService.updateProfile(
+        firstName: firstName,
+        lastName: lastName,
+        profileImage: profileImage,
+      );
+      _user = updated;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 

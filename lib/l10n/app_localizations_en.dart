@@ -592,4 +592,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorOccurred => 'Error';
+
+  @override
+  String get profileEditTitle => 'Edit Profile';
+
+  @override
+  String get profileEditImageHint => 'Tap to change profile picture';
+
+  @override
+  String get profileFirstName => 'First Name';
+
+  @override
+  String get profileFirstNameHint => 'Enter your first name';
+
+  @override
+  String get profileLastName => 'Last Name';
+
+  @override
+  String get profileLastNameHint => 'Enter your last name';
+
+  @override
+  String get profileEmailReadOnly => 'Email cannot be changed';
+
+  @override
+  String get profileEditSave => 'Save Changes';
+
+  @override
+  String get profileEditValidationRequired => 'Please fill in all fields';
+
+  @override
+  String get successProfileUpdated => 'Profile updated successfully';
+
+  @override
+  String get errorProfileUpdate => 'Failed to update profile';
 }

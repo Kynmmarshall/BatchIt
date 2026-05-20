@@ -603,4 +603,38 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get errorOccurred => 'Erreur';
+
+  @override
+  String get profileEditTitle => 'Modifier le profil';
+
+  @override
+  String get profileEditImageHint => 'Appuyez pour modifier la photo de profil';
+
+  @override
+  String get profileFirstName => 'Prénom';
+
+  @override
+  String get profileFirstNameHint => 'Entrez votre prénom';
+
+  @override
+  String get profileLastName => 'Nom de famille';
+
+  @override
+  String get profileLastNameHint => 'Entrez votre nom de famille';
+
+  @override
+  String get profileEmailReadOnly => 'L\'e-mail ne peut pas être modifié';
+
+  @override
+  String get profileEditSave => 'Enregistrer les modifications';
+
+  @override
+  String get profileEditValidationRequired =>
+      'Veuillez remplir tous les champs';
+
+  @override
+  String get successProfileUpdated => 'Profil mis à jour avec succès';
+
+  @override
+  String get errorProfileUpdate => 'Impossible de mettre à jour le profil';
 }

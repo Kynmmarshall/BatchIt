@@ -199,5 +199,16 @@
   "orderEmptyTitle": "No orders yet",
   "orderEmptySubtitle": "Place your first order to get started",
   "errorMessage": "An error occurred. Please try again.",
-  "errorOccurred": "Error"
+  "errorOccurred": "Error",
+    "profileEditTitle": "Edit Profile",
+    "profileEditImageHint": "Tap to change profile picture",
+    "profileFirstName": "First Name",
+    "profileFirstNameHint": "Enter your first name",
+    "profileLastName": "Last Name",
+    "profileLastNameHint": "Enter your last name",
+    "profileEmailReadOnly": "Email cannot be changed",
+    "profileEditSave": "Save Changes",
+    "profileEditValidationRequired": "Please fill in all fields",
+    "successProfileUpdated": "Profile updated successfully",
+    "errorProfileUpdate": "Failed to update profile"
 }

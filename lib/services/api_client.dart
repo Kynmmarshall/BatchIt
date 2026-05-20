@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:batchit/core/app_constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -145,6 +146,36 @@ class ApiClient {
           )
           .timeout(AppConstants.apiTimeout);
 
+      return _handleResponse(response);
+    } catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  /// Performs a PATCH multipart/form-data request.
+  /// Used for updates that include file uploads (e.g. profile picture).
+  Future<dynamic> patchMultipart(
+    String endpoint, {
+    required Map<String, String> fields,
+    File? file,
+    String fileField = 'profile_photo',
+  }) async {
+    final uri = Uri.parse('$_baseUrl$endpoint');
+    final request = http.MultipartRequest('PATCH', uri);
+
+    if (_authToken != null) {
+      request.headers['Authorization'] = 'Token $_authToken';
+    }
+    request.headers['Accept'] = 'application/json';
+    request.fields.addAll(fields);
+
+    if (file != null) {
+      request.files.add(await http.MultipartFile.fromPath(fileField, file.path));
+    }
+
+    try {
+      final streamed = await request.send().timeout(AppConstants.apiTimeout);
+      final response = await http.Response.fromStream(streamed);
       return _handleResponse(response);
     } catch (e) {
       throw _handleError(e);

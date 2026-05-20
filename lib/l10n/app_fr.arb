@@ -199,5 +199,16 @@
   "orderEmptyTitle": "Aucune commande",
   "orderEmptySubtitle": "Passez votre première commande pour commencer",
   "errorMessage": "Une erreur s'est produite. Veuillez réessayer.",
-  "errorOccurred": "Erreur"
+  "errorOccurred": "Erreur",
+    "profileEditTitle": "Modifier le profil",
+    "profileEditImageHint": "Appuyez pour modifier la photo de profil",
+    "profileFirstName": "Prénom",
+    "profileFirstNameHint": "Entrez votre prénom",
+    "profileLastName": "Nom de famille",
+    "profileLastNameHint": "Entrez votre nom de famille",
+    "profileEmailReadOnly": "L'e-mail ne peut pas être modifié",
+    "profileEditSave": "Enregistrer les modifications",
+    "profileEditValidationRequired": "Veuillez remplir tous les champs",
+    "successProfileUpdated": "Profil mis à jour avec succès",
+    "errorProfileUpdate": "Impossible de mettre à jour le profil"
 }

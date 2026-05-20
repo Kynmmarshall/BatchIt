@@ -49,5 +49,6 @@ class AppRoutes {
   static const String mapView = '/map-view';
   static const String chat = '/chat';
   static const String providerDiscovery = '/provider-discovery';
+    static const String profileEdit = '/profile-edit';
 }
 

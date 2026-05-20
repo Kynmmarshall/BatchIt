@@ -1213,6 +1213,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error'**
   String get errorOccurred;
+
+  /// No description provided for @profileEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get profileEditTitle;
+
+  /// No description provided for @profileEditImageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to change profile picture'**
+  String get profileEditImageHint;
+
+  /// No description provided for @profileFirstName.
+  ///
+  /// In en, this message translates to:
+  /// **'First Name'**
+  String get profileFirstName;
+
+  /// No description provided for @profileFirstNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your first name'**
+  String get profileFirstNameHint;
+
+  /// No description provided for @profileLastName.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Name'**
+  String get profileLastName;
+
+  /// No description provided for @profileLastNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your last name'**
+  String get profileLastNameHint;
+
+  /// No description provided for @profileEmailReadOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Email cannot be changed'**
+  String get profileEmailReadOnly;
+
+  /// No description provided for @profileEditSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get profileEditSave;
+
+  /// No description provided for @profileEditValidationRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill in all fields'**
+  String get profileEditValidationRequired;
+
+  /// No description provided for @successProfileUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully'**
+  String get successProfileUpdated;
+
+  /// No description provided for @errorProfileUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update profile'**
+  String get errorProfileUpdate;
 }
 
 class _AppLocalizationsDelegate

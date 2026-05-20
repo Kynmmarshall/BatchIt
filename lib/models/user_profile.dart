@@ -35,6 +35,24 @@ class UserProfile {
   final String? lastName;
   final String? avatarUrl;
 
+  UserProfile copyWith({
+    String? id,
+    String? username,
+    String? email,
+    String? firstName,
+    String? lastName,
+    String? avatarUrl,
+  }) {
+    return UserProfile(
+      id: id ?? this.id,
+      username: username ?? this.username,
+      email: email ?? this.email,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+    );
+  }
+
   /// Returns display name: firstName lastName, or username if names not available
   String get displayName {
     if (firstName != null && firstName!.isNotEmpty) {

@@ -122,6 +122,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ],
                             ),
                           ),
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, AppRoutes.profileEdit);
+                              },
+                              icon: const Icon(Icons.edit_rounded),
+                              tooltip: l10n.profileEditTitle,
+                            ),
                         ],
                       ),
                       const SizedBox(height: AppSpacing.sm),
