@@ -46,8 +46,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     final slidesLength = _slidesFor(AppLocalizations.of(context)!).length;
     debugPrint('[BatchIt][onboarding] continue tapped currentPage=$_currentPage');
     if (_currentPage == slidesLength - 1) {
-      debugPrint('[BatchIt][onboarding] navigating -> ${AppRoutes.login}');
-      Navigator.pushReplacementNamed(context, AppRoutes.login);
+      debugPrint('[BatchIt][onboarding] navigating -> ${AppRoutes.questionnaire}');
+      Navigator.pushReplacementNamed(context, AppRoutes.questionnaire);
       return;
     }
 

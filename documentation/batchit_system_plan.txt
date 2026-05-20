@@ -1,0 +1,553 @@
+        BATCHIT
+Collaborative Bulk Purchasing Platform
+
+
+
+ Full System Plan & Design Document
+               Version 1.0
+               April 2026
+Table of Contents
+Table of Contents....................................................................................................................... 2
+1. Executive Summary ............................................................................................................... 4
+2. Problem Statement ................................................................................................................ 4
+   2.1 The Core Problem ............................................................................................................ 4
+   2.2 Problems with the Original Peer-to-Peer Model ................................................................ 4
+   2.3 The Shifted Solution: Provider-Centric Model ................................................................... 5
+3. System Overview ................................................................................................................... 5
+   3.1 Key Entities ...................................................................................................................... 5
+   3.2 How a Batch Works .......................................................................................................... 6
+4. User Flows ............................................................................................................................. 6
+   4.1 Customer Onboarding Flow .............................................................................................. 6
+   4.2 Returning User Flow ......................................................................................................... 6
+   4.3 Creating a Batch (Customer) ............................................................................................ 7
+   4.4 Joining a Batch (Customer) .............................................................................................. 7
+   4.5 Provider Flow (High-Level) ............................................................................................... 7
+5. Application Screens (Customer App)...................................................................................... 7
+   5.1 Screen Map ...................................................................................................................... 7
+   5.2 Home Screen — Detailed Layout ..................................................................................... 8
+   5.3 Batch Card — UI Component ........................................................................................... 8
+6. Subscriptions & Provider Relationships .................................................................................. 9
+   6.1 Subscribing to a Provider .................................................................................................. 9
+   6.2 Subscription Management ................................................................................................ 9
+7. Notification System ................................................................................................................ 9
+   7.1 Notification Types ............................................................................................................. 9
+   7.2 Notification Page Layout ..................................................................................................10
+8. Data Models ..........................................................................................................................10
+   8.1 Customer .........................................................................................................................10
+   8.2 Provider ...........................................................................................................................11
+   8.3 Product ............................................................................................................................11
+   8.4 Batch ...............................................................................................................................12
+   8.5 Batch Participant .............................................................................................................12
+9. System Architecture ..............................................................................................................12
+   9.1 Architecture Overview......................................................................................................12
+   9.2 Technology Stack Recommendation ...............................................................................13
+10. Security & Privacy Considerations ......................................................................................14
+11. Phased Rollout Plan............................................................................................................14
+12. Open Questions & Clarifications Needed .............................. Error! Bookmark not defined.
+1. Executive Summary
+Batchit is a mobile-first collaborative bulk purchasing platform that solves a common consumer
+pain point: purchasing minimums that exceed individual needs. By connecting consumers who
+want to buy portions of a bulk product, Batchit allows users to split the cost and quantity,
+reducing waste and saving money.
+
+
+The platform is centered around Providers (retailers, wholesalers, or suppliers) who list their
+products. Customers find products they need, create or join Batches — group purchase
+requests — and coordinate purchases through the provider. This provider-centric model
+removes the challenge of customer-to-customer coordination across regions and retailer
+preferences.
+
+
+  Core Value Proposition
+  Batchit reduces per-unit purchase cost and product waste by enabling customers to pool demand.
+  Providers gain access to aggregated bulk orders, improving their sales volume. Everyone wins.
+
+
+
+
+2. Problem Statement
+2.1 The Core Problem
+Many consumer goods are sold in bulk quantities that exceed what a single buyer needs. This
+creates several friction points:
+   •   A customer needs 15 toilet rolls but the pack contains 20 — they either overspend or go
+       without.
+   •   Bulk packs offer lower per-unit prices, but individuals cannot always take advantage of
+       that pricing.
+   •   Product waste increases when buyers are forced to purchase more than required.
+
+
+
+2.2 Problems with the Original Peer-to-Peer Model
+An initial concept of connecting customers directly with each other faced the following
+challenges:
+
+ Problem                          Impact
+
+ Hard to find others              Customers wanting to split the same product at the same time are
+                                  hard to match.
+
+ Geographic barriers              Customers from different regions cannot easily coordinate a shared
+                                  purchase.
+ Retailer mismatch                  Customer A may prefer Retailer X while Customer B prefers
+                                    Retailer Y — making a split impossible.
+
+ Trust issues                       Peer-to-peer money handling raises concerns about fraud and
+                                    reliability.
+ Scalability                        Matching individual customers for every purchase is complex and
+                                    operationally heavy.
+
+
+
+
+2.3 The Shifted Solution: Provider-Centric Model
+Batchit resolved these issues by pivoting to a provider-centric approach. Instead of matching
+customers to each other, everything revolves around a Provider — a business, retailer, or
+supplier who lists their goods on the platform. This means:
+   •      All customers shopping at the same provider can join the same batch.
+   •      Geographic friction is eliminated since the provider handles logistics.
+   •      The provider fulfills the bulk order and manages delivery or pickup.
+   •      Batchit facilitates the grouping and coordination, not the money transfer between users.
+
+
+
+
+3. System Overview
+3.1 Key Entities
+ Entity                             Description                       Role
+
+ Customer                           An individual user who wants to   Primary user of the app
+                                    purchase a portion of a bulk
+                                    product.
+
+ Provider                           A business, retailer, or          Supplier-side actor
+                                    wholesaler that lists products
+                                    and fulfills orders.
+
+ Batch                              A group purchase request          Core transactional object
+                                    specifying a product, total
+                                    quantity, and how portions are
+                                    divided among participating
+                                    customers.
+
+ Subscription                       A relationship between a          Connectivity mechanism
+                                    Customer and a Provider,
+                                    granting access to send and
+                                    receive batches from that
+                                    provider.
+3.2 How a Batch Works
+A Batch is the fundamental unit of activity on Batchit. The lifecycle is as follows:
+   1. A customer identifies a product they want to purchase partially (e.g., 15 of 20 toilet rolls).
+   2. The customer creates a Batch, specifying the product, their desired quantity, and the
+      provider.
+   3. The Batch is shared with the provider's subscriber pool. Other customers who want the
+      remaining quantity can join.
+   4. Once the Batch is fully filled (total quantity matches the pack size), the batch is sent to
+      the provider.
+   5. The provider fulfills the order in bulk. Each participant receives their purchased portion.
+
+
+  Listening & Sending — Dual Subscription Benefit
+  When subscribed to a provider, a customer can both SEND new batches to that provider AND LISTEN
+  for batches created by other customers at that provider — so they are automatically notified and can
+  join batches they did not create.
+
+
+
+
+4. User Flows
+4.1 Customer Onboarding Flow
+  New User Journey
+
+   6. App Launch — Splash screen with Batchit branding.
+   7. Onboarding Screens — 3–5 introductory slides explaining the concept: what a batch is,
+       how providers work, and how to save money.
+   8. Questionnaire — Collects user preferences (product categories of interest, shopping
+       frequency, preferred regions, budget range). Used to power recommendations.
+   9. Account Creation — User enters name, email/phone, and password. Optionally continue
+       with Google/Apple.
+   10. Login — Authenticated session established.
+   11. Home Screen — User lands on the main dashboard. Profile can be completed later via
+       the Profile section.
+
+
+
+4.2 Returning User Flow
+   12. App Launch — Automatic login if session is active.
+   13. Home Screen — Feed of recommended batches and popular providers is shown.
+   14. User browses, searches, creates, or joins batches.
+   15. Notifications alert user to batch activity.
+
+
+
+4.3 Creating a Batch (Customer)
+   16. From the Home Screen or Provider page, tap 'Create Batch'.
+   17. Select product from the provider's catalogue.
+   18. Specify desired quantity (must be less than the full pack quantity).
+   19. Choose which subscribed providers to send the batch to.
+   20. Optionally add a note or deadline for the batch.
+   21. Batch is published. Subscribed customers at the chosen provider are notified.
+
+
+
+4.4 Joining a Batch (Customer)
+   22. User receives notification of a new batch at a subscribed provider, OR discovers a batch
+       via search.
+   23. User reviews batch details: product, quantity needed, quantity available, participants.
+   24. User taps 'Join Batch' and specifies how many units they want.
+   25. If the batch is now fully filled, it moves to fulfillment.
+   26. If not yet full, the batch stays open for more joiners.
+
+
+
+4.5 Provider Flow (High-Level)
+While the provider side requires its own detailed specification, the high-level flow is:
+   27. Provider registers and creates a business profile.
+   28. Provider lists products: name, description, pack size, unit price, available stock.
+   29. Customers subscribe to the provider.
+   30. Provider receives incoming batches (group purchase requests).
+   31. Provider reviews, confirms, and fulfills the batch order.
+   32. Provider can also initiate special offers or bulk deals that appear as promoted batches.
+
+
+
+
+5. Application Screens (Customer App)
+5.1 Screen Map
+ Screen                            Description
+ Splash / Onboarding               First-time launch: brand intro, concept walkthrough, questionnaire,
+                                   account creation, login.
+
+ Home Screen                       Main dashboard with search bar, recommended batches, popular
+                                   providers, active batches.
+ Search Results                    Unified search returning both batches and providers filtered by
+                                   query.
+
+ Provider Profile                  Provider details, product catalogue, subscriber count, active
+                                   batches for that provider.
+ Batch Detail                      Full batch info, participants, quantity breakdown, join action, status.
+
+ Create Batch                      Form to create a new batch: product, quantity, provider selection,
+                                   notes.
+
+ My Batches                        List of all batches the customer has created or joined, with status
+                                   indicators.
+
+ Notifications                     Chronological list of system events: new batches, batch filled, order
+                                   fulfilled, etc.
+ Profile                           Customer details, preferences, subscription management, account
+                                   settings.
+
+ Provider Discovery                Browsable/searchable list of all providers with category filters.
+
+
+
+
+5.2 Home Screen — Detailed Layout
+The Home Screen is the primary interface. It is organized as follows, from top to bottom:
+   •   Header — App logo (top left), notifications icon (top right), user avatar.
+   •   Search Bar — Prominent, with toggle to switch between searching Batches vs.
+       Providers.
+   •   Active Batches Banner — Horizontal scroll of batches the user is currently participating
+       in.
+   •   Popular Providers — Horizontally scrollable cards of top-rated / most-subscribed
+       providers.
+   •   Recommended Batches — Vertically scrollable feed of batches matching user
+       preferences from the questionnaire.
+   •   Bottom Navigation Bar — Home | Search | Create Batch | Notifications | Profile.
+
+
+
+5.3 Batch Card — UI Component
+Each batch is displayed as a card with the following information:
+   •   Product name and image.
+   •   Provider name and logo.
+   •   Progress bar: units filled / total pack size (e.g. 15/20).
+   •   Number of participants.
+   •     Price per unit (calculated from pack price divided by pack size).
+   •     Time remaining or creation date.
+   •     'Join' or 'View' call-to-action button.
+
+
+
+
+6. Subscriptions & Provider Relationships
+6.1 Subscribing to a Provider
+Customers subscribe to providers they frequently shop at or are interested in. The subscription
+grants two capabilities:
+
+ Capability                        What It Means
+
+ LISTEN                            When any other customer creates a batch at this provider, the
+                                   subscribed customer is automatically notified and can join that
+                                   batch.
+
+ SEND                              When the subscribed customer creates a new batch, they can
+                                   choose to broadcast it to this provider so other subscribers are
+                                   notified.
+
+
+
+
+6.2 Subscription Management
+   •     Customers can subscribe and unsubscribe from providers at any time via the Provider
+         Profile or the Profile > Subscriptions section.
+   •     Customers can control notification preferences per provider (e.g., notify for all new
+         batches vs. only for specific product categories).
+   •     Popular and recommended providers are surfaced on the Home Screen to encourage
+         new subscriptions.
+
+
+
+
+7. Notification System
+7.1 Notification Types
+ Event                             Description                         Channel
+
+ New Batch                         A new batch has been created        Push + In-App
+                                   at a provider you subscribe to.
+Batch Joined                      Another customer has joined        In-App
+                                  your batch.
+
+Batch Filled                      A batch you are part of is now     Push + In-App
+                                  fully subscribed.
+Order Confirmed                   The provider has confirmed the     Push + In-App
+                                  fulfilled batch order.
+
+Order Ready                       Your portion of the batch order    Push + In-App
+                                  is ready for pickup/delivery.
+Batch Expired                     A batch you were part of expired   In-App
+                                  without being filled.
+
+New Provider Deal                 A subscribed provider has          Push (optional)
+                                  posted a new special offer
+                                  batch.
+
+Profile Reminder                  Reminder to complete profile if    In-App
+                                  fields are still empty.
+
+
+
+
+7.2 Notification Page Layout
+  •     Grouped by date: Today, Yesterday, This Week, Earlier.
+  •     Each notification shows: icon, summary text, timestamp, and a link to the relevant batch
+        or provider.
+  •     Unread notifications are highlighted. User can mark all as read.
+  •     Settings shortcut from this page to manage notification preferences.
+
+
+
+
+8. Data Models
+8.1 Customer
+Field                             Description
+
+customer_id                       UUID — Primary key
+
+name                              Full name
+
+email                             Email address (unique)
+
+phone                             Phone number (optional)
+
+profile_photo_url                 Link to avatar image
+
+preferences                       JSON — Product categories, budget range, region (from
+                                  questionnaire)
+subscriptions      Array of provider_ids
+
+created_at         Timestamp
+
+last_login         Timestamp
+
+
+
+
+8.2 Provider
+Field              Description
+provider_id        UUID — Primary key
+
+business_name      Display name
+
+logo_url           Provider logo image
+description        Short bio / description
+
+category           e.g., Grocery, Electronics, Household
+
+location           Address or service region
+
+contact_email      Business contact
+
+rating             Average rating (float)
+
+subscriber_count   Cached count for display
+
+verified           Boolean — is the provider verified by Batchit
+
+created_at         Timestamp
+
+
+
+
+8.3 Product
+Field              Description
+
+product_id         UUID — Primary key
+provider_id        FK — owning provider
+
+name               Product name
+
+description        Product details
+image_url          Product photo
+
+pack_size          Total units per bulk pack
+
+pack_price         Full pack price
+unit_price         Calculated: pack_price / pack_size
+
+category           Product category
+
+in_stock           Boolean
+8.4 Batch
+ Field                            Description
+ batch_id                         UUID — Primary key
+
+ product_id                       FK — product being batched
+
+ provider_id                      FK — associated provider
+ creator_id                       FK — customer who created the batch
+
+ total_quantity                   Full pack size (target quantity)
+
+ filled_quantity                  How many units have been claimed
+ status                           open | filled | confirmed | fulfilled | expired
+
+ expires_at                       Optional deadline for the batch
+
+ created_at                       Timestamp
+
+ notes                            Optional message from creator
+
+
+
+
+8.5 Batch Participant
+ Field                            Description
+
+ participant_id                   UUID — Primary key
+
+ batch_id                         FK — batch
+
+ customer_id                      FK — customer
+
+ quantity_requested               How many units this customer wants
+ joined_at                        Timestamp
+
+ status                           pending | confirmed | fulfilled
+
+
+
+
+9. System Architecture
+9.1 Architecture Overview
+Batchit follows a client-server architecture with the following major components:
+
+ Component                        Responsibility
+Mobile App (Customer)          React Native or Flutter app for iOS and Android. Consumes the
+                               REST/GraphQL API.
+
+Mobile App (Provider)          Separate provider-facing app or web dashboard. Manages product
+                               listings and incoming batches.
+API Gateway                    Entry point for all client requests. Handles authentication, rate
+                               limiting, and routing.
+
+Auth Service                   JWT-based authentication. Supports email/password and OAuth
+                               (Google, Apple).
+User Service                   Manages customer and provider profiles, questionnaire data,
+                               preferences.
+
+Batch Service                  Core business logic — creating, joining, filling, expiring batches.
+
+Notification Service           Sends push notifications (FCM/APNs) and manages in-app
+                               notification feeds.
+
+Subscription Service           Manages customer-provider subscription relationships.
+
+Search Service                 Full-text search across batches and providers. Powered by
+                               Elasticsearch or Algolia.
+
+Recommendation Engine          Generates personalized provider and batch recommendations
+                               based on questionnaire data and activity.
+
+Database                       PostgreSQL for relational data. Redis for caching and real-time
+                               batch state.
+
+File Storage                   AWS S3 or equivalent for product images, provider logos, and
+                               profile photos.
+Push Notification Provider     Firebase Cloud Messaging (Android) + APNs (iOS).
+
+
+
+
+9.2 Technology Stack
+Layer                          Technology
+Mobile (Customer & Provider)   Flutter (shared codebase for iOS + Android)
+
+Backend                        Django Rest Framework
+Database                       PostgreSQL (primary), Redis (caching, session, real-time)
+
+Search                         Algolia or Elasticsearch
+Authentication                 JWT + Google auth
+
+File Storage                   Locally for now
+
+Push Notifications             Firebase Cloud Messaging (FCM)
+Hosting                        Digital Ocean or Contabo
+CI/CD                          GitHub Actions or GitLab CI
+Monitoring                        Prometheus and Grafana, but for now no monitoring
+
+
+
+
+10. Security & Privacy Considerations
+  •     All API communication over HTTPS/TLS 1.3.
+  •     Passwords hashed with bcrypt (minimum 12 rounds), but for now nothing just simple
+        hashing in django
+  •     JWT tokens with short expiry (15 minutes) and refresh token rotation.
+  •     Customer personal data encrypted at rest (AES-256).
+  •     GDPR / data privacy compliance — users can request data deletion.
+  •     Provider verification process to prevent fraudulent listings.
+  •     Rate limiting on all public-facing endpoints to prevent abuse.
+  •     Financial transactions handled by a certified payment processor (Stripe, Flutterwave, or
+        equivalent) — Batchit does not store card data, but for now nothing.
+
+
+
+
+11. Phased Rollout Plan
+Phase                             Scope                                Timeline
+
+Phase 1 — MVP                     Core customer app: onboarding,       2-3 weeks. We end here for now
+                                  questionnaire, home screen,
+                                  batch creation and joining,
+                                  provider profiles, basic
+                                  notifications.
+
+Phase 2 — Provider Portal         Provider web dashboard:              Months 4–7
+                                  product listings, batch
+                                  management, order fulfillment,
+                                  analytics.
+
+Phase 3 — Intelligence            Recommendation engine, smart         Months 7–10
+                                  notifications, subscription
+                                  listening, batch auto-matching.
+
+Phase 4 — Payments                Integrated payments: batch fee       Months 10–13
+                                  collection, refund flows, provider
+                                  payouts.
+
+Phase 5 — Growth                  Ratings & reviews, referral          Months 13–16
+                                  program, promotional batches,
+                                  provider promotions.
+Batchit — System Plan & Design Document v1.0 — Confidential
+

@@ -1,3 +1,35 @@
+/// ============================================================================
+/// [BatchItApp] - Main application widget and routing dispatcher
+/// ============================================================================
+/// Stateless widget that builds the MaterialApp root and configures routing,
+/// theming, localization, and global UI overlays.
+///
+/// Key responsibilities:
+/// - Consume 4 core providers: AppSettings (theme/locale), Auth, Batch, Order
+/// - Determine initial route based on auth state (authenticated → shell, else → splash)
+/// - Configure MaterialApp with theme, dark theme, supported locales
+/// - Route all 14 named routes via onGenerateRoute switch statement
+/// - Apply consistent page transitions (fade + slide)
+/// - Overlay language switcher button (top-right corner)
+/// - Log all route transitions for debugging
+///
+/// Routing table (14 routes):
+/// - splashscreen → SplashScreen (initial for unauthenticated)
+/// - onboarding → OnboardingScreen (first-time users)
+/// - login → LoginScreen (email/password auth)
+/// - register → RegisterScreen (new account)
+/// - questionnaire → QuestionnaireScreen (user profile form)
+/// - verification → VerificationCodeScreen (2FA confirmation)
+/// - shell → MainNavigationShell (post-auth tab navigator)
+/// - search → SearchResultsScreen (unified search)
+/// - batchDetails → BatchDetailsScreen (requires batchId arg)
+/// - joinBatch → JoinBatchScreen (requires batchId arg)
+/// - notifications → NotificationsScreen
+/// - settings → SettingsScreen
+/// - mapView → MapViewScreen
+/// - chat → ChatScreen
+/// - providerDiscovery → ProviderDiscoveryScreen
+/// ============================================================================
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/models/auth/verification_code_args.dart';
@@ -10,8 +42,15 @@ import 'package:batchit/screens/auth/register_screen.dart';
 import 'package:batchit/screens/auth/verification_code_screen.dart';
 import 'package:batchit/screens/batch/batch_details_screen.dart';
 import 'package:batchit/screens/batch/join_batch_screen.dart';
+import 'package:batchit/screens/more/chat_screen.dart';
+import 'package:batchit/screens/more/map_view_screen.dart';
+import 'package:batchit/screens/notifications/notifications_screen.dart';
+import 'package:batchit/screens/providers/provider_discovery_screen.dart';
+import 'package:batchit/screens/search/search_results_screen.dart';
+import 'package:batchit/screens/splash/questionnaire_screen.dart';
 import 'package:batchit/screens/splash/onboarding_screen.dart';
 import 'package:batchit/screens/splash/splash_screen.dart';
+import 'package:batchit/screens/profile/settings_screen.dart';
 import 'package:batchit/themes/app_motion.dart';
 import 'package:batchit/themes/app_theme.dart';
 import 'package:batchit/widgets/main_navigation_shell.dart';
@@ -92,15 +131,21 @@ class BatchItApp extends StatelessWidget {
                 return _buildRoute(const LoginScreen());
               case AppRoutes.register:
                 return _buildRoute(const RegisterScreen());
+              case AppRoutes.questionnaire:
+                return _buildRoute(const QuestionnaireScreen());
               case AppRoutes.verification:
                 final args = settingsRoute.arguments as VerificationCodeArgs?;
                 return _buildRoute(
                   VerificationCodeScreen(
                     maskedEmail: args?.maskedEmail ?? 'sha....@gmail.com',
+                    email: args?.email,
+                    registrationData: args?.registrationData,
                   ),
                 );
               case AppRoutes.shell:
                 return _buildRoute(const MainNavigationShell(), isRoot: true);
+              case AppRoutes.search:
+                return _buildRoute(const SearchResultsScreen());
               case AppRoutes.batchDetails:
                 final id = settingsRoute.arguments as String?;
                 if (id == null) {
@@ -113,6 +158,16 @@ class BatchItApp extends StatelessWidget {
                   return _fallbackRoute();
                 }
                 return _buildRoute(JoinBatchScreen(batchId: id));
+              case AppRoutes.notifications:
+                return _buildRoute(const NotificationsScreen());
+              case AppRoutes.settings:
+                return _buildRoute(const SettingsScreen());
+              case AppRoutes.mapView:
+                return _buildRoute(const MapViewScreen());
+              case AppRoutes.chat:
+                return _buildRoute(const ChatScreen());
+              case AppRoutes.providerDiscovery:
+                return _buildRoute(const ProviderDiscoveryScreen());
               default:
                 return _fallbackRoute();
             }
@@ -122,6 +177,15 @@ class BatchItApp extends StatelessWidget {
     );
   }
 
+  /// Constructs PageRoute with custom transitions for non-root screens.
+  /// Root screens (shell) use zero-duration transitions to avoid jank.
+  /// Non-root screens use fade + slide-up with emphasized timing curve.
+  ///
+  /// Parameters:
+  ///   - child: Widget to wrap in page route
+  ///   - isRoot: If true, use instant (zero-duration) transition
+  ///
+  /// Returns: PageRoute<T> with custom animation or instant navigation
   PageRoute<T> _buildRoute<T>(Widget child, {bool isRoot = false}) {
     if (isRoot) {
       return PageRouteBuilder<T>(
@@ -154,6 +218,8 @@ class BatchItApp extends StatelessWidget {
     );
   }
 
+  /// Builds fallback 404 page when route not found.
+  /// Shows localized "Route not found" message.
   MaterialPageRoute<void> _fallbackRoute() {
     return MaterialPageRoute(
       builder: (context) => Scaffold(
@@ -163,6 +229,12 @@ class BatchItApp extends StatelessWidget {
   }
 }
 
+/// ============================================================================
+/// [_LanguageSwitcherButton] - Floating action button for locale switching
+/// ============================================================================
+/// Overlay button positioned at top-right corner for EN ↔ FR switching.
+/// Provides quick access to language change without navigating to settings.
+/// ============================================================================
 class _LanguageSwitcherButton extends StatelessWidget {
   const _LanguageSwitcherButton({required this.onPressed});
 
