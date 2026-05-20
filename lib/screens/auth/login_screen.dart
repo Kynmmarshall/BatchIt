@@ -298,13 +298,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 icon: const _GoogleMark(),
                 textColor: secondaryText,
                 onPressed: () async {
+                  debugPrint('[BatchIt][login] Google button pressed');
                   try {
                     await context.read<AuthProvider>().loginWithGoogle();
                     if (!context.mounted) {
                       return;
                     }
+                    debugPrint('[BatchIt][login] Google login completed, navigating to shell');
                     Navigator.pushReplacementNamed(context, AppRoutes.shell);
                   } catch (e) {
+                    debugPrint('[BatchIt][login] Google login failed: $e');
                     if (!context.mounted) return;
                     final l10n = AppLocalizations.of(context)!;
                     final errorText = _extractErrorMessage(e, l10n.errorMessage);

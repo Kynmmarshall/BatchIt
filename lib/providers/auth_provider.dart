@@ -28,10 +28,33 @@ class AuthProvider extends ChangeNotifier {
 
   UserProfile? _user;
   bool _isLoading = false;
+  bool _isInitialized = false;
 
   UserProfile? get user => _user;
   bool get isAuthenticated => _user != null;
   bool get isLoading => _isLoading;
+  bool get isInitialized => _isInitialized;
+
+  /// Initializes auth provider by checking for persisted session.
+  /// Call this once on app startup before showing main UI.
+  Future<void> initialize() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      await _authService.initialize();
+      if (_authService.isAuthenticated) {
+        _user = await _authService.getCurrentUser();
+      }
+    } catch (e) {
+      debugPrint('Failed to initialize auth: $e');
+      _user = null;
+    } finally {
+      _isLoading = false;
+      _isInitialized = true;
+      notifyListeners();
+    }
+  }
 
   /// Initiates email+password login flow.
   /// Sets loading state, awaits AuthService result, updates user, injects token
@@ -90,12 +113,16 @@ class AuthProvider extends ChangeNotifier {
   ///
   /// Side effects: Sets _user to null, clears ApiClient token, triggers navigation to splash screen
   Future<void> logout() async {
+    _isLoading = true;
+    notifyListeners();
+
     try {
       await _authService.logout();
     } catch (e) {
       debugPrint('Logout error: $e');
     } finally {
       _user = null;
+      _isLoading = false;
       notifyListeners();
     }
   }

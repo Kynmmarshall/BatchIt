@@ -20,6 +20,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final ApiClient _apiClient = ApiClient();
+  static const String _googleWebClientId = '569929198452-v57ct3srgu0pc5k7rtpnpsq3a4rf1mhk.apps.googleusercontent.com';
 
   /// Logs in with email and password, returns user profile and stores auth token.
   /// Throws ApiException on network or validation error.
@@ -40,7 +41,7 @@ class AuthService {
       // Expected response: { 'token': '...', 'user': { 'id': '...', 'name': '...', 'email': '...' } }
       final token = response['token'] as String?;
       if (token != null) {
-        _apiClient.setAuthToken(token);
+        await _apiClient.setAuthToken(token);
       }
 
       final userData = response['user'] as Map<String, dynamic>?;
@@ -56,7 +57,7 @@ class AuthService {
         lastName: userData['last_name'] as String?,
         avatarUrl: userData['profile_photo_url'] as String?,
       );
-    } on ApiException catch (e) {
+    } on ApiException catch (_) {
       rethrow;
     }
   }
@@ -82,7 +83,7 @@ class AuthService {
 
       final token = response['token'] as String?;
       if (token != null) {
-        _apiClient.setAuthToken(token);
+        await _apiClient.setAuthToken(token);
       }
 
       final userData = response['user'] as Map<String, dynamic>?;
@@ -98,7 +99,7 @@ class AuthService {
         lastName: userData['last_name'] as String?,
         avatarUrl: userData['profile_photo_url'] as String?,
       );
-    } on ApiException catch (e) {
+    } on ApiException catch (_) {
       rethrow;
     }
   }
@@ -109,7 +110,9 @@ class AuthService {
   /// Returns user profile and stores auth token on success.
   Future<UserProfile> loginWithGoogle() async {
     try {
+      debugPrint('[BatchIt][auth] Google login started');
       final googleSignIn = GoogleSignIn(
+        serverClientId: _googleWebClientId,
         scopes: [
           'email',
           'profile',
@@ -119,16 +122,25 @@ class AuthService {
       // Sign in with Google
       final googleUser = await googleSignIn.signIn();
       if (googleUser == null) {
+        debugPrint('[BatchIt][auth] Google login cancelled by user');
         throw ApiException(statusCode: 0, message: 'Google sign-in cancelled by user');
       }
+
+      debugPrint('[BatchIt][auth] Google account selected: ${googleUser.email}');
 
       // Get authentication object and ID token
       final googleAuth = await googleUser.authentication;
       final idToken = googleAuth.idToken;
 
       if (idToken == null) {
-        throw ApiException(statusCode: 0, message: 'Failed to get Google ID token');
+        debugPrint('[BatchIt][auth] Google login failed: idToken was null');
+        throw ApiException(
+          statusCode: 0,
+          message: 'Failed to get Google ID token. Check Android Google Sign-In configuration.',
+        );
       }
+
+      debugPrint('[BatchIt][auth] Google ID token received, sending to backend');
 
       // Send ID token to backend
       final response = await _apiClient.post(
@@ -138,10 +150,12 @@ class AuthService {
         },
       );
 
+      debugPrint('[BatchIt][auth] Google backend login succeeded');
+
       // Extract token and user data from response
       final token = response['token'] as String?;
       if (token != null) {
-        _apiClient.setAuthToken(token);
+        await _apiClient.setAuthToken(token);
       }
 
       final userData = response['user'] as Map<String, dynamic>?;
@@ -160,7 +174,14 @@ class AuthService {
     } on ApiException {
       rethrow;
     } catch (e) {
+      debugPrint('[BatchIt][auth] Google login error: $e');
       final errorMsg = e.toString();
+      if (errorMsg.contains('ApiException: 10') || errorMsg.contains('sign_in_failed')) {
+        throw ApiException(
+          statusCode: 0,
+          message: 'Google sign-in is not configured for this Android package. Verify the OAuth Android client in Google Cloud Console uses package com.example.batchit and the correct SHA-1 fingerprint.',
+        );
+      }
       // Better error messages for common issues
       if (errorMsg.contains('channel-error') || errorMsg.contains('PlatformException')) {
         throw ApiException(
@@ -194,7 +215,7 @@ class AuthService {
         lastName: userData['last_name'] as String?,
         avatarUrl: userData['profile_photo_url'] as String?,
       );
-    } on ApiException catch (e) {
+    } on ApiException catch (_) {
       rethrow;
     }
   }
@@ -207,23 +228,24 @@ class AuthService {
       // Ignore errors during logout; clear token anyway
       debugPrint('Logout request failed, clearing token anyway');
     } finally {
-      _apiClient.clearAuthToken();
+      await _apiClient.clearAuthToken();
     }
   }
 
-  /// Refreshes the auth token using a refresh token (if available).
-  /// Returns new auth token.
-  Future<String?> refreshToken() async {
+  /// Initializes auth service by restoring persisted token from storage.
+  /// Fetches current user profile if token is valid.
+  /// Call this once on app startup (in main.dart or splash screen).
+  Future<void> initialize() async {
     try {
-      final response = await _apiClient.post('/auth/refresh/', body: {});
-      final newToken = response['token'] as String?;
-      if (newToken != null) {
-        _apiClient.setAuthToken(newToken);
+      final tokenRestored = await _apiClient.restoreAuthToken();
+      if (tokenRestored && _apiClient.isAuthenticated) {
+        // Try to fetch current user to validate token
+        await getCurrentUser();
       }
-      return newToken;
-    } on ApiException catch (e) {
-      debugPrint('Token refresh failed: $e');
-      return null;
+    } catch (e) {
+      debugPrint('Auth initialization failed: $e');
+      // Token was invalid, clear it
+      await _apiClient.clearAuthToken();
     }
   }
 
@@ -235,7 +257,7 @@ class AuthService {
         '/auth/send-verification-code/',
         body: {'email': email},
       );
-    } on ApiException catch (e) {
+    } on ApiException catch (_) {
       rethrow;
     }
   }
@@ -265,7 +287,7 @@ class AuthService {
 
       final token = response['token'] as String?;
       if (token != null) {
-        _apiClient.setAuthToken(token);
+        await _apiClient.setAuthToken(token);
       }
 
       final userData = response['user'] as Map<String, dynamic>?;
@@ -281,7 +303,7 @@ class AuthService {
         lastName: userData['last_name'] as String?,
         avatarUrl: userData['profile_photo_url'] as String?,
       );
-    } on ApiException catch (e) {
+    } on ApiException catch (_) {
       rethrow;
     }
   }

@@ -1,5 +1,7 @@
 import 'package:batchit/core/app_constants.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 import 'dart:convert';
 
 /// ============================================================================
@@ -34,13 +36,43 @@ class ApiClient {
 
   /// Sets the authentication token for subsequent requests.
   /// Called after successful login or token refresh.
-  void setAuthToken(String token) {
+  /// Persists token to local storage.
+  Future<void> setAuthToken(String token) async {
     _authToken = token;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('auth_token', token);
+    } catch (e) {
+      debugPrint('Failed to save auth token to storage: $e');
+    }
   }
 
   /// Clears the authentication token (e.g., on logout).
-  void clearAuthToken() {
+  /// Removes token from local storage.
+  Future<void> clearAuthToken() async {
     _authToken = null;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('auth_token');
+    } catch (e) {
+      debugPrint('Failed to clear auth token from storage: $e');
+    }
+  }
+
+  /// Loads persisted auth token from local storage (called on app startup).
+  /// Returns true if token was restored, false otherwise.
+  Future<bool> restoreAuthToken() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('auth_token');
+      if (token != null && token.isNotEmpty) {
+        _authToken = token;
+        return true;
+      }
+    } catch (e) {
+      debugPrint('Failed to restore auth token from storage: $e');
+    }
+    return false;
   }
 
   /// Returns true if an auth token is currently set.

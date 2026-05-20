@@ -284,17 +284,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
-                  onPressed: () async {
-                    await context.read<AuthProvider>().logout();
-                    if (context.mounted) {
-                      Navigator.pushReplacementNamed(
-                        context,
-                        AppRoutes.splashscreen,
-                      );
-                    }
-                  },
+                  onPressed: auth.isLoading
+                      ? null
+                      : () async {
+                          await context.read<AuthProvider>().logout();
+                          if (context.mounted) {
+                            Navigator.pushReplacementNamed(
+                              context,
+                              AppRoutes.splashscreen,
+                            );
+                          }
+                        },
                   icon: const Icon(Icons.logout_rounded),
-                  label: Text(l10n.logout),
+                  label: auth.isLoading
+                      ? const SizedBox(
+                          height: 18,
+                          width: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Text(l10n.logout),
                 ),
               ),
             ),

@@ -49,3 +49,10 @@ void main() {
     ),
   );
 }
+
+/// Initializes the auth provider on app startup.
+/// Should be called during app initialization or in a splash screen.
+Future<void> initializeAuth(BuildContext context) async {
+  final authProvider = context.read<AuthProvider>();
+  await authProvider.initialize();
+}
