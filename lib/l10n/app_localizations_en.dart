@@ -625,4 +625,160 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorProfileUpdate => 'Failed to update profile';
+
+  @override
+  String get becomeProvider => 'Become a Provider';
+
+  @override
+  String get createProviderProfile => 'Create Provider Profile';
+
+  @override
+  String get providerStep1Title => 'Business Information';
+
+  @override
+  String get providerStep1Subtitle => 'Tell us about your business.';
+
+  @override
+  String get providerStep2Title => 'Contact & Location';
+
+  @override
+  String get providerStep2Subtitle => 'How customers can find and reach you.';
+
+  @override
+  String get providerStep3Title => 'Documents & Description';
+
+  @override
+  String get providerStep3Subtitle =>
+      'Upload verification documents and describe your services.';
+
+  @override
+  String get providerBusinessName => 'Business Name';
+
+  @override
+  String get providerBusinessNameHint => 'e.g. Ain Sebaa Fresh Market';
+
+  @override
+  String get providerOwnerName => 'Owner Full Name';
+
+  @override
+  String get providerOwnerNameHint => 'Enter the owner\'s full legal name';
+
+  @override
+  String get providerCategory => 'Business Category';
+
+  @override
+  String get providerRegistrationNumber => 'Registration / License Number';
+
+  @override
+  String get providerRegistrationNumberHint =>
+      'Enter your business registration number';
+
+  @override
+  String get providerPhone => 'Phone Number';
+
+  @override
+  String get providerPhoneHint => '+212 6XX XXX XXX';
+
+  @override
+  String get providerBusinessEmail => 'Business Email';
+
+  @override
+  String get providerAddress => 'Business Address';
+
+  @override
+  String get providerAddressHint => 'Full street address';
+
+  @override
+  String get providerGpsTitle => 'GPS Coordinates';
+
+  @override
+  String get providerGpsNote =>
+      'Enter your business GPS coordinates so customers can navigate to you. Both fields are optional.';
+
+  @override
+  String get providerLatitude => 'Latitude';
+
+  @override
+  String get providerLongitude => 'Longitude';
+
+  @override
+  String get providerDescription => 'Services & Products';
+
+  @override
+  String get providerDescriptionHint =>
+      'Describe what you sell or offer to batch members...';
+
+  @override
+  String get providerUploadLogo => 'Business Logo (Optional)';
+
+  @override
+  String get providerUploadLogoHint => 'Tap to upload logo';
+
+  @override
+  String get providerUploadDocs => 'Business Documents';
+
+  @override
+  String get providerAddDoc => 'Add File';
+
+  @override
+  String get providerUploadDocsHint =>
+      'Registration certificate, license, or ID — PDF or image';
+
+  @override
+  String get providerNoDocs => 'No documents added yet';
+
+  @override
+  String get providerLegalNote =>
+      'All submitted information and documents are handled securely and reviewed only by BatchIt admins.';
+
+  @override
+  String get providerNext => 'Next';
+
+  @override
+  String get providerBack => 'Back';
+
+  @override
+  String get providerSubmit => 'Submit for Verification';
+
+  @override
+  String get providerSubmitSuccess =>
+      'Profile submitted! Our team will review it within 48 hours.';
+
+  @override
+  String get providerSubmitError =>
+      'Failed to submit profile. Please try again.';
+
+  @override
+  String get providerStatusPending => 'Pending Review';
+
+  @override
+  String get providerStatusVerified => 'Verified';
+
+  @override
+  String get providerStatusRejected => 'Rejected';
+
+  @override
+  String get providerPendingNote =>
+      'Your provider profile has been submitted and is awaiting admin approval. You will be notified once it has been reviewed.';
+
+  @override
+  String get providerFieldRequired => 'This field is required';
+
+  @override
+  String get providerCategoryGrocery => 'Grocery & Food';
+
+  @override
+  String get providerCategoryHousehold => 'Household';
+
+  @override
+  String get providerCategoryElectronics => 'Electronics';
+
+  @override
+  String get providerCategoryClothing => 'Clothing & Fashion';
+
+  @override
+  String get providerCategoryRestaurant => 'Restaurant';
+
+  @override
+  String get providerCategoryOther => 'Other';
 }

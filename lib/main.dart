@@ -17,9 +17,11 @@ import 'package:batchit/providers/app_settings_provider.dart';
 import 'package:batchit/providers/auth_provider.dart';
 import 'package:batchit/providers/batch_provider.dart';
 import 'package:batchit/providers/order_provider.dart';
+import 'package:batchit/providers/provider_provider.dart';
 import 'package:batchit/services/auth_service.dart';
 import 'package:batchit/services/batch_service.dart';
 import 'package:batchit/services/order_service.dart';
+import 'package:batchit/services/provider_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -43,6 +45,9 @@ void main() {
             BatchService(),
             context.read<OrderProvider>(),
           ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ProviderProvider(ProviderService()),
         ),
       ],
       child: const BatchItApp(),

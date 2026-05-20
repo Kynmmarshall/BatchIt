@@ -27,6 +27,7 @@
 /// ============================================================================
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
+import 'package:batchit/providers/provider_provider.dart';
 import 'package:batchit/models/order.dart';
 import 'package:batchit/providers/app_settings_provider.dart';
 import 'package:batchit/providers/auth_provider.dart';
@@ -227,6 +228,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Navigator.pushNamed(context, AppRoutes.settings);
                         },
                       ),
+                      _BecomeProviderTile(l10n: l10n),
                     ],
                   ),
                 ),
@@ -342,6 +344,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     final initials = buffer.toString();
     return initials.isEmpty ? 'B' : initials;
+  }
+}
+
+class _BecomeProviderTile extends StatelessWidget {
+  const _BecomeProviderTile({required this.l10n});
+
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
+    final myProfile = context.watch<ProviderProvider>().myProfile;
+    final scheme = Theme.of(context).colorScheme;
+
+    final (icon, label, subtitle) = myProfile == null
+        ? (
+            Icons.storefront_rounded,
+            l10n.becomeProvider,
+            l10n.providerStep1Subtitle,
+          )
+        : myProfile.isVerified
+            ? (
+                Icons.verified_rounded,
+                l10n.providerStatusVerified,
+                myProfile.businessName,
+              )
+            : (
+                Icons.hourglass_top_rounded,
+                l10n.providerStatusPending,
+                myProfile.businessName,
+              );
+
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: Icon(icon,
+          color: myProfile?.isVerified == true ? Colors.green : scheme.primary),
+      title: Text(label),
+      subtitle: Text(subtitle),
+      trailing: myProfile == null
+          ? const Icon(Icons.chevron_right_rounded)
+          : null,
+      onTap: myProfile == null
+          ? () => Navigator.pushNamed(context, AppRoutes.becomeProvider)
+          : null,
+    );
   }
 }
 

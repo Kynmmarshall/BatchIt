@@ -1279,6 +1279,300 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to update profile'**
   String get errorProfileUpdate;
+
+  /// No description provided for @becomeProvider.
+  ///
+  /// In en, this message translates to:
+  /// **'Become a Provider'**
+  String get becomeProvider;
+
+  /// No description provided for @createProviderProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Provider Profile'**
+  String get createProviderProfile;
+
+  /// No description provided for @providerStep1Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Business Information'**
+  String get providerStep1Title;
+
+  /// No description provided for @providerStep1Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us about your business.'**
+  String get providerStep1Subtitle;
+
+  /// No description provided for @providerStep2Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact & Location'**
+  String get providerStep2Title;
+
+  /// No description provided for @providerStep2Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How customers can find and reach you.'**
+  String get providerStep2Subtitle;
+
+  /// No description provided for @providerStep3Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents & Description'**
+  String get providerStep3Title;
+
+  /// No description provided for @providerStep3Subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload verification documents and describe your services.'**
+  String get providerStep3Subtitle;
+
+  /// No description provided for @providerBusinessName.
+  ///
+  /// In en, this message translates to:
+  /// **'Business Name'**
+  String get providerBusinessName;
+
+  /// No description provided for @providerBusinessNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Ain Sebaa Fresh Market'**
+  String get providerBusinessNameHint;
+
+  /// No description provided for @providerOwnerName.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner Full Name'**
+  String get providerOwnerName;
+
+  /// No description provided for @providerOwnerNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the owner\'s full legal name'**
+  String get providerOwnerNameHint;
+
+  /// No description provided for @providerCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Business Category'**
+  String get providerCategory;
+
+  /// No description provided for @providerRegistrationNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration / License Number'**
+  String get providerRegistrationNumber;
+
+  /// No description provided for @providerRegistrationNumberHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your business registration number'**
+  String get providerRegistrationNumberHint;
+
+  /// No description provided for @providerPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get providerPhone;
+
+  /// No description provided for @providerPhoneHint.
+  ///
+  /// In en, this message translates to:
+  /// **'+212 6XX XXX XXX'**
+  String get providerPhoneHint;
+
+  /// No description provided for @providerBusinessEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Business Email'**
+  String get providerBusinessEmail;
+
+  /// No description provided for @providerAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Business Address'**
+  String get providerAddress;
+
+  /// No description provided for @providerAddressHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Full street address'**
+  String get providerAddressHint;
+
+  /// No description provided for @providerGpsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'GPS Coordinates'**
+  String get providerGpsTitle;
+
+  /// No description provided for @providerGpsNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your business GPS coordinates so customers can navigate to you. Both fields are optional.'**
+  String get providerGpsNote;
+
+  /// No description provided for @providerLatitude.
+  ///
+  /// In en, this message translates to:
+  /// **'Latitude'**
+  String get providerLatitude;
+
+  /// No description provided for @providerLongitude.
+  ///
+  /// In en, this message translates to:
+  /// **'Longitude'**
+  String get providerLongitude;
+
+  /// No description provided for @providerDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Services & Products'**
+  String get providerDescription;
+
+  /// No description provided for @providerDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe what you sell or offer to batch members...'**
+  String get providerDescriptionHint;
+
+  /// No description provided for @providerUploadLogo.
+  ///
+  /// In en, this message translates to:
+  /// **'Business Logo (Optional)'**
+  String get providerUploadLogo;
+
+  /// No description provided for @providerUploadLogoHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to upload logo'**
+  String get providerUploadLogoHint;
+
+  /// No description provided for @providerUploadDocs.
+  ///
+  /// In en, this message translates to:
+  /// **'Business Documents'**
+  String get providerUploadDocs;
+
+  /// No description provided for @providerAddDoc.
+  ///
+  /// In en, this message translates to:
+  /// **'Add File'**
+  String get providerAddDoc;
+
+  /// No description provided for @providerUploadDocsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration certificate, license, or ID — PDF or image'**
+  String get providerUploadDocsHint;
+
+  /// No description provided for @providerNoDocs.
+  ///
+  /// In en, this message translates to:
+  /// **'No documents added yet'**
+  String get providerNoDocs;
+
+  /// No description provided for @providerLegalNote.
+  ///
+  /// In en, this message translates to:
+  /// **'All submitted information and documents are handled securely and reviewed only by BatchIt admins.'**
+  String get providerLegalNote;
+
+  /// No description provided for @providerNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get providerNext;
+
+  /// No description provided for @providerBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get providerBack;
+
+  /// No description provided for @providerSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit for Verification'**
+  String get providerSubmit;
+
+  /// No description provided for @providerSubmitSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile submitted! Our team will review it within 48 hours.'**
+  String get providerSubmitSuccess;
+
+  /// No description provided for @providerSubmitError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to submit profile. Please try again.'**
+  String get providerSubmitError;
+
+  /// No description provided for @providerStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Review'**
+  String get providerStatusPending;
+
+  /// No description provided for @providerStatusVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get providerStatusVerified;
+
+  /// No description provided for @providerStatusRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get providerStatusRejected;
+
+  /// No description provided for @providerPendingNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your provider profile has been submitted and is awaiting admin approval. You will be notified once it has been reviewed.'**
+  String get providerPendingNote;
+
+  /// No description provided for @providerFieldRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get providerFieldRequired;
+
+  /// No description provided for @providerCategoryGrocery.
+  ///
+  /// In en, this message translates to:
+  /// **'Grocery & Food'**
+  String get providerCategoryGrocery;
+
+  /// No description provided for @providerCategoryHousehold.
+  ///
+  /// In en, this message translates to:
+  /// **'Household'**
+  String get providerCategoryHousehold;
+
+  /// No description provided for @providerCategoryElectronics.
+  ///
+  /// In en, this message translates to:
+  /// **'Electronics'**
+  String get providerCategoryElectronics;
+
+  /// No description provided for @providerCategoryClothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Clothing & Fashion'**
+  String get providerCategoryClothing;
+
+  /// No description provided for @providerCategoryRestaurant.
+  ///
+  /// In en, this message translates to:
+  /// **'Restaurant'**
+  String get providerCategoryRestaurant;
+
+  /// No description provided for @providerCategoryOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get providerCategoryOther;
 }
 
 class _AppLocalizationsDelegate

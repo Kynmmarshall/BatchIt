@@ -152,6 +152,39 @@ class ApiClient {
     }
   }
 
+  /// Performs a POST multipart/form-data request.
+  /// Used for creating resources that include file uploads (e.g. provider profile).
+  Future<dynamic> postMultipart(
+    String endpoint, {
+    required Map<String, String> fields,
+    List<MapEntry<String, File>>? files,
+  }) async {
+    final uri = Uri.parse('$_baseUrl$endpoint');
+    final request = http.MultipartRequest('POST', uri);
+
+    if (_authToken != null) {
+      request.headers['Authorization'] = 'Token $_authToken';
+    }
+    request.headers['Accept'] = 'application/json';
+    request.fields.addAll(fields);
+
+    if (files != null) {
+      for (final entry in files) {
+        request.files.add(
+          await http.MultipartFile.fromPath(entry.key, entry.value.path),
+        );
+      }
+    }
+
+    try {
+      final streamed = await request.send().timeout(AppConstants.apiTimeout);
+      final response = await http.Response.fromStream(streamed);
+      return _handleResponse(response);
+    } catch (e) {
+      throw _handleError(e);
+    }
+  }
+
   /// Performs a PATCH multipart/form-data request.
   /// Used for updates that include file uploads (e.g. profile picture).
   Future<dynamic> patchMultipart(

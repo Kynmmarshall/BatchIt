@@ -637,4 +637,163 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get errorProfileUpdate => 'Impossible de mettre à jour le profil';
+
+  @override
+  String get becomeProvider => 'Devenir prestataire';
+
+  @override
+  String get createProviderProfile => 'Créer un profil prestataire';
+
+  @override
+  String get providerStep1Title => 'Informations commerciales';
+
+  @override
+  String get providerStep1Subtitle => 'Parlez-nous de votre entreprise.';
+
+  @override
+  String get providerStep2Title => 'Contact & Localisation';
+
+  @override
+  String get providerStep2Subtitle =>
+      'Comment les clients peuvent vous trouver.';
+
+  @override
+  String get providerStep3Title => 'Documents & Description';
+
+  @override
+  String get providerStep3Subtitle =>
+      'Téléchargez les documents de vérification et décrivez vos services.';
+
+  @override
+  String get providerBusinessName => 'Nom de l\'entreprise';
+
+  @override
+  String get providerBusinessNameHint => 'ex. Marché Ain Sebaa';
+
+  @override
+  String get providerOwnerName => 'Nom complet du propriétaire';
+
+  @override
+  String get providerOwnerNameHint =>
+      'Entrez le nom légal complet du propriétaire';
+
+  @override
+  String get providerCategory => 'Catégorie d\'activité';
+
+  @override
+  String get providerRegistrationNumber =>
+      'Numéro d\'immatriculation / licence';
+
+  @override
+  String get providerRegistrationNumberHint =>
+      'Entrez votre numéro d\'immatriculation';
+
+  @override
+  String get providerPhone => 'Numéro de téléphone';
+
+  @override
+  String get providerPhoneHint => '+212 6XX XXX XXX';
+
+  @override
+  String get providerBusinessEmail => 'E-mail professionnel';
+
+  @override
+  String get providerAddress => 'Adresse de l\'entreprise';
+
+  @override
+  String get providerAddressHint => 'Adresse complète';
+
+  @override
+  String get providerGpsTitle => 'Coordonnées GPS';
+
+  @override
+  String get providerGpsNote =>
+      'Entrez les coordonnées GPS de votre entreprise pour que les clients puissent vous trouver. Les deux champs sont optionnels.';
+
+  @override
+  String get providerLatitude => 'Latitude';
+
+  @override
+  String get providerLongitude => 'Longitude';
+
+  @override
+  String get providerDescription => 'Services & Produits';
+
+  @override
+  String get providerDescriptionHint =>
+      'Décrivez ce que vous vendez ou proposez aux membres du batch...';
+
+  @override
+  String get providerUploadLogo => 'Logo de l\'entreprise (optionnel)';
+
+  @override
+  String get providerUploadLogoHint => 'Appuyez pour télécharger le logo';
+
+  @override
+  String get providerUploadDocs => 'Documents commerciaux';
+
+  @override
+  String get providerAddDoc => 'Ajouter un fichier';
+
+  @override
+  String get providerUploadDocsHint =>
+      'Certificat d\'immatriculation, licence ou pièce d\'identité — PDF ou image';
+
+  @override
+  String get providerNoDocs => 'Aucun document ajouté';
+
+  @override
+  String get providerLegalNote =>
+      'Toutes les informations et documents soumis sont traités en toute sécurité et examinés uniquement par les administrateurs BatchIt.';
+
+  @override
+  String get providerNext => 'Suivant';
+
+  @override
+  String get providerBack => 'Retour';
+
+  @override
+  String get providerSubmit => 'Soumettre pour vérification';
+
+  @override
+  String get providerSubmitSuccess =>
+      'Profil soumis ! Notre équipe l\'examinera dans les 48 heures.';
+
+  @override
+  String get providerSubmitError =>
+      'Échec de la soumission. Veuillez réessayer.';
+
+  @override
+  String get providerStatusPending => 'En attente de vérification';
+
+  @override
+  String get providerStatusVerified => 'Vérifié';
+
+  @override
+  String get providerStatusRejected => 'Rejeté';
+
+  @override
+  String get providerPendingNote =>
+      'Votre profil prestataire a été soumis et est en attente d\'approbation par un administrateur. Vous serez notifié une fois examiné.';
+
+  @override
+  String get providerFieldRequired => 'Ce champ est obligatoire';
+
+  @override
+  String get providerCategoryGrocery => 'Épicerie & Alimentation';
+
+  @override
+  String get providerCategoryHousehold => 'Maison & Ménage';
+
+  @override
+  String get providerCategoryElectronics => 'Électronique';
+
+  @override
+  String get providerCategoryClothing => 'Vêtements & Mode';
+
+  @override
+  String get providerCategoryRestaurant => 'Restaurant';
+
+  @override
+  String get providerCategoryOther => 'Autre';
 }

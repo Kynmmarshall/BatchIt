@@ -52,6 +52,7 @@ import 'package:batchit/screens/splash/onboarding_screen.dart';
 import 'package:batchit/screens/splash/splash_screen.dart';
 import 'package:batchit/screens/profile/settings_screen.dart';
 import 'package:batchit/screens/profile/profile_edit_screen.dart';
+import 'package:batchit/screens/providers/become_provider_screen.dart';
 import 'package:batchit/themes/app_motion.dart';
 import 'package:batchit/themes/app_theme.dart';
 import 'package:batchit/widgets/main_navigation_shell.dart';
@@ -171,6 +172,8 @@ class BatchItApp extends StatelessWidget {
                 return _buildRoute(const ProviderDiscoveryScreen());
                 case AppRoutes.profileEdit:
                   return _buildRoute(const ProfileEditScreen());
+              case AppRoutes.becomeProvider:
+                return _buildRoute(const BecomeProviderScreen());
               default:
                 return _fallbackRoute();
             }
