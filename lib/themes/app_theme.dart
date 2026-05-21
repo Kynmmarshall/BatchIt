@@ -71,14 +71,16 @@ class AppTheme {
           TargetPlatform.linux: FadeForwardsPageTransitionsBuilder(),
         },
       ),
-      scaffoldBackgroundColor: isDark
-          ? AppColors.darkBackground
-          : AppColors.lightBackground,
+        scaffoldBackgroundColor: Colors.transparent,
       appBarTheme: AppBarTheme(
-        backgroundColor: Colors.transparent,
+        backgroundColor: scheme.surface.withValues(alpha: 0.92),
+        foregroundColor: scheme.onSurface,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
+        iconTheme: IconThemeData(color: scheme.onSurface),
+        actionsIconTheme: IconThemeData(color: scheme.onSurface),
         titleTextStyle: textTheme.titleLarge?.copyWith(
           color: scheme.onSurface,
         ),
@@ -160,6 +162,32 @@ class AppTheme {
         ),
         side: BorderSide(color: scheme.outlineVariant),
       ),
+      extensions: <ThemeExtension<dynamic>>[
+        AppBackgroundTheme(
+          imageAsset: isDark
+              ? 'assets/background/dark.png'
+              : 'assets/background/light.png',
+        ),
+      ],
     );
+  }
+}
+
+class AppBackgroundTheme extends ThemeExtension<AppBackgroundTheme> {
+  const AppBackgroundTheme({required this.imageAsset});
+
+  final String imageAsset;
+
+  @override
+  AppBackgroundTheme copyWith({String? imageAsset}) {
+    return AppBackgroundTheme(imageAsset: imageAsset ?? this.imageAsset);
+  }
+
+  @override
+  AppBackgroundTheme lerp(ThemeExtension<AppBackgroundTheme>? other, double t) {
+    if (other is! AppBackgroundTheme) {
+      return this;
+    }
+    return AppBackgroundTheme(imageAsset: t < 0.5 ? imageAsset : other.imageAsset);
   }
 }

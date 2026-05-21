@@ -1,6 +1,6 @@
-import 'package:batchit/themes/app_colors.dart';
 import 'package:batchit/themes/app_motion.dart';
 import 'package:batchit/themes/app_spacing.dart';
+import 'package:batchit/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class AppScreenContainer extends StatelessWidget {
@@ -16,17 +16,19 @@ class AppScreenContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
+    final background = Theme.of(context).extension<AppBackgroundTheme>();
+    final imageAsset = background?.imageAsset ??
+        (brightness == Brightness.dark
+            ? 'assets/background/dark.png'
+            : 'assets/background/light.png');
 
     return AnimatedContainer(
       duration: AppMotion.slow,
       curve: AppMotion.emphasized,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: brightness == Brightness.dark
-              ? AppColors.darkPageGradient
-              : AppColors.lightPageGradient,
+        image: DecorationImage(
+          image: AssetImage(imageAsset),
+          fit: BoxFit.cover,
         ),
       ),
       child: SafeArea(

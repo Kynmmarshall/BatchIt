@@ -311,7 +311,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           width: 18,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : Text(l10n.logout),
+                      : Text(
+                          l10n.logout,
+                          style: TextStyle(color: Theme.of(context).colorScheme.error),
+                        ),
                 ),
               ),
             ),

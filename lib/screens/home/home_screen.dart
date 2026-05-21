@@ -27,6 +27,7 @@ import 'package:batchit/models/batch.dart';
 import 'package:batchit/providers/batch_provider.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/batch_card.dart';
+import 'package:batchit/widgets/app_screen_container.dart';
 import 'package:batchit/widgets/app_staggered_fade.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -88,11 +89,9 @@ class _HomeScreenState extends State<HomeScreen> {
     final openCount = batchProvider.batches.where((batch) => !batch.isFull).length;
 
     return Scaffold(
-      backgroundColor: scheme.surface,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-          child: ListView(
+      backgroundColor: Colors.transparent,
+      body: AppScreenContainer(
+        child: ListView(
             children: [
               AppStaggeredFade(
                 index: 0,
@@ -104,8 +103,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        scheme.primary.withValues(alpha: 0.18),
-                        scheme.secondaryContainer.withValues(alpha: 0.92),
+                        scheme.primary.withValues(alpha: 0.12),
+                        scheme.secondaryContainer.withValues(alpha: 0.78),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(28),
@@ -142,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             width: 48,
                             height: 48,
                             decoration: BoxDecoration(
-                              color: scheme.surface.withValues(alpha: 0.94),
+                              color: scheme.surface.withValues(alpha: 0.8),
                               shape: BoxShape.circle,
                               border: Border.all(color: scheme.outlineVariant),
                             ),
@@ -169,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                             decoration: BoxDecoration(
-                              color: scheme.surface.withValues(alpha: 0.92),
+                              color: scheme.surface.withValues(alpha: 0.8),
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(color: scheme.outlineVariant),
                             ),
@@ -393,7 +392,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-      ),
+
     );
   }
 }
@@ -416,7 +415,7 @@ class _DashboardStat extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: scheme.surface.withValues(alpha: 0.78),
+        color: scheme.surface.withValues(alpha: 0.62),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: scheme.outlineVariant),
       ),

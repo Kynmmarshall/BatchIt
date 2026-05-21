@@ -21,33 +21,33 @@ class AppPrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final onTap = isLoading ? null : onPressed;
+    final child = isSecondary
+        ? OutlinedButton(
+            onPressed: onTap,
+            child: _ButtonChild(label: label, isLoading: isLoading, icon: icon),
+          )
+        : FilledButton(
+            onPressed: onTap,
+            child: AnimatedSwitcher(
+              duration: AppMotion.fast,
+              switchInCurve: AppMotion.emphasized,
+              switchOutCurve: Curves.easeIn,
+              child: _ButtonChild(
+                key: ValueKey<bool>(isLoading),
+                label: label,
+                isLoading: isLoading,
+                icon: icon,
+              ),
+            ),
+          );
 
-    if (isSecondary) {
-      return SizedBox(
-        width: double.infinity,
-        child: OutlinedButton(
-          onPressed: onTap,
-          child: _ButtonChild(label: label, isLoading: isLoading, icon: icon),
-        ),
-      );
-    }
-
-    return SizedBox(
-      width: double.infinity,
-      child: FilledButton(
-        onPressed: onTap,
-        child: AnimatedSwitcher(
-          duration: AppMotion.fast,
-          switchInCurve: AppMotion.emphasized,
-          switchOutCurve: Curves.easeIn,
-          child: _ButtonChild(
-            key: ValueKey<bool>(isLoading),
-            label: label,
-            isLoading: isLoading,
-            icon: icon,
-          ),
-        ),
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.hasBoundedWidth) {
+          return SizedBox(width: double.infinity, child: child);
+        }
+        return child;
+      },
     );
   }
 }
