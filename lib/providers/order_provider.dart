@@ -16,6 +16,7 @@
 /// Dependencies:
 /// - OrderService: Provides backend API calls for order operations
 /// ============================================================================
+library;
 import 'package:batchit/models/order.dart';
 import 'package:batchit/services/order_service.dart';
 import 'package:flutter/material.dart';

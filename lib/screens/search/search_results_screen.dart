@@ -24,6 +24,7 @@
 /// - Results update immediately as user types (reactive)
 /// - Empty state shown when no results match current mode + query
 /// ============================================================================
+library;
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/models/batch.dart';

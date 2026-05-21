@@ -23,6 +23,7 @@
 /// - Maintain visual selection state (icon/label highlighting)
 /// - Apply platform-consistent bottom safe area
 /// ============================================================================
+library;
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/screens/batch/create_batch_screen.dart';
 import 'package:batchit/screens/home/home_screen.dart';

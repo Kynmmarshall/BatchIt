@@ -21,6 +21,7 @@
 /// - Watches BatchProvider for batches list and loading state
 /// - Uses AppLocalizations for EN/FR text labels
 /// ============================================================================
+library;
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/models/batch.dart';

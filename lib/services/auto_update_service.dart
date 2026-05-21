@@ -8,6 +8,8 @@
 ///
 /// Dependencies: Flutter SDK only (no platform channels)
 /// ============================================================================
+library;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

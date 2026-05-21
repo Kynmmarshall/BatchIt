@@ -30,6 +30,7 @@
 /// - chat → ChatScreen
 /// - providerDiscovery → ProviderDiscoveryScreen
 /// ============================================================================
+library;
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/models/auth/verification_code_args.dart';

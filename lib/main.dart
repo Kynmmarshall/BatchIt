@@ -11,6 +11,7 @@
 /// The MultiProvider wraps all providers in a single hierarchy so any widget
 /// in the app tree can access state via context.read() or context.watch().
 /// ============================================================================
+library;
 
 import 'package:batchit/app/app.dart';
 import 'package:batchit/providers/app_settings_provider.dart';

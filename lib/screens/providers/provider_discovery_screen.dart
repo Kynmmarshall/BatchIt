@@ -26,6 +26,7 @@
 /// - Subscription state is local (no backend sync yet)
 /// - Layout uses ListView + Card for scrollable provider list
 /// ============================================================================
+library;
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/app_screen_container.dart';

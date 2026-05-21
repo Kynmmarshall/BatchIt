@@ -18,6 +18,7 @@
 /// - BatchService: Provides backend API calls for batch operations
 /// - OrderProvider: Receives notification to create orders when batch fills
 /// ============================================================================
+library;
 import 'package:batchit/models/batch.dart';
 import 'package:batchit/models/order.dart';
 import 'package:batchit/providers/order_provider.dart';

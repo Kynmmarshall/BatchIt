@@ -25,6 +25,7 @@
 /// - UI reflects settings reactively via Provider consumers
 /// - Logout navigates back to splash screen via AppRoutes
 /// ============================================================================
+library;
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/models/order.dart';

@@ -15,6 +15,7 @@
 /// Dependencies:
 /// - AuthService: Provides actual authentication backend logic
 /// ============================================================================
+library;
 import 'package:batchit/models/user_profile.dart';
 import 'package:batchit/services/auth_service.dart';
 import 'package:flutter/material.dart';
