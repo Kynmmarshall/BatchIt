@@ -1,5 +1,4 @@
 import 'package:batchit/themes/app_icons.dart';
-import 'package:batchit/themes/app_motion.dart';
 import 'package:flutter/material.dart';
 
 class AppPrimaryButton extends StatelessWidget {
@@ -20,52 +19,23 @@ class AppPrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final onTap = isLoading ? null : onPressed;
-    final child = isSecondary
-        ? OutlinedButton(
-            onPressed: onTap,
-            child: _ButtonChild(label: label, isLoading: isLoading, icon: icon),
-          )
-        : FilledButton(
-            onPressed: onTap,
-            child: AnimatedSwitcher(
-              duration: AppMotion.fast,
-              switchInCurve: AppMotion.emphasized,
-              switchOutCurve: Curves.easeIn,
-              child: _ButtonChild(
-                key: ValueKey<bool>(isLoading),
-                label: label,
-                isLoading: isLoading,
-                icon: icon,
-              ),
-            ),
-          );
+    final effectiveCallback = isLoading ? null : onPressed;
+    final content = _content();
 
+    final button = isSecondary
+        ? OutlinedButton(onPressed: effectiveCallback, child: content)
+        : FilledButton(onPressed: effectiveCallback, child: content);
+
+    // Row + Expanded gives the button tight finite width — cannot produce
+    // BoxConstraints(w=Infinity) because LayoutBuilder guarantees bounded parent.
     return LayoutBuilder(
-      builder: (context, constraints) {
-        if (constraints.hasBoundedWidth) {
-          return SizedBox(width: double.infinity, child: child);
-        }
-        return child;
-      },
+      builder: (_, constraints) => constraints.hasBoundedWidth
+          ? Row(children: [Expanded(child: button)])
+          : button,
     );
   }
-}
 
-class _ButtonChild extends StatelessWidget {
-  const _ButtonChild({
-    super.key,
-    required this.label,
-    required this.isLoading,
-    required this.icon,
-  });
-
-  final String label;
-  final bool isLoading;
-  final IconData? icon;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _content() {
     if (isLoading) {
       return const SizedBox(
         height: 18,
@@ -73,12 +43,9 @@ class _ButtonChild extends StatelessWidget {
         child: CircularProgressIndicator(strokeWidth: 2),
       );
     }
-
-    if (icon == null) {
-      return Text(label);
-    }
-
+    if (icon == null) return Text(label);
     return Row(
+      mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(icon, size: AppIcons.md),

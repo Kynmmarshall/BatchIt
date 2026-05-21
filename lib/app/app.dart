@@ -172,8 +172,8 @@ class BatchItApp extends StatelessWidget {
                 return _buildRoute(const ChatScreen());
               case AppRoutes.providerDiscovery:
                 return _buildRoute(const ProviderDiscoveryScreen());
-                case AppRoutes.profileEdit:
-                  return _buildRoute(const ProfileEditScreen());
+              case AppRoutes.profileEdit:
+                return _buildRoute(const ProfileEditScreen());
               case AppRoutes.becomeProvider:
                 return _buildRoute(const BecomeProviderScreen());
               case AppRoutes.providerDetail:

@@ -49,7 +49,7 @@ class AppRoutes {
   static const String mapView = '/map-view';
   static const String chat = '/chat';
   static const String providerDiscovery = '/provider-discovery';
-    static const String profileEdit = '/profile-edit';
+  static const String profileEdit = '/profile-edit';
   static const String becomeProvider = '/become-provider';
   static const String providerDetail = '/provider-detail';
   // args: String? providerId — pre-selects a provider (Module 3)
