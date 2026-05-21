@@ -536,26 +536,7 @@ class _LiveMapView extends StatelessWidget {
   final ProviderProfile provider;
   final AppLocalizations l10n;
 
-  Future<void> _openMaps(BuildContext context) async {
-    final lat = provider.latitude!;
-    final lng = provider.longitude!;
-    final encoded = Uri.encodeComponent(provider.businessName);
 
-    final googleUrl = Uri.parse(
-      'https://www.google.com/maps/search/?api=1&query=$lat,$lng&query=$encoded',
-    );
-    final geoUrl = Uri.parse('geo:$lat,$lng?q=$lat,$lng($encoded)');
-
-    if (await canLaunchUrl(googleUrl)) {
-      await launchUrl(googleUrl, mode: LaunchMode.externalApplication);
-    } else if (await canLaunchUrl(geoUrl)) {
-      await launchUrl(geoUrl, mode: LaunchMode.externalApplication);
-    } else if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.mapOpenError)),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -637,14 +618,19 @@ class _LiveMapView extends StatelessWidget {
               bottom: AppSpacing.xs,
               right: AppSpacing.xs,
               child: FilledButton.icon(
-                onPressed: () => _openMaps(context),
+                onPressed: () => Navigator.pushNamed(
+                  context,
+                  AppRoutes.mapView,
+                  arguments: provider.id,
+                ),
                 style: FilledButton.styleFrom(
+                  minimumSize: Size.zero,
                   padding: const EdgeInsets.symmetric(
                       horizontal: AppSpacing.sm, vertical: 6),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   textStyle: theme.textTheme.labelSmall,
                 ),
-                icon: const Icon(Icons.open_in_new_rounded, size: 14),
+                icon: const Icon(Icons.map_rounded, size: 14),
                 label: Text(l10n.providerDetailViewOnMap),
               ),
             ),

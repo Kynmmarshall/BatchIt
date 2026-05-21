@@ -1,3 +1,4 @@
+import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/models/order.dart';
 import 'package:batchit/providers/order_provider.dart';
@@ -7,7 +8,7 @@ import 'package:batchit/widgets/app_staggered_fade.dart';
 import 'package:batchit/widgets/order_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:batchit/screens/orders/create_order_screen.dart';
+
 
 class MyBatchesScreen extends StatefulWidget {
   const MyBatchesScreen({super.key});
@@ -110,7 +111,7 @@ class _MyBatchesScreenState extends State<MyBatchesScreen> {
                               ),
                               const SizedBox(height: AppSpacing.md),
                               ElevatedButton(
-                                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CreateOrderScreen())),
+                                onPressed: () => Navigator.pushNamed(context, AppRoutes.createOrder),
                                 child: Text(l10n.createOrder),
                               ),
                             ],
@@ -135,7 +136,7 @@ class _MyBatchesScreenState extends State<MyBatchesScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CreateOrderScreen())),
+        onPressed: () => Navigator.pushNamed(context, AppRoutes.createOrder),
         child: const Icon(Icons.add),
       ),
     );

@@ -55,6 +55,8 @@ import 'package:batchit/screens/splash/splash_screen.dart';
 import 'package:batchit/screens/profile/settings_screen.dart';
 import 'package:batchit/screens/profile/profile_edit_screen.dart';
 import 'package:batchit/screens/providers/become_provider_screen.dart';
+import 'package:batchit/screens/orders/my_batches_screen.dart';
+import 'package:batchit/screens/orders/create_order_screen.dart';
 import 'package:batchit/themes/app_motion.dart';
 import 'package:batchit/themes/app_theme.dart';
 import 'package:batchit/widgets/main_navigation_shell.dart';
@@ -167,7 +169,9 @@ class BatchItApp extends StatelessWidget {
               case AppRoutes.settings:
                 return _buildRoute(const SettingsScreen());
               case AppRoutes.mapView:
-                return _buildRoute(const MapViewScreen());
+                return _buildRoute(MapViewScreen(
+                    focusedProviderId:
+                        settingsRoute.arguments as String?));
               case AppRoutes.chat:
                 return _buildRoute(const ChatScreen());
               case AppRoutes.providerDiscovery:
@@ -185,6 +189,10 @@ class BatchItApp extends StatelessWidget {
                 return _buildRoute(
                   CreateBatchScreen(preselectedProviderId: providerId),
                 );
+              case AppRoutes.myBatches:
+                return _buildRoute(const MyBatchesScreen());
+              case AppRoutes.createOrder:
+                return _buildRoute(const CreateOrderScreen());
               default:
                 return _fallbackRoute();
             }

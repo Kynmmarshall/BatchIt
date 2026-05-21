@@ -8,6 +8,7 @@ import 'package:batchit/widgets/app_primary_button.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -336,7 +337,7 @@ class _Step1BusinessInfo extends StatelessWidget {
 
 // ─── Step 2: Contact & Location ───────────────────────────────────────────────
 
-class _Step2ContactLocation extends StatelessWidget {
+class _Step2ContactLocation extends StatefulWidget {
   const _Step2ContactLocation({
     required this.formKey,
     required this.phoneCtrl,
@@ -354,13 +355,56 @@ class _Step2ContactLocation extends StatelessWidget {
   final TextEditingController lngCtrl;
 
   @override
+  State<_Step2ContactLocation> createState() => _Step2ContactLocationState();
+}
+
+class _Step2ContactLocationState extends State<_Step2ContactLocation> {
+  bool _locating = false;
+
+  Future<void> _useMyLocation() async {
+    setState(() => _locating = true);
+    try {
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permission denied')),
+          );
+        }
+        return;
+      }
+      final pos = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
+      );
+      if (mounted) {
+        widget.latCtrl.text = pos.latitude.toStringAsFixed(6);
+        widget.lngCtrl.text = pos.longitude.toStringAsFixed(6);
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not get location')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _locating = false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
     return Form(
-      key: formKey,
+      key: widget.formKey,
       child: ListView(
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
         children: [
@@ -371,7 +415,7 @@ class _Step2ContactLocation extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
           TextFormField(
-            controller: phoneCtrl,
+            controller: widget.phoneCtrl,
             keyboardType: TextInputType.phone,
             decoration: InputDecoration(
               labelText: l10n.providerPhone,
@@ -382,7 +426,7 @@ class _Step2ContactLocation extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           TextFormField(
-            controller: emailCtrl,
+            controller: widget.emailCtrl,
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               labelText: l10n.providerBusinessEmail,
@@ -396,7 +440,7 @@ class _Step2ContactLocation extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           TextFormField(
-            controller: addressCtrl,
+            controller: widget.addressCtrl,
             maxLines: 2,
             decoration: InputDecoration(
               labelText: l10n.providerAddress,
@@ -420,11 +464,33 @@ class _Step2ContactLocation extends StatelessWidget {
                     Icon(Icons.my_location_rounded,
                         size: 18, color: scheme.primary),
                     const SizedBox(width: AppSpacing.xs),
-                    Text(
-                      l10n.providerGpsTitle,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        color: scheme.primary,
-                        fontWeight: FontWeight.w700,
+                    Expanded(
+                      child: Text(
+                        l10n.providerGpsTitle,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          color: scheme.primary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    FilledButton.tonalIcon(
+                      style: FilledButton.styleFrom(
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.sm, vertical: 6),
+                      ),
+                      onPressed: _locating ? null : _useMyLocation,
+                      icon: _locating
+                          ? const SizedBox(
+                              width: 14,
+                              height: 14,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.gps_fixed_rounded, size: 14),
+                      label: Text(
+                        'Use My Location',
+                        style: theme.textTheme.labelSmall,
                       ),
                     ),
                   ],
@@ -441,7 +507,7 @@ class _Step2ContactLocation extends StatelessWidget {
                   children: [
                     Expanded(
                       child: TextFormField(
-                        controller: latCtrl,
+                        controller: widget.latCtrl,
                         keyboardType: const TextInputType.numberWithOptions(
                           decimal: true,
                           signed: true,
@@ -460,7 +526,7 @@ class _Step2ContactLocation extends StatelessWidget {
                     const SizedBox(width: AppSpacing.sm),
                     Expanded(
                       child: TextFormField(
-                        controller: lngCtrl,
+                        controller: widget.lngCtrl,
                         keyboardType: const TextInputType.numberWithOptions(
                           decimal: true,
                           signed: true,

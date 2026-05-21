@@ -46,10 +46,37 @@ class OrderProvider extends ChangeNotifier {
   }
 
   /// Adds a new order to the front of _orders list and notifies listeners.
-  /// Called when batch reaches capacity or user manually places order.
   void addOrder(Order order) {
     _orders = [order, ..._orders];
     notifyListeners();
+  }
+
+  /// Persists a new order to the backend then prepends it to the local list.
+  /// Falls back to a local optimistic order if the API call fails.
+  Future<void> createOrder({
+    required String batchId,
+    required double quantityKg,
+  }) async {
+    try {
+      final order = await _orderService.createOrder(
+        batchId: batchId,
+        quantityKg: quantityKg,
+      );
+      _orders = [order, ..._orders];
+      notifyListeners();
+    } catch (e) {
+      debugPrint('[OrderProvider] API createOrder failed: $e — adding local fallback');
+      final fallback = Order(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        productName: 'Batch #$batchId',
+        quantityKg: quantityKg,
+        status: OrderStatus.pending,
+        hubName: 'Unknown Hub',
+        batchId: batchId,
+      );
+      _orders = [fallback, ..._orders];
+      notifyListeners();
+    }
   }
 
   /// Returns order with matching ID or null if not found.

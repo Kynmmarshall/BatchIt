@@ -80,6 +80,37 @@ class ApiClient {
   /// Returns true if an auth token is currently set.
   bool get isAuthenticated => _authToken != null;
 
+  // ── Token refresh ───────────────────────────────────────────────────────────
+
+  Future<bool> Function()? _refreshCallback;
+  bool _isRefreshing = false;
+
+  /// Registers a callback invoked on 401 responses to refresh the token.
+  /// The callback should call the refresh endpoint and return true on success.
+  void setRefreshCallback(Future<bool> Function() callback) {
+    _refreshCallback = callback;
+  }
+
+  /// Wraps any HTTP request with automatic token-refresh-and-retry on 401.
+  Future<dynamic> _withRefresh(Future<dynamic> Function() request) async {
+    try {
+      return await request();
+    } on ApiException catch (e) {
+      if (e.statusCode == 401 && _refreshCallback != null && !_isRefreshing) {
+        _isRefreshing = true;
+        try {
+          final refreshed = await _refreshCallback!();
+          if (refreshed) return await request();
+        } finally {
+          _isRefreshing = false;
+        }
+      }
+      rethrow;
+    } catch (e) {
+      throw _handleError(e);
+    }
+  }
+
   /// Builds common headers including Content-Type and Authorization.
   Map<String, String> _buildHeaders() {
     final headers = {
@@ -98,65 +129,43 @@ class ApiClient {
   /// Parameters:
   ///   - endpoint: Path relative to base URL (e.g., '/batches/')
   ///   - params: Optional query parameters map
-  Future<dynamic> get(String endpoint, {Map<String, String>? params}) async {
+  Future<dynamic> get(String endpoint, {Map<String, String>? params}) {
     final uri = Uri.parse('$_baseUrl$endpoint');
     final uriWithParams = params != null ? uri.replace(queryParameters: params) : uri;
     debugPrint('[BatchIt][api] GET $uriWithParams');
-
-    try {
+    return _withRefresh(() async {
       final response = await _httpClient
           .get(uriWithParams, headers: _buildHeaders())
           .timeout(AppConstants.apiTimeout);
-
       debugPrint('[BatchIt][api] GET $endpoint → ${response.statusCode}');
       return _handleResponse(response);
-    } catch (e) {
-      debugPrint('[BatchIt][api] GET $endpoint error: ${e.runtimeType}: $e');
-      throw _handleError(e);
-    }
+    });
   }
 
   /// Performs a POST request with JSON body.
   /// Returns parsed JSON response or throws an exception on error.
-  Future<dynamic> post(String endpoint, {required Map<String, dynamic> body}) async {
+  Future<dynamic> post(String endpoint, {required Map<String, dynamic> body}) {
     final uri = Uri.parse('$_baseUrl$endpoint');
     debugPrint('[BatchIt][api] POST $uri');
-
-    try {
+    return _withRefresh(() async {
       final response = await _httpClient
-          .post(
-            uri,
-            headers: _buildHeaders(),
-            body: jsonEncode(body),
-          )
+          .post(uri, headers: _buildHeaders(), body: jsonEncode(body))
           .timeout(AppConstants.apiTimeout);
-
       debugPrint('[BatchIt][api] POST $endpoint → ${response.statusCode}');
       return _handleResponse(response);
-    } catch (e) {
-      debugPrint('[BatchIt][api] POST $endpoint error: ${e.runtimeType}: $e');
-      throw _handleError(e);
-    }
+    });
   }
 
   /// Performs a PATCH request with JSON body.
   /// Used for partial updates.
-  Future<dynamic> patch(String endpoint, {required Map<String, dynamic> body}) async {
+  Future<dynamic> patch(String endpoint, {required Map<String, dynamic> body}) {
     final uri = Uri.parse('$_baseUrl$endpoint');
-
-    try {
+    return _withRefresh(() async {
       final response = await _httpClient
-          .patch(
-            uri,
-            headers: _buildHeaders(),
-            body: jsonEncode(body),
-          )
+          .patch(uri, headers: _buildHeaders(), body: jsonEncode(body))
           .timeout(AppConstants.apiTimeout);
-
       return _handleResponse(response);
-    } catch (e) {
-      throw _handleError(e);
-    }
+    });
   }
 
   /// Performs a POST multipart/form-data request.
@@ -183,13 +192,11 @@ class ApiClient {
       }
     }
 
-    try {
+    return _withRefresh(() async {
       final streamed = await request.send().timeout(AppConstants.apiTimeout);
       final response = await http.Response.fromStream(streamed);
       return _handleResponse(response);
-    } catch (e) {
-      throw _handleError(e);
-    }
+    });
   }
 
   /// Performs a PATCH multipart/form-data request.
@@ -213,29 +220,23 @@ class ApiClient {
       request.files.add(await http.MultipartFile.fromPath(fileField, file.path));
     }
 
-    try {
+    return _withRefresh(() async {
       final streamed = await request.send().timeout(AppConstants.apiTimeout);
       final response = await http.Response.fromStream(streamed);
       return _handleResponse(response);
-    } catch (e) {
-      throw _handleError(e);
-    }
+    });
   }
 
   /// Performs a DELETE request.
   /// Returns parsed JSON response or null on success.
-  Future<dynamic> delete(String endpoint) async {
+  Future<dynamic> delete(String endpoint) {
     final uri = Uri.parse('$_baseUrl$endpoint');
-
-    try {
+    return _withRefresh(() async {
       final response = await _httpClient
           .delete(uri, headers: _buildHeaders())
           .timeout(AppConstants.apiTimeout);
-
       return _handleResponse(response);
-    } catch (e) {
-      throw _handleError(e);
-    }
+    });
   }
 
   /// Handles HTTP response and returns parsed JSON or error message.

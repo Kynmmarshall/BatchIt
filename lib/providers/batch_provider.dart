@@ -20,7 +20,6 @@
 /// ============================================================================
 import 'dart:io';
 import 'package:batchit/models/batch.dart';
-import 'package:batchit/models/order.dart';
 import 'package:batchit/providers/order_provider.dart';
 import 'package:batchit/services/batch_service.dart';
 import 'package:flutter/material.dart';
@@ -98,7 +97,6 @@ class BatchProvider extends ChangeNotifier {
       await _batchService.joinBatch(batchId, quantityKg);
       
       // Update local state
-      Batch? updatedBatch;
       _batches = _batches
           .map(
             (batch) => batch.id == batchId
@@ -113,21 +111,10 @@ class BatchProvider extends ChangeNotifier {
                 : batch,
           )
           .toList(growable: false);
-      updatedBatch = findById(batchId);
-      
-      if (updatedBatch != null && updatedBatch.isFull) {
-        final order = Order(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          productName: updatedBatch.productName,
-          quantityKg: updatedBatch.currentQuantityKg,
-          status: OrderStatus.triggered,
-          hubName: updatedBatch.hubName,
-          batchId: updatedBatch.id,
-        );
-        _orderProvider.addOrder(order);
-      }
-      
       notifyListeners();
+
+      // Persist the participation as an order via the backend.
+      await _orderProvider.createOrder(batchId: batchId, quantityKg: quantityKg);
     } catch (e) {
       debugPrint('Failed to join batch: $e');
       rethrow;

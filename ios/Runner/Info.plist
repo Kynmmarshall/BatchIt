@@ -47,6 +47,8 @@
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Select a profile picture.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>BatchIt uses your location to set your business GPS coordinates.</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>https</string>

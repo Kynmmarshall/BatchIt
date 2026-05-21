@@ -43,6 +43,7 @@ class AuthService {
       final token = response['token'] as String?;
       if (token != null) {
         await _apiClient.setAuthToken(token);
+        _apiClient.setRefreshCallback(refreshToken);
       }
 
       final userData = response['user'] as Map<String, dynamic>?;
@@ -85,6 +86,7 @@ class AuthService {
       final token = response['token'] as String?;
       if (token != null) {
         await _apiClient.setAuthToken(token);
+        _apiClient.setRefreshCallback(refreshToken);
       }
 
       final userData = response['user'] as Map<String, dynamic>?;
@@ -157,6 +159,7 @@ class AuthService {
       final token = response['token'] as String?;
       if (token != null) {
         await _apiClient.setAuthToken(token);
+        _apiClient.setRefreshCallback(refreshToken);
       }
 
       final userData = response['user'] as Map<String, dynamic>?;
@@ -289,6 +292,7 @@ class AuthService {
       final token = response['token'] as String?;
       if (token != null) {
         await _apiClient.setAuthToken(token);
+        _apiClient.setRefreshCallback(refreshToken);
       }
 
       final userData = response['user'] as Map<String, dynamic>?;
@@ -346,6 +350,22 @@ class AuthService {
       );
     } on ApiException {
       rethrow;
+    }
+  }
+
+  /// Refreshes the auth token using the /auth/refresh/ endpoint.
+  /// Returns true if a new token was obtained and stored.
+  Future<bool> refreshToken() async {
+    try {
+      final response = await _apiClient.post('/auth/refresh/', body: {});
+      final token = response['token'] as String?;
+      if (token != null && token.isNotEmpty) {
+        await _apiClient.setAuthToken(token);
+        return true;
+      }
+      return false;
+    } catch (_) {
+      return false;
     }
   }
 

@@ -54,5 +54,7 @@ class AppRoutes {
   static const String providerDetail = '/provider-detail';
   // args: String? providerId — pre-selects a provider (Module 3)
   static const String createBatch = '/create-batch';
+  static const String myBatches = '/my-batches';
+  static const String createOrder = '/create-order';
 }
 
