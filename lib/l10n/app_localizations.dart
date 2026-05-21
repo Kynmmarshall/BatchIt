@@ -1573,6 +1573,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Other'**
   String get providerCategoryOther;
+
+  /// No description provided for @providersVerifiedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified Providers'**
+  String get providersVerifiedTitle;
+
+  /// No description provided for @providersScreenLead.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse verified hubs and connect with trusted providers near you.'**
+  String get providersScreenLead;
+
+  /// No description provided for @providerCardFollow.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow'**
+  String get providerCardFollow;
+
+  /// No description provided for @providerCardFollowing.
+  ///
+  /// In en, this message translates to:
+  /// **'Following'**
+  String get providerCardFollowing;
+
+  /// No description provided for @providerCardContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact'**
+  String get providerCardContact;
+
+  /// No description provided for @providerNoResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No providers match your search'**
+  String get providerNoResults;
+
+  /// No description provided for @providerNoResultsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Try a different keyword or category.'**
+  String get providerNoResultsSubtitle;
+
+  /// No description provided for @providerNoVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'No verified providers yet'**
+  String get providerNoVerified;
+
+  /// No description provided for @providerNoVerifiedSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check back soon — new hubs are being onboarded.'**
+  String get providerNoVerifiedSubtitle;
+
+  /// No description provided for @providerDetailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider Details'**
+  String get providerDetailTitle;
+
+  /// No description provided for @providerDetailOwner.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner'**
+  String get providerDetailOwner;
+
+  /// No description provided for @providerDetailRegistration.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration'**
+  String get providerDetailRegistration;
+
+  /// No description provided for @providerDetailServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Services & Products'**
+  String get providerDetailServices;
+
+  /// No description provided for @providerDetailLocationSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Business Location'**
+  String get providerDetailLocationSection;
+
+  /// No description provided for @providerDetailViewOnMap.
+  ///
+  /// In en, this message translates to:
+  /// **'View on Map'**
+  String get providerDetailViewOnMap;
+
+  /// No description provided for @providerDetailCreateBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a Batch with this Provider'**
+  String get providerDetailCreateBatch;
+
+  /// No description provided for @providerDetailContactProvider.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Provider'**
+  String get providerDetailContactProvider;
+
+  /// No description provided for @batchSelectProvider.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Provider'**
+  String get batchSelectProvider;
+
+  /// No description provided for @batchChangeProvider.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get batchChangeProvider;
+
+  /// No description provided for @batchAutoProviderDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'BatchIt will assign the nearest available hub'**
+  String get batchAutoProviderDesc;
 }
 
 class _AppLocalizationsDelegate

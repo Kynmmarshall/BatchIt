@@ -259,5 +259,27 @@
   "providerCategoryElectronics": "Electronics",
   "providerCategoryClothing": "Clothing & Fashion",
   "providerCategoryRestaurant": "Restaurant",
-  "providerCategoryOther": "Other"
+  "providerCategoryOther": "Other",
+
+  "providersVerifiedTitle": "Verified Providers",
+  "providersScreenLead": "Browse verified hubs and connect with trusted providers near you.",
+  "providerCardFollow": "Follow",
+  "providerCardFollowing": "Following",
+  "providerCardContact": "Contact",
+  "providerNoResults": "No providers match your search",
+  "providerNoResultsSubtitle": "Try a different keyword or category.",
+  "providerNoVerified": "No verified providers yet",
+  "providerNoVerifiedSubtitle": "Check back soon — new hubs are being onboarded.",
+  "providerDetailTitle": "Provider Details",
+  "providerDetailOwner": "Owner",
+  "providerDetailRegistration": "Registration",
+  "providerDetailServices": "Services & Products",
+  "providerDetailLocationSection": "Business Location",
+  "providerDetailViewOnMap": "View on Map",
+  "providerDetailCreateBatch": "Create a Batch with this Provider",
+  "providerDetailContactProvider": "Contact Provider",
+
+  "batchSelectProvider": "Select Provider",
+  "batchChangeProvider": "Change",
+  "batchAutoProviderDesc": "BatchIt will assign the nearest available hub"
 }

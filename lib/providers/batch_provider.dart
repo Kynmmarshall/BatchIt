@@ -67,11 +67,15 @@ class BatchProvider extends ChangeNotifier {
     required String productName,
     required double bulkSizeKg,
     required String location,
+    String? providerId,
+    String? notes,
   }) async {
     final batch = await _batchService.createBatch(
       productName: productName,
       bulkSizeKg: bulkSizeKg,
       location: location,
+      providerId: providerId,
+      notes: notes,
     );
     _batches = [batch, ..._batches];
     notifyListeners();

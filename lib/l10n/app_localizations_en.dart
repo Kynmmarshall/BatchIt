@@ -781,4 +781,68 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get providerCategoryOther => 'Other';
+
+  @override
+  String get providersVerifiedTitle => 'Verified Providers';
+
+  @override
+  String get providersScreenLead =>
+      'Browse verified hubs and connect with trusted providers near you.';
+
+  @override
+  String get providerCardFollow => 'Follow';
+
+  @override
+  String get providerCardFollowing => 'Following';
+
+  @override
+  String get providerCardContact => 'Contact';
+
+  @override
+  String get providerNoResults => 'No providers match your search';
+
+  @override
+  String get providerNoResultsSubtitle =>
+      'Try a different keyword or category.';
+
+  @override
+  String get providerNoVerified => 'No verified providers yet';
+
+  @override
+  String get providerNoVerifiedSubtitle =>
+      'Check back soon — new hubs are being onboarded.';
+
+  @override
+  String get providerDetailTitle => 'Provider Details';
+
+  @override
+  String get providerDetailOwner => 'Owner';
+
+  @override
+  String get providerDetailRegistration => 'Registration';
+
+  @override
+  String get providerDetailServices => 'Services & Products';
+
+  @override
+  String get providerDetailLocationSection => 'Business Location';
+
+  @override
+  String get providerDetailViewOnMap => 'View on Map';
+
+  @override
+  String get providerDetailCreateBatch => 'Create a Batch with this Provider';
+
+  @override
+  String get providerDetailContactProvider => 'Contact Provider';
+
+  @override
+  String get batchSelectProvider => 'Select Provider';
+
+  @override
+  String get batchChangeProvider => 'Change';
+
+  @override
+  String get batchAutoProviderDesc =>
+      'BatchIt will assign the nearest available hub';
 }

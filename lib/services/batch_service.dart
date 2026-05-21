@@ -60,6 +60,7 @@ class BatchService {
     required String productName,
     required double bulkSizeKg,
     required String location,
+    String? providerId,
     String? notes,
     DateTime? expiresAt,
   }) async {
@@ -70,8 +71,9 @@ class BatchService {
           'product_name': productName,
           'total_quantity': bulkSizeKg,
           'location': location,
+          if (providerId != null) 'provider_id': providerId,
           'notes': notes ?? '',
-          'expires_at': expiresAt?.toIso8601String() ?? 
+          'expires_at': expiresAt?.toIso8601String() ??
               DateTime.now().add(const Duration(days: 7)).toIso8601String(),
           'status': 'open',
         },

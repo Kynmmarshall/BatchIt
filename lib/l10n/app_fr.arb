@@ -259,5 +259,27 @@
   "providerCategoryElectronics": "Électronique",
   "providerCategoryClothing": "Vêtements & Mode",
   "providerCategoryRestaurant": "Restaurant",
-  "providerCategoryOther": "Autre"
+  "providerCategoryOther": "Autre",
+
+  "providersVerifiedTitle": "Prestataires Vérifiés",
+  "providersScreenLead": "Parcourez les hubs vérifiés et connectez-vous avec des prestataires de confiance près de chez vous.",
+  "providerCardFollow": "Suivre",
+  "providerCardFollowing": "Suivi",
+  "providerCardContact": "Contacter",
+  "providerNoResults": "Aucun prestataire ne correspond à votre recherche",
+  "providerNoResultsSubtitle": "Essayez un autre mot-clé ou une autre catégorie.",
+  "providerNoVerified": "Aucun prestataire vérifié pour le moment",
+  "providerNoVerifiedSubtitle": "Revenez bientôt — de nouveaux hubs sont en cours d'intégration.",
+  "providerDetailTitle": "Détails du Prestataire",
+  "providerDetailOwner": "Propriétaire",
+  "providerDetailRegistration": "Immatriculation",
+  "providerDetailServices": "Services & Produits",
+  "providerDetailLocationSection": "Localisation de l'entreprise",
+  "providerDetailViewOnMap": "Voir sur la carte",
+  "providerDetailCreateBatch": "Créer un Batch avec ce Prestataire",
+  "providerDetailContactProvider": "Contacter le Prestataire",
+
+  "batchSelectProvider": "Sélectionner un Prestataire",
+  "batchChangeProvider": "Modifier",
+  "batchAutoProviderDesc": "BatchIt assignera le hub disponible le plus proche"
 }

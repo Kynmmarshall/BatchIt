@@ -796,4 +796,69 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get providerCategoryOther => 'Autre';
+
+  @override
+  String get providersVerifiedTitle => 'Prestataires Vérifiés';
+
+  @override
+  String get providersScreenLead =>
+      'Parcourez les hubs vérifiés et connectez-vous avec des prestataires de confiance près de chez vous.';
+
+  @override
+  String get providerCardFollow => 'Suivre';
+
+  @override
+  String get providerCardFollowing => 'Suivi';
+
+  @override
+  String get providerCardContact => 'Contacter';
+
+  @override
+  String get providerNoResults =>
+      'Aucun prestataire ne correspond à votre recherche';
+
+  @override
+  String get providerNoResultsSubtitle =>
+      'Essayez un autre mot-clé ou une autre catégorie.';
+
+  @override
+  String get providerNoVerified => 'Aucun prestataire vérifié pour le moment';
+
+  @override
+  String get providerNoVerifiedSubtitle =>
+      'Revenez bientôt — de nouveaux hubs sont en cours d\'intégration.';
+
+  @override
+  String get providerDetailTitle => 'Détails du Prestataire';
+
+  @override
+  String get providerDetailOwner => 'Propriétaire';
+
+  @override
+  String get providerDetailRegistration => 'Immatriculation';
+
+  @override
+  String get providerDetailServices => 'Services & Produits';
+
+  @override
+  String get providerDetailLocationSection => 'Localisation de l\'entreprise';
+
+  @override
+  String get providerDetailViewOnMap => 'Voir sur la carte';
+
+  @override
+  String get providerDetailCreateBatch => 'Créer un Batch avec ce Prestataire';
+
+  @override
+  String get providerDetailContactProvider => 'Contacter le Prestataire';
+
+  @override
+  String get batchSelectProvider => 'Sélectionner un Prestataire';
+
+  @override
+  String get batchChangeProvider => 'Modifier';
+
+  @override
+  String get batchAutoProviderDesc =>
+      'BatchIt assignera le hub disponible le plus proche';
 }
