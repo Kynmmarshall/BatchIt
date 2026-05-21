@@ -1693,6 +1693,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'BatchIt will assign the nearest available hub'**
   String get batchAutoProviderDesc;
+
+  /// No description provided for @getDirections.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Directions'**
+  String get getDirections;
+
+  /// No description provided for @mapOpenError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open Maps. Please try again.'**
+  String get mapOpenError;
+
+  /// No description provided for @batchImageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Product Image (Optional)'**
+  String get batchImageLabel;
+
+  /// No description provided for @batchImageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to add a product photo'**
+  String get batchImageHint;
+
+  /// No description provided for @batchImageChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Image'**
+  String get batchImageChange;
 }
 
 class _AppLocalizationsDelegate

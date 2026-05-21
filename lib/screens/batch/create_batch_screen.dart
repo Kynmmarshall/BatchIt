@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/models/provider_profile.dart';
@@ -8,6 +9,7 @@ import 'package:batchit/widgets/app_primary_button.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
 import 'package:batchit/widgets/app_staggered_fade.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 // Sealed result for provider picker bottom sheet
@@ -53,6 +55,7 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
 
   String _selectedProduct = 'Potatoes';
   ProviderProfile? _selectedProvider;
+  File? _batchImage;
 
   @override
   void initState() {
@@ -78,6 +81,19 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
     _noteController.dispose();
     _bulkController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 1024,
+      maxHeight: 1024,
+      imageQuality: 85,
+    );
+    if (picked != null && mounted) {
+      setState(() => _batchImage = File(picked.path));
+    }
   }
 
   Future<void> _openProviderPicker() async {
@@ -116,6 +132,7 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
         notes: _noteController.text.trim().isEmpty
             ? null
             : _noteController.text.trim(),
+        image: _batchImage,
       );
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -277,6 +294,79 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
                           scheme: scheme,
                           theme: theme,
                           onTap: _openProviderPicker,
+                        ),
+                        const SizedBox(height: AppSpacing.lg),
+
+                        // ── Product image ──────────────────────────────────
+                        Text(
+                          l10n.batchImageLabel,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.xs),
+                        GestureDetector(
+                          onTap: _pickImage,
+                          child: Container(
+                            height: 140,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: scheme.surfaceContainerLowest,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: scheme.outlineVariant,
+                                style: BorderStyle.solid,
+                              ),
+                            ),
+                            child: _batchImage != null
+                                ? Stack(
+                                    fit: StackFit.expand,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(12),
+                                        child: Image.file(
+                                          _batchImage!,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      Positioned(
+                                        top: AppSpacing.xs,
+                                        right: AppSpacing.xs,
+                                        child: FilledButton.icon(
+                                          onPressed: _pickImage,
+                                          style: FilledButton.styleFrom(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: AppSpacing.sm,
+                                                vertical: 4),
+                                            tapTargetSize:
+                                                MaterialTapTargetSize.shrinkWrap,
+                                            textStyle:
+                                                theme.textTheme.labelSmall,
+                                          ),
+                                          icon: const Icon(Icons.edit_rounded,
+                                              size: 14),
+                                          label: Text(l10n.batchImageChange),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.add_photo_alternate_rounded,
+                                          size: 36,
+                                          color: scheme.onSurfaceVariant),
+                                      const SizedBox(height: AppSpacing.xs),
+                                      Text(
+                                        l10n.batchImageHint,
+                                        style:
+                                            theme.textTheme.bodySmall?.copyWith(
+                                          color: scheme.onSurfaceVariant,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                          ),
                         ),
                         const SizedBox(height: AppSpacing.lg),
 

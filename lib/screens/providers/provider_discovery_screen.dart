@@ -3,8 +3,6 @@ import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/models/provider_profile.dart';
 import 'package:batchit/providers/provider_provider.dart';
 import 'package:batchit/themes/app_spacing.dart';
-import 'package:batchit/widgets/app_screen_container.dart';
-import 'package:batchit/widgets/app_staggered_fade.dart';
 import 'package:batchit/widgets/provider_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +16,6 @@ class ProviderDiscoveryScreen extends StatefulWidget {
 }
 
 class _ProviderDiscoveryScreenState extends State<ProviderDiscoveryScreen> {
-  // null means "All"
   BusinessCategory? _selectedCategory;
   String _query = '';
   final Set<String> _followedIds = {};
@@ -56,120 +53,85 @@ class _ProviderDiscoveryScreenState extends State<ProviderDiscoveryScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.providersVerifiedTitle)),
-      body: AppScreenContainer(
-        child: state.isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : ListView(
-                children: [
-                  // ── Header card ──────────────────────────────────────────
-                  AppStaggeredFade(
-                    index: 0,
-                    child: _HeaderBanner(l10n: l10n, scheme: scheme, theme: theme),
-                  ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: theme.brightness == Brightness.dark
+                ? [const Color(0xFF1a1a1a), const Color(0xFF0d0d0d)]
+                : [const Color(0xFFFafafa), const Color(0xFFF5f5f5)],
+          ),
+        ),
+        child: SafeArea(
+          bottom: false,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 12.0,
+            ),
+            child: state.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : ListView(
+                    children: [
+                      // Header banner
+                      _buildHeaderBanner(l10n, scheme, theme),
+                      const SizedBox(height: AppSpacing.sm),
 
-                  const SizedBox(height: AppSpacing.sm),
+                      // Search and filter card
+                      _buildSearchCard(l10n),
+                      const SizedBox(height: AppSpacing.sm),
 
-                  // ── Search + filter ──────────────────────────────────────
-                  AppStaggeredFade(
-                    index: 1,
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(AppSpacing.md),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            TextField(
-                              onChanged: (v) =>
-                                  setState(() => _query = v.trim()),
-                              decoration: InputDecoration(
-                                hintText: l10n.searchHint,
-                                prefixIcon:
-                                    const Icon(Icons.search_rounded),
-                                isDense: true,
-                              ),
+                      // Provider list or empty state
+                      if (!hasProviders)
+                        _buildEmptyState(
+                          l10n.providerNoVerified,
+                          l10n.providerNoVerifiedSubtitle,
+                          Icons.storefront_outlined,
+                          theme,
+                          scheme,
+                        )
+                      else if (filtered.isEmpty)
+                        _buildEmptyState(
+                          l10n.providerNoResults,
+                          l10n.providerNoResultsSubtitle,
+                          Icons.search_off_rounded,
+                          theme,
+                          scheme,
+                        )
+                      else
+                        ...filtered.map((provider) {
+                          return Padding(
+                            padding:
+                                const EdgeInsets.only(bottom: AppSpacing.sm),
+                            child: ProviderCard(
+                              provider: provider,
+                              isFollowing: _followedIds.contains(provider.id),
+                              onFollowToggle: () => setState(() {
+                                if (_followedIds.contains(provider.id)) {
+                                  _followedIds.remove(provider.id);
+                                } else {
+                                  _followedIds.add(provider.id);
+                                }
+                              }),
                             ),
-                            const SizedBox(height: AppSpacing.sm),
-                            _CategoryFilterBar(
-                              selected: _selectedCategory,
-                              onChanged: (cat) =>
-                                  setState(() => _selectedCategory = cat),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                          );
+                        }),
+
+                      const SizedBox(height: AppSpacing.xl),
+                    ],
                   ),
-
-                  const SizedBox(height: AppSpacing.sm),
-
-                  // ── Provider list ────────────────────────────────────────
-                  if (!hasProviders)
-                    AppStaggeredFade(
-                      index: 2,
-                      child: _EmptyState(
-                        icon: Icons.storefront_outlined,
-                        title: l10n.providerNoVerified,
-                        subtitle: l10n.providerNoVerifiedSubtitle,
-                      ),
-                    )
-                  else if (filtered.isEmpty)
-                    AppStaggeredFade(
-                      index: 2,
-                      child: _EmptyState(
-                        icon: Icons.search_off_rounded,
-                        title: l10n.providerNoResults,
-                        subtitle: l10n.providerNoResultsSubtitle,
-                      ),
-                    )
-                  else
-                    ...filtered.asMap().entries.map((entry) {
-                      final i = entry.key;
-                      final provider = entry.value;
-                      return AppStaggeredFade(
-                        index: i + 2,
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.only(bottom: AppSpacing.sm),
-                          child: ProviderCard(
-                            provider: provider,
-                            isFollowing:
-                                _followedIds.contains(provider.id),
-                            onFollowToggle: () => setState(() {
-                              if (_followedIds.contains(provider.id)) {
-                                _followedIds.remove(provider.id);
-                              } else {
-                                _followedIds.add(provider.id);
-                              }
-                            }),
-                          ),
-                        ),
-                      );
-                    }),
-
-                  const SizedBox(height: AppSpacing.xl),
-                ],
-              ),
+          ),
+        ),
       ),
     );
   }
-}
 
-// ─── Header banner ────────────────────────────────────────────────────────────
-
-class _HeaderBanner extends StatelessWidget {
-  const _HeaderBanner({
-    required this.l10n,
-    required this.scheme,
-    required this.theme,
-  });
-
-  final AppLocalizations l10n;
-  final ColorScheme scheme;
-  final ThemeData theme;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildHeaderBanner(
+    AppLocalizations l10n,
+    ColorScheme scheme,
+    ThemeData theme,
+  ) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
@@ -208,38 +170,58 @@ class _HeaderBanner extends StatelessWidget {
             ),
           ),
           const SizedBox(width: AppSpacing.sm),
-          FilledButton.icon(
-            onPressed: () =>
-                Navigator.pushNamed(context, AppRoutes.becomeProvider),
-            icon: const Icon(Icons.add_business_rounded, size: 18),
-            label: Text(
-              l10n.createProviderProfile,
-              style: theme.textTheme.labelSmall,
-            ),
-            style: FilledButton.styleFrom(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          // Fix: wrap the button in a SizedBox to prevent infinite width
+          // caused by the Row's Expanded child giving non‑flexible children
+          // unbounded horizontal constraints.
+          SizedBox(
+            width: 150, // Adjust as needed to fit the label
+            child: FilledButton.icon(
+              onPressed: () =>
+                  Navigator.pushNamed(context, AppRoutes.becomeProvider),
+              icon: const Icon(Icons.add_business_rounded, size: 18),
+              label: Text(
+                l10n.createProviderProfile,
+                style: Theme.of(context).textTheme.labelSmall,
+              ),
+              style: FilledButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.sm,
+                  vertical: AppSpacing.xs,
+                ),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
             ),
           ),
         ],
       ),
     );
   }
-}
 
-// ─── Category filter bar ──────────────────────────────────────────────────────
+  Widget _buildSearchCard(AppLocalizations l10n) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextField(
+              onChanged: (v) => setState(() => _query = v.trim()),
+              decoration: InputDecoration(
+                hintText: l10n.searchHint,
+                prefixIcon: const Icon(Icons.search_rounded),
+                isDense: true,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            _buildCategoryFilter(l10n),
+          ],
+        ),
+      ),
+    );
+  }
 
-class _CategoryFilterBar extends StatelessWidget {
-  const _CategoryFilterBar({required this.selected, required this.onChanged});
-
-  final BusinessCategory? selected;
-  final ValueChanged<BusinessCategory?> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
+  Widget _buildCategoryFilter(AppLocalizations l10n) {
     final options = <(BusinessCategory?, String)>[
       (null, l10n.seeAll),
       (BusinessCategory.grocery, l10n.providerCategoryGrocery),
@@ -250,44 +232,29 @@ class _CategoryFilterBar extends StatelessWidget {
       (BusinessCategory.other, l10n.providerCategoryOther),
     ];
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: options.map((opt) {
-          final (cat, label) = opt;
-          return Padding(
-            padding: const EdgeInsets.only(right: AppSpacing.xs),
-            child: FilterChip(
-              label: Text(label),
-              selected: selected == cat,
-              onSelected: (_) => onChanged(cat),
-              visualDensity: VisualDensity.compact,
-            ),
-          );
-        }).toList(),
-      ),
+    return Wrap(
+      spacing: AppSpacing.xs,
+      runSpacing: AppSpacing.xs,
+      children: options.map((opt) {
+        final (cat, label) = opt;
+        return FilterChip(
+          label: Text(label),
+          selected: _selectedCategory == cat,
+          onSelected: (_) => setState(() => _selectedCategory = cat),
+          visualDensity: VisualDensity.compact,
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        );
+      }).toList(),
     );
   }
-}
 
-// ─── Empty state ──────────────────────────────────────────────────────────────
-
-class _EmptyState extends StatelessWidget {
-  const _EmptyState({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-  });
-
-  final IconData icon;
-  final String title;
-  final String subtitle;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-
+  Widget _buildEmptyState(
+    String title,
+    String subtitle,
+    IconData icon,
+    ThemeData theme,
+    ColorScheme scheme,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxl),
       child: Column(

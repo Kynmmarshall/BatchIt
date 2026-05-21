@@ -845,4 +845,19 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get batchAutoProviderDesc =>
       'BatchIt will assign the nearest available hub';
+
+  @override
+  String get getDirections => 'Get Directions';
+
+  @override
+  String get mapOpenError => 'Could not open Maps. Please try again.';
+
+  @override
+  String get batchImageLabel => 'Product Image (Optional)';
+
+  @override
+  String get batchImageHint => 'Tap to add a product photo';
+
+  @override
+  String get batchImageChange => 'Change Image';
 }

@@ -18,6 +18,7 @@
 /// - BatchService: Provides backend API calls for batch operations
 /// - OrderProvider: Receives notification to create orders when batch fills
 /// ============================================================================
+import 'dart:io';
 import 'package:batchit/models/batch.dart';
 import 'package:batchit/models/order.dart';
 import 'package:batchit/providers/order_provider.dart';
@@ -69,6 +70,7 @@ class BatchProvider extends ChangeNotifier {
     required String location,
     String? providerId,
     String? notes,
+    File? image,
   }) async {
     final batch = await _batchService.createBatch(
       productName: productName,
@@ -76,6 +78,7 @@ class BatchProvider extends ChangeNotifier {
       location: location,
       providerId: providerId,
       notes: notes,
+      image: image,
     );
     _batches = [batch, ..._batches];
     notifyListeners();

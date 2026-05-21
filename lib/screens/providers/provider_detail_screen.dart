@@ -6,7 +6,10 @@ import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/app_primary_button.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Full-detail view for a single verified provider.
 /// Receives the provider ID as a route argument (String).
@@ -131,8 +134,7 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
                   const SizedBox(height: AppSpacing.xs),
                   _CoordinatesRow(provider: provider, l10n: l10n),
                   const SizedBox(height: AppSpacing.sm),
-                  // Map placeholder — replaced by real map in Module 4
-                  _MapPlaceholder(provider: provider, l10n: l10n),
+                  _LiveMapView(provider: provider, l10n: l10n),
                 ],
               ],
             ),
@@ -150,6 +152,22 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
               ),
             ),
 
+            if (provider.latitude != null && provider.longitude != null) ...[
+              const SizedBox(height: AppSpacing.sm),
+              AppPrimaryButton(
+                label: l10n.getDirections,
+                icon: Icons.directions_rounded,
+                isSecondary: true,
+                onPressed: () => _openMaps(
+                  context,
+                  provider.latitude!,
+                  provider.longitude!,
+                  provider.businessName,
+                  l10n,
+                ),
+              ),
+            ],
+
             const SizedBox(height: AppSpacing.sm),
 
             // ── Secondary CTA: Contact ────────────────────────────────────
@@ -165,6 +183,30 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _openMaps(
+    BuildContext context,
+    double lat,
+    double lng,
+    String name,
+    AppLocalizations l10n,
+  ) async {
+    final encoded = Uri.encodeComponent(name);
+    final googleUrl = Uri.parse(
+      'https://www.google.com/maps/search/?api=1&query=$lat,$lng&query=$encoded',
+    );
+    final geoUrl = Uri.parse('geo:$lat,$lng?q=$lat,$lng($encoded)');
+
+    if (await canLaunchUrl(googleUrl)) {
+      await launchUrl(googleUrl, mode: LaunchMode.externalApplication);
+    } else if (await canLaunchUrl(geoUrl)) {
+      await launchUrl(geoUrl, mode: LaunchMode.externalApplication);
+    } else if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.mapOpenError)),
+      );
+    }
   }
 
   void _showContactSheet(
@@ -486,82 +528,124 @@ class _CoordChip extends StatelessWidget {
   }
 }
 
-// ─── Map placeholder ──────────────────────────────────────────────────────────
+// ─── Live map view (flutter_map + OpenStreetMap) ──────────────────────────────
 
-class _MapPlaceholder extends StatelessWidget {
-  const _MapPlaceholder({required this.provider, required this.l10n});
+class _LiveMapView extends StatelessWidget {
+  const _LiveMapView({required this.provider, required this.l10n});
 
   final ProviderProfile provider;
   final AppLocalizations l10n;
+
+  Future<void> _openMaps(BuildContext context) async {
+    final lat = provider.latitude!;
+    final lng = provider.longitude!;
+    final encoded = Uri.encodeComponent(provider.businessName);
+
+    final googleUrl = Uri.parse(
+      'https://www.google.com/maps/search/?api=1&query=$lat,$lng&query=$encoded',
+    );
+    final geoUrl = Uri.parse('geo:$lat,$lng?q=$lat,$lng($encoded)');
+
+    if (await canLaunchUrl(googleUrl)) {
+      await launchUrl(googleUrl, mode: LaunchMode.externalApplication);
+    } else if (await canLaunchUrl(geoUrl)) {
+      await launchUrl(geoUrl, mode: LaunchMode.externalApplication);
+    } else if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.mapOpenError)),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final theme = Theme.of(context);
+    final location = LatLng(provider.latitude!, provider.longitude!);
 
-    return GestureDetector(
-      onTap: () {
-        // Module 4 will launch the map view with this provider's coordinates.
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '${l10n.providerDetailViewOnMap} — coming in Module 4',
-            ),
-          ),
-        );
-      },
-      child: Container(
-        height: 140,
-        decoration: BoxDecoration(
-          color: scheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: scheme.outlineVariant),
-        ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: SizedBox(
+        height: 200,
+        width: double.infinity,
         child: Stack(
           children: [
-            // Grid pattern to simulate a map tile
-            CustomPaint(
-              size: const Size(double.infinity, 140),
-              painter: _MapGridPainter(color: scheme.outlineVariant),
+            // ── Real OpenStreetMap tile layer ─────────────────────────────
+            FlutterMap(
+              options: MapOptions(
+                initialCenter: location,
+                initialZoom: 15,
+                interactionOptions: const InteractionOptions(
+                  flags: InteractiveFlag.none,
+                ),
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate:
+                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  userAgentPackageName: 'app.batchit',
+                ),
+                MarkerLayer(
+                  markers: [
+                    Marker(
+                      point: location,
+                      width: 48,
+                      height: 48,
+                      child: Icon(
+                        Icons.location_pin,
+                        color: scheme.error,
+                        size: 48,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            // Centered pin
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.location_pin, color: scheme.error, size: 40),
-                  const SizedBox(height: AppSpacing.xxs),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.sm, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: scheme.surface,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: scheme.outlineVariant),
-                    ),
-                    child: Text(
+
+            // ── Provider name label ───────────────────────────────────────
+            Positioned(
+              top: AppSpacing.xs,
+              left: AppSpacing.xs,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm, vertical: AppSpacing.xxs),
+                decoration: BoxDecoration(
+                  color: scheme.surface.withValues(alpha: 0.92),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: scheme.outlineVariant),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.storefront_rounded,
+                        size: 12, color: scheme.primary),
+                    const SizedBox(width: 4),
+                    Text(
                       provider.businessName,
-                      style: theme.textTheme.labelSmall
-                          ?.copyWith(fontWeight: FontWeight.w700),
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: scheme.onSurface,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-            // "View on Map" button overlay
+
+            // ── "View on Map" / open in native maps button ────────────────
             Positioned(
               bottom: AppSpacing.xs,
               right: AppSpacing.xs,
               child: FilledButton.icon(
-                onPressed: null,
+                onPressed: () => _openMaps(context),
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.sm, vertical: 4),
+                      horizontal: AppSpacing.sm, vertical: 6),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  textStyle: theme.textTheme.labelSmall,
                 ),
                 icon: const Icon(Icons.open_in_new_rounded, size: 14),
-                label: Text(l10n.providerDetailViewOnMap,
-                    style: theme.textTheme.labelSmall),
+                label: Text(l10n.providerDetailViewOnMap),
               ),
             ),
           ],
@@ -569,30 +653,6 @@ class _MapPlaceholder extends StatelessWidget {
       ),
     );
   }
-}
-
-class _MapGridPainter extends CustomPainter {
-  const _MapGridPainter({required this.color});
-
-  final Color color;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color.withValues(alpha: 0.5)
-      ..strokeWidth = 0.5;
-
-    const step = 24.0;
-    for (double x = 0; x < size.width; x += step) {
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
-    }
-    for (double y = 0; y < size.height; y += step) {
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(_MapGridPainter old) => old.color != color;
 }
 
 // ─── Contact tile ─────────────────────────────────────────────────────────────

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:batchit/models/batch.dart';
 import 'package:flutter/foundation.dart';
 import 'package:batchit/services/api_client.dart';
@@ -55,7 +56,7 @@ class BatchService {
   }
 
   /// Creates a new batch with the provided details.
-  /// Requires authentication token.
+  /// Uses multipart upload when [image] is provided, JSON otherwise.
   Future<Batch> createBatch({
     required String productName,
     required double bulkSizeKg,
@@ -63,9 +64,29 @@ class BatchService {
     String? providerId,
     String? notes,
     DateTime? expiresAt,
+    File? image,
   }) async {
-    try {
-      final response = await _apiClient.post(
+    final expires = expiresAt?.toIso8601String() ??
+        DateTime.now().add(const Duration(days: 7)).toIso8601String();
+
+    final dynamic response;
+    if (image != null) {
+      final fields = <String, String>{
+        'product_name': productName,
+        'total_quantity': bulkSizeKg.toString(),
+        'location': location,
+        if (providerId != null) 'provider_id': providerId,
+        'notes': notes ?? '',
+        'expires_at': expires,
+        'status': 'open',
+      };
+      response = await _apiClient.postMultipart(
+        '/batches/',
+        fields: fields,
+        files: [MapEntry('image', image)],
+      );
+    } else {
+      response = await _apiClient.post(
         '/batches/',
         body: {
           'product_name': productName,
@@ -73,26 +94,19 @@ class BatchService {
           'location': location,
           if (providerId != null) 'provider_id': providerId,
           'notes': notes ?? '',
-          'expires_at': expiresAt?.toIso8601String() ??
-              DateTime.now().add(const Duration(days: 7)).toIso8601String(),
+          'expires_at': expires,
           'status': 'open',
         },
       );
-
-      return _mapBatchFromJson(response as Map<String, dynamic>);
-    } on ApiException catch (e) {
-      rethrow;
     }
+
+    return _mapBatchFromJson(response as Map<String, dynamic>);
   }
 
   /// Fetches a specific batch by ID.
   Future<Batch> fetchBatchById(String batchId) async {
-    try {
-      final response = await _apiClient.get('/batches/$batchId/');
-      return _mapBatchFromJson(response as Map<String, dynamic>);
-    } on ApiException catch (e) {
-      rethrow;
-    }
+    final response = await _apiClient.get('/batches/$batchId/');
+    return _mapBatchFromJson(response as Map<String, dynamic>);
   }
 
   /// Updates a batch (requires ownership or admin).
@@ -102,45 +116,26 @@ class BatchService {
     double? currentQuantityKg,
     String? notes,
   }) async {
-    try {
-      final body = <String, dynamic>{};
-      if (status != null) body['status'] = status;
-      if (currentQuantityKg != null) body['filled_quantity'] = currentQuantityKg;
-      if (notes != null) body['notes'] = notes;
+    final body = <String, dynamic>{};
+    if (status != null) body['status'] = status;
+    if (currentQuantityKg != null) body['filled_quantity'] = currentQuantityKg;
+    if (notes != null) body['notes'] = notes;
 
-      final response = await _apiClient.patch(
-        '/batches/$batchId/',
-        body: body,
-      );
-
-      return _mapBatchFromJson(response as Map<String, dynamic>);
-    } on ApiException catch (e) {
-      rethrow;
-    }
+    final response = await _apiClient.patch('/batches/$batchId/', body: body);
+    return _mapBatchFromJson(response as Map<String, dynamic>);
   }
 
   /// Joins a batch (creates a batch participant entry).
-  /// This is a custom action endpoint that handles the join logic.
   Future<void> joinBatch(String batchId, double quantityRequested) async {
-    try {
-      await _apiClient.post(
-        '/batches/$batchId/join/',
-        body: {
-          'quantity_requested': quantityRequested,
-        },
-      );
-    } on ApiException catch (e) {
-      rethrow;
-    }
+    await _apiClient.post(
+      '/batches/$batchId/join/',
+      body: {'quantity_requested': quantityRequested},
+    );
   }
 
   /// Deletes a batch (requires ownership).
   Future<void> deleteBatch(String batchId) async {
-    try {
-      await _apiClient.delete('/batches/$batchId/');
-    } on ApiException catch (e) {
-      rethrow;
-    }
+    await _apiClient.delete('/batches/$batchId/');
   }
 
   /// Maps backend batch JSON to frontend Batch model.

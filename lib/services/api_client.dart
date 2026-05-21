@@ -33,6 +33,7 @@ class ApiClient {
 
   ApiClient._internal() {
     _httpClient = http.Client();
+    debugPrint('[BatchIt][api] ApiClient initialized — baseUrl: $_baseUrl');
   }
 
   /// Sets the authentication token for subsequent requests.
@@ -100,14 +101,17 @@ class ApiClient {
   Future<dynamic> get(String endpoint, {Map<String, String>? params}) async {
     final uri = Uri.parse('$_baseUrl$endpoint');
     final uriWithParams = params != null ? uri.replace(queryParameters: params) : uri;
+    debugPrint('[BatchIt][api] GET $uriWithParams');
 
     try {
       final response = await _httpClient
           .get(uriWithParams, headers: _buildHeaders())
           .timeout(AppConstants.apiTimeout);
 
+      debugPrint('[BatchIt][api] GET $endpoint → ${response.statusCode}');
       return _handleResponse(response);
     } catch (e) {
+      debugPrint('[BatchIt][api] GET $endpoint error: ${e.runtimeType}: $e');
       throw _handleError(e);
     }
   }
@@ -116,6 +120,7 @@ class ApiClient {
   /// Returns parsed JSON response or throws an exception on error.
   Future<dynamic> post(String endpoint, {required Map<String, dynamic> body}) async {
     final uri = Uri.parse('$_baseUrl$endpoint');
+    debugPrint('[BatchIt][api] POST $uri');
 
     try {
       final response = await _httpClient
@@ -126,8 +131,10 @@ class ApiClient {
           )
           .timeout(AppConstants.apiTimeout);
 
+      debugPrint('[BatchIt][api] POST $endpoint → ${response.statusCode}');
       return _handleResponse(response);
     } catch (e) {
+      debugPrint('[BatchIt][api] POST $endpoint error: ${e.runtimeType}: $e');
       throw _handleError(e);
     }
   }

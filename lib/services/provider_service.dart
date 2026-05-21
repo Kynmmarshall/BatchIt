@@ -10,11 +10,21 @@ class ProviderService {
   Future<List<ProviderProfile>> fetchVerifiedProviders() async {
     try {
       final response = await _apiClient.get('/providers/');
+      debugPrint('[ProviderService] fetchVerifiedProviders response: $response');
       final items = response as List<dynamic>? ?? [];
-      return items
+      debugPrint('[ProviderService] Total items from API: ${items.length}');
+      final verified = items
           .map((e) => ProviderProfile.fromJson(e as Map<String, dynamic>))
           .where((p) => p.isVerified)
           .toList();
+      debugPrint('[ProviderService] Verified providers: ${verified.length}');
+
+      // If API returns empty, use mock data for dev
+      if (verified.isEmpty) {
+        debugPrint('[ProviderService] Empty response, using mock data');
+        return List.of(kMockVerifiedProviders);
+      }
+      return verified;
     } catch (e) {
       debugPrint('[ProviderService] fetchVerifiedProviders fallback: $e');
       return List.of(kMockVerifiedProviders);

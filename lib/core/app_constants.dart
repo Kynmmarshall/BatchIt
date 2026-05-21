@@ -1,9 +1,9 @@
 class AppConstants {
   // API Configuration
-  // Override with: --dart-define=API_BASE_URL=https://api.batchit.duckdns.org/api
+  // Override with: --dart-define=API_BASE_URL=http://38.242.246.126/api
   static const String apiBaseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://api.batchit.duckdns.org/api',
+    defaultValue: 'http://38.242.246.126/api',
   );
   static const Duration apiTimeout = Duration(seconds: 30);
 

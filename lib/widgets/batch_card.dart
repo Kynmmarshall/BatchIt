@@ -108,7 +108,7 @@ class BatchCard extends StatelessWidget {
                     width: 36,
                     height: 36,
                     child: FilledButton(
-                      onPressed: onTap,
+                      onPressed: onTap, 
                       style: FilledButton.styleFrom(
                         padding: EdgeInsets.zero,
                         shape: RoundedRectangleBorder(

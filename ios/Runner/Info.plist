@@ -47,5 +47,12 @@
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Select a profile picture.</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>https</string>
+		<string>maps</string>
+		<string>geo</string>
+		<string>comgooglemaps</string>
+	</array>
 </dict>
 </plist>

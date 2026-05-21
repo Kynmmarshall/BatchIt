@@ -281,5 +281,11 @@
 
   "batchSelectProvider": "Select Provider",
   "batchChangeProvider": "Change",
-  "batchAutoProviderDesc": "BatchIt will assign the nearest available hub"
+  "batchAutoProviderDesc": "BatchIt will assign the nearest available hub",
+
+  "getDirections": "Get Directions",
+  "mapOpenError": "Could not open Maps. Please try again.",
+  "batchImageLabel": "Product Image (Optional)",
+  "batchImageHint": "Tap to add a product photo",
+  "batchImageChange": "Change Image"
 }

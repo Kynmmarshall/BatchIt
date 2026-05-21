@@ -281,5 +281,11 @@
 
   "batchSelectProvider": "Sélectionner un Prestataire",
   "batchChangeProvider": "Modifier",
-  "batchAutoProviderDesc": "BatchIt assignera le hub disponible le plus proche"
+  "batchAutoProviderDesc": "BatchIt assignera le hub disponible le plus proche",
+
+  "getDirections": "Obtenir l'itinéraire",
+  "mapOpenError": "Impossible d'ouvrir Maps. Veuillez réessayer.",
+  "batchImageLabel": "Image du produit (optionnel)",
+  "batchImageHint": "Appuyer pour ajouter une photo",
+  "batchImageChange": "Changer l'image"
 }
