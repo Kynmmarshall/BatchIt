@@ -22,7 +22,6 @@ class BatchService {
   final ApiClient _apiClient = ApiClient();
 
   /// Fetches nearby open batches that the user can join.
-  /// Falls back to mock data if API call fails (for dev/testing).
   Future<List<Batch>> fetchNearbyBatches({
     String status = 'open',
     double? latitude,
@@ -49,9 +48,8 @@ class BatchService {
           .map((batchJson) => _mapBatchFromJson(batchJson as Map<String, dynamic>))
           .toList();
     } on ApiException catch (e) {
-      debugPrint('Failed to fetch batches: $e, using mock data');
-      // Fall back to mock data for development
-      return _getMockBatches();
+      debugPrint('Failed to fetch batches: $e');
+      return [];
     }
   }
 
@@ -157,6 +155,7 @@ class BatchService {
   Batch _mapBatchFromJson(Map<String, dynamic> json) {
     return Batch(
       id: json['id'] as String? ?? json['batch_id'] as String? ?? 'unknown',
+      providerId: json['provider_id'] as String?,
       productName: json['product_name'] as String? ?? 'Unknown Product',
       bulkSizeKg: (json['bulk_size_kg'] as num?)?.toDouble() ??
           (json['total_quantity'] as num?)?.toDouble() ?? 0.0,
@@ -170,33 +169,4 @@ class BatchService {
     );
   }
 
-  /// Returns mock batch data for development/testing when API is unavailable.
-  List<Batch> _getMockBatches() {
-    return const [
-      Batch(
-        id: 'b_001',
-        productName: 'Potatoes',
-        bulkSizeKg: 50,
-        currentQuantityKg: 23,
-        locationName: 'Hay Salam',
-        hubName: 'Hub Ain Sebaa',
-      ),
-      Batch(
-        id: 'b_002',
-        productName: 'Tomatoes',
-        bulkSizeKg: 30,
-        currentQuantityKg: 30,
-        locationName: 'Maarif',
-        hubName: 'Hub Centre',
-      ),
-      Batch(
-        id: 'b_003',
-        productName: 'Onions',
-        bulkSizeKg: 40,
-        currentQuantityKg: 17,
-        locationName: 'Sidi Moumen',
-        hubName: 'Hub East',
-      ),
-    ];
-  }
 }

@@ -17,7 +17,7 @@
 /// - _searchMode: Current view mode (batches or providers)
 /// - _query: User search input text (trimmed)
 /// - Watches BatchProvider for live batches list
-/// - Static _providerResults: Mock provider data (TODO: backend)
+/// - _providerResults: Verified providers fetched from backend
 ///
 /// Architecture:
 /// - Search filtering is local/client-side (no backend search API yet)
@@ -27,7 +27,9 @@
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/models/batch.dart';
+import 'package:batchit/models/provider_profile.dart';
 import 'package:batchit/providers/batch_provider.dart';
+import 'package:batchit/services/provider_service.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
 import 'package:flutter/material.dart';
@@ -47,14 +49,8 @@ class SearchResultsScreen extends StatefulWidget {
 class _SearchResultsScreenState extends State<SearchResultsScreen> {
   _SearchMode _searchMode = _SearchMode.batches;
   String _query = '';
-
-  static const List<_ProviderResult> _providerResults = [
-    _ProviderResult(name: 'Hub Ain Sebaa', category: 'Groceries', location: 'Ain Sebaa', subscribers: 284),
-    _ProviderResult(name: 'Hub Centre', category: 'Household', location: 'Centre', subscribers: 196),
-    _ProviderResult(name: 'Hub East', category: 'Groceries', location: 'East', subscribers: 152),
-    _ProviderResult(name: 'Carrefour', category: 'Groceries', location: 'Citywide', subscribers: 401),
-    _ProviderResult(name: 'Marjane', category: 'Household', location: 'Citywide', subscribers: 367),
-  ];
+  final ProviderService _providerService = ProviderService();
+  List<ProviderProfile> _providerResults = const [];
 
   /// Ensures nearby batches are loaded on first render.
   /// Checks if BatchProvider already has batches to avoid redundant fetch.
@@ -68,7 +64,14 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
       if (provider.batches.isEmpty) {
         provider.loadNearbyBatches();
       }
+      _loadProviders();
     });
+  }
+
+  Future<void> _loadProviders() async {
+    final providers = await _providerService.fetchVerifiedProviders();
+    if (!mounted) return;
+    setState(() => _providerResults = providers);
   }
 
   @override
@@ -148,11 +151,23 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                               child: ListTile(
                                 leading: CircleAvatar(
                                   backgroundColor: scheme.secondaryContainer,
-                                  child: Icon(Icons.storefront_outlined, color: scheme.onSecondaryContainer),
+                                  backgroundImage: provider.logoUrl != null
+                                      ? NetworkImage(provider.logoUrl!)
+                                      : null,
+                                  child: provider.logoUrl == null
+                                      ? Icon(Icons.storefront_outlined, color: scheme.onSecondaryContainer)
+                                      : null,
                                 ),
-                                title: Text(provider.name),
-                                subtitle: Text('${provider.category} • ${provider.location}'),
-                                trailing: Text('${provider.subscribers}'),
+                                title: Text(provider.businessName),
+                                subtitle: Text('${provider.category.name} • ${provider.address}'),
+                                trailing: provider.isVerified
+                                    ? Icon(Icons.verified_rounded, color: scheme.primary)
+                                    : null,
+                                onTap: () => Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.providerDetail,
+                                  arguments: provider.id,
+                                ),
                               ),
                             );
                           },
@@ -179,32 +194,18 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
   }
 
   /// Filters provider list based on query string (case-insensitive).
-  /// Searches across name, category, and location fields.
+  /// Searches across business name, category, and address fields.
   /// Returns empty list if query matches nothing.
-  List<_ProviderResult> _filterProviders(List<_ProviderResult> providers, String query) {
+  List<ProviderProfile> _filterProviders(List<ProviderProfile> providers, String query) {
     if (query.isEmpty) return providers;
     final q = query.toLowerCase();
 
     return providers.where((provider) {
-      return provider.name.toLowerCase().contains(q) ||
-          provider.category.toLowerCase().contains(q) ||
-          provider.location.toLowerCase().contains(q);
+      return provider.businessName.toLowerCase().contains(q) ||
+          provider.category.name.toLowerCase().contains(q) ||
+          provider.address.toLowerCase().contains(q);
     }).toList(growable: false);
   }
-}
-
-class _ProviderResult {
-  const _ProviderResult({
-    required this.name,
-    required this.category,
-    required this.location,
-    required this.subscribers,
-  });
-
-  final String name;
-  final String category;
-  final String location;
-  final int subscribers;
 }
 
 class _EmptySearchState extends StatelessWidget {

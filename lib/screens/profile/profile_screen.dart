@@ -29,9 +29,11 @@ import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/providers/provider_provider.dart';
 import 'package:batchit/models/order.dart';
+import 'package:batchit/models/provider_profile.dart';
 import 'package:batchit/providers/app_settings_provider.dart';
 import 'package:batchit/providers/auth_provider.dart';
 import 'package:batchit/providers/order_provider.dart';
+import 'package:batchit/services/provider_service.dart';
 
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
@@ -48,10 +50,9 @@ class ProfileScreen extends StatefulWidget {
 
 /// Manages profile screen state including followed provider set.
 class _ProfileScreenState extends State<ProfileScreen> {
-  final Set<String> _followedProviderIds = {
-    'ainSebaa',
-    'centre',
-  };
+  final ProviderService _providerService = ProviderService();
+  List<ProviderProfile> _followedProviders = [];
+  bool _loadingProviders = true;
 
   /// Loads user orders on first render for metrics display.
   /// Safe check: verifies mounted before using context.
@@ -63,6 +64,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return;
       }
       context.read<OrderProvider>().loadOrders();
+      context.read<ProviderProvider>().loadMyProfile();
+      _loadFollowedProviders();
+    });
+  }
+
+  Future<void> _loadFollowedProviders() async {
+    final providers = await _providerService.fetchFollowedProviders();
+    if (!mounted) return;
+    setState(() {
+      _followedProviders = providers;
+      _loadingProviders = false;
     });
   }
 
@@ -80,6 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final themeLabel = settings.themeMode == ThemeMode.dark ? l10n.dark : l10n.light;
     final totalOrders = orders.length;
     final completedOrders = orders.where((order) => order.status == OrderStatus.completed).length;
+    final followedCount = _followedProviders.length;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.profile)),
@@ -181,7 +194,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Expanded(
                     child: _MetricCard(
                       label: l10n.providerPreferences,
-                      value: _followedProviderIds.length.toString(),
+                          value: _loadingProviders ? '...' : followedCount.toString(),
                     ),
                   ),
                 ],
@@ -256,33 +269,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                       ),
                       const SizedBox(height: AppSpacing.sm),
-                      Wrap(
-                        spacing: AppSpacing.xs,
-                        runSpacing: AppSpacing.xs,
-                        children: [
-                          FilterChip(
-                            selected: _followedProviderIds.contains('ainSebaa'),
-                            label: Text(l10n.providerAinSebaa),
-                            onSelected: (selected) => setState(() {
-                              _toggleProvider('ainSebaa', selected);
-                            }),
-                          ),
-                          FilterChip(
-                            selected: _followedProviderIds.contains('centre'),
-                            label: Text(l10n.providerCentre),
-                            onSelected: (selected) => setState(() {
-                              _toggleProvider('centre', selected);
-                            }),
-                          ),
-                          FilterChip(
-                            selected: _followedProviderIds.contains('east'),
-                            label: Text(l10n.providerEast),
-                            onSelected: (selected) => setState(() {
-                              _toggleProvider('east', selected);
-                            }),
-                          ),
-                        ],
-                      ),
+                      if (_loadingProviders)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: AppSpacing.sm),
+                          child: LinearProgressIndicator(),
+                        )
+                      else if (_followedProviders.isEmpty)
+                        Text(
+                          l10n.providerPreferencesSubtitle,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              ),
+                        )
+                      else
+                        Wrap(
+                          spacing: AppSpacing.xs,
+                          runSpacing: AppSpacing.xs,
+                          children: _followedProviders.map((provider) {
+                            return FilterChip(
+                              selected: true,
+                              avatar: provider.logoUrl != null && provider.logoUrl!.isNotEmpty
+                                  ? CircleAvatar(
+                                      backgroundImage: NetworkImage(provider.logoUrl!),
+                                      radius: 10,
+                                    )
+                                  : null,
+                              label: Text(provider.businessName),
+                              onSelected: (selected) => _toggleFollow(provider, selected),
+                            );
+                          }).toList(),
+                        ),
                     ],
                   ),
                 ),
@@ -325,11 +341,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  void _toggleProvider(String providerId, bool selected) {
-    if (selected) {
-      _followedProviderIds.add(providerId);
-    } else {
-      _followedProviderIds.remove(providerId);
+  Future<void> _toggleFollow(ProviderProfile provider, bool selected) async {
+    setState(() {
+      if (selected) {
+        if (_followedProviders.every((p) => p.id != provider.id)) {
+          _followedProviders.add(provider);
+        }
+      } else {
+        _followedProviders.removeWhere((p) => p.id == provider.id);
+      }
+    });
+
+    try {
+      if (selected) {
+        await _providerService.followProvider(provider.id);
+      } else {
+        await _providerService.unfollowProvider(provider.id);
+      }
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        if (selected) {
+          _followedProviders.removeWhere((p) => p.id == provider.id);
+        } else if (_followedProviders.every((p) => p.id != provider.id)) {
+          _followedProviders.add(provider);
+        }
+      });
     }
   }
 
@@ -370,12 +407,12 @@ class _BecomeProviderTile extends StatelessWidget {
         : myProfile.isVerified
             ? (
                 Icons.verified_rounded,
-                l10n.providerStatusVerified,
+                'My Provider Profile',
                 myProfile.businessName,
               )
             : (
                 Icons.hourglass_top_rounded,
-                l10n.providerStatusPending,
+                'My Provider Profile',
                 myProfile.businessName,
               );
 
@@ -385,12 +422,8 @@ class _BecomeProviderTile extends StatelessWidget {
           color: myProfile?.isVerified == true ? Colors.green : scheme.primary),
       title: Text(label),
       subtitle: Text(subtitle),
-      trailing: myProfile == null
-          ? const Icon(Icons.chevron_right_rounded)
-          : null,
-      onTap: myProfile == null
-          ? () => Navigator.pushNamed(context, AppRoutes.becomeProvider)
-          : null,
+      trailing: const Icon(Icons.chevron_right_rounded),
+      onTap: () => Navigator.pushNamed(context, AppRoutes.becomeProvider),
     );
   }
 }

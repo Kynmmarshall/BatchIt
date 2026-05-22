@@ -1,8 +1,10 @@
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
+import 'package:batchit/providers/auth_provider.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MoreScreen extends StatelessWidget {
   const MoreScreen({super.key});
@@ -10,6 +12,8 @@ class MoreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final user = context.watch<AuthProvider>().user;
+    final isStaff = user?.isStaff ?? false;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.more)),
@@ -46,6 +50,15 @@ class MoreScreen extends StatelessWidget {
               subtitle: l10n.moreSettingsSubtitle,
               onTap: () => Navigator.pushNamed(context, AppRoutes.settings),
             ),
+            if (isStaff) ...[
+              const Divider(height: AppSpacing.lg),
+              _MoreOptionTile(
+                icon: Icons.admin_panel_settings_outlined,
+                title: 'Admin — Provider Verification',
+                subtitle: 'Review and approve or reject pending provider profiles',
+                onTap: () => Navigator.pushNamed(context, AppRoutes.adminProviders),
+              ),
+            ],
           ],
         ),
       ),

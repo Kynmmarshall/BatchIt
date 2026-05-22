@@ -12,6 +12,7 @@
 class Batch {
   const Batch({
     required this.id,
+    this.providerId,
     required this.productName,
     required this.bulkSizeKg,
     required this.currentQuantityKg,
@@ -21,6 +22,7 @@ class Batch {
   });
 
   final String id;
+  final String? providerId;
   final String productName;
   final double bulkSizeKg;
   final double currentQuantityKg;

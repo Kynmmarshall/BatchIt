@@ -96,6 +96,44 @@ class ProviderProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> updateMyProviderProfile({
+    required String businessName,
+    required String ownerName,
+    required BusinessCategory category,
+    required String registrationNumber,
+    required String phone,
+    required String email,
+    required String address,
+    double? latitude,
+    double? longitude,
+    required String description,
+  }) async {
+    _isSubmitting = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      _myProfile = await _service.updateMyProviderProfile(
+        businessName: businessName,
+        ownerName: ownerName,
+        category: category,
+        registrationNumber: registrationNumber,
+        phone: phone,
+        email: email,
+        address: address,
+        latitude: latitude,
+        longitude: longitude,
+        description: description,
+      );
+    } catch (e) {
+      _error = e.toString();
+      rethrow;
+    } finally {
+      _isSubmitting = false;
+      notifyListeners();
+    }
+  }
+
   ProviderProfile? findById(String id) {
     try {
       return _verifiedProviders.firstWhere((p) => p.id == id);

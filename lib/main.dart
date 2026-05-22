@@ -16,6 +16,7 @@ import 'package:batchit/app/app.dart';
 import 'package:batchit/providers/app_settings_provider.dart';
 import 'package:batchit/providers/auth_provider.dart';
 import 'package:batchit/providers/batch_provider.dart';
+import 'package:batchit/providers/notification_provider.dart';
 import 'package:batchit/providers/order_provider.dart';
 import 'package:batchit/providers/provider_provider.dart';
 import 'package:batchit/services/auth_service.dart';
@@ -34,6 +35,7 @@ import 'package:provider/provider.dart';
 /// 4. Runs BatchItApp widget which handles routing based on auth state
 void main() {
   debugPrint('[BatchIt][main] App starting...');
+  final providerService = ProviderService();
   runApp(
     MultiProvider(
       providers: [
@@ -44,11 +46,13 @@ void main() {
           create: (context) => BatchProvider(
             BatchService(),
             context.read<OrderProvider>(),
+            providerService,
           ),
         ),
         ChangeNotifierProvider(
-          create: (_) => ProviderProvider(ProviderService()),
+          create: (_) => ProviderProvider(providerService),
         ),
+        ChangeNotifierProvider(create: (_) => NotificationProvider()),
       ],
       child: const BatchItApp(),
     ),

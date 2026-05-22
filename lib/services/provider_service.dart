@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 class ProviderService {
   final ApiClient _apiClient = ApiClient();
 
-  /// Fetches all verified providers. Falls back to mock data on failure.
+  /// Fetches all verified providers from backend.
   Future<List<ProviderProfile>> fetchVerifiedProviders() async {
     try {
       final response = await _apiClient.get('/providers/');
@@ -20,16 +20,10 @@ class ProviderService {
           .where((p) => p.isVerified)
           .toList();
       debugPrint('[ProviderService] Verified providers: ${verified.length}');
-
-      // If API returns empty, use mock data for dev
-      if (verified.isEmpty) {
-        debugPrint('[ProviderService] Empty response, using mock data');
-        return List.of(kMockVerifiedProviders);
-      }
       return verified;
     } catch (e) {
-      debugPrint('[ProviderService] fetchVerifiedProviders fallback: $e');
-      return List.of(kMockVerifiedProviders);
+      debugPrint('[ProviderService] fetchVerifiedProviders error: $e');
+      return [];
     }
   }
 
@@ -45,17 +39,52 @@ class ProviderService {
     }
   }
 
-  /// Fetches a single provider by ID. Falls back to mock data.
+  /// Fetches a single provider by ID.
   Future<ProviderProfile> fetchProviderById(String id) async {
     try {
       final response = await _apiClient.get('/providers/$id/');
       return ProviderProfile.fromJson(response as Map<String, dynamic>);
     } catch (e) {
-      debugPrint('[ProviderService] fetchProviderById fallback: $e');
-      return kMockVerifiedProviders.firstWhere(
-        (p) => p.id == id,
-        orElse: () => kMockVerifiedProviders.first,
-      );
+      debugPrint('[ProviderService] fetchProviderById error: $e');
+      rethrow;
+    }
+  }
+
+  /// Fetches providers the current user follows.
+  Future<List<ProviderProfile>> fetchFollowedProviders() async {
+    try {
+      final response = await _apiClient.get('/providers/followed/');
+      final items = response is List
+          ? response
+          : (response as Map<String, dynamic>?)?['results'] as List<dynamic>? ?? [];
+      return items
+          .map((e) => ProviderProfile.fromJson(e as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      debugPrint('[ProviderService] fetchFollowedProviders error: $e');
+      return [];
+    }
+  }
+
+  /// Follow a provider. Returns true if newly followed, false if already followed.
+  Future<bool> followProvider(String providerId) async {
+    try {
+      final response = await _apiClient.post('/providers/$providerId/follow/', body: {});
+      final detail = (response as Map<String, dynamic>?)?['detail'] as String? ?? '';
+      return detail.contains('Following');
+    } catch (e) {
+      debugPrint('[ProviderService] followProvider error: $e');
+      rethrow;
+    }
+  }
+
+  /// Unfollow a provider.
+  Future<void> unfollowProvider(String providerId) async {
+    try {
+      await _apiClient.delete('/providers/$providerId/follow/');
+    } catch (e) {
+      debugPrint('[ProviderService] unfollowProvider error: $e');
+      rethrow;
     }
   }
 
@@ -114,24 +143,38 @@ class ProviderService {
     } on ApiException {
       rethrow;
     } catch (e) {
-      debugPrint('[ProviderService] submitProviderProfile fallback: $e');
-      // Dev fallback: return a pending profile locally so the UI flows
-      return ProviderProfile(
-        id: 'local-pending-${DateTime.now().millisecondsSinceEpoch}',
-        ownerId: 'current-user',
-        businessName: businessName,
-        ownerName: ownerName,
-        category: category,
-        registrationNumber: registrationNumber,
-        phone: phone,
-        email: email,
-        address: address,
-        latitude: latitude,
-        longitude: longitude,
-        description: description,
-        status: ProviderStatus.pending,
-        createdAt: DateTime.now(),
-      );
+      debugPrint('[ProviderService] submitProviderProfile error: $e');
+      rethrow;
     }
+  }
+
+  /// Updates the current authenticated provider profile.
+  Future<ProviderProfile> updateMyProviderProfile({
+    required String businessName,
+    required String ownerName,
+    required BusinessCategory category,
+    required String registrationNumber,
+    required String phone,
+    required String email,
+    required String address,
+    double? latitude,
+    double? longitude,
+    required String description,
+  }) async {
+    final body = <String, dynamic>{
+      'business_name': businessName,
+      'owner_name': ownerName,
+      'category': category.name,
+      'registration_number': registrationNumber,
+      'phone': phone,
+      'email': email,
+      'address': address,
+      'description': description,
+      if (latitude != null) 'latitude': latitude,
+      if (longitude != null) 'longitude': longitude,
+    };
+
+    final response = await _apiClient.patch('/providers/my-profile/', body: body);
+    return ProviderProfile.fromJson(response as Map<String, dynamic>);
   }
 }

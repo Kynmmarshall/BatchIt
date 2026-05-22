@@ -58,6 +58,7 @@ class AuthService {
         firstName: userData['first_name'] as String?,
         lastName: userData['last_name'] as String?,
         avatarUrl: userData['profile_photo_url'] as String?,
+        isStaff: userData['is_staff'] as bool? ?? false,
       );
     } on ApiException catch (_) {
       rethrow;
@@ -101,6 +102,7 @@ class AuthService {
         firstName: userData['first_name'] as String?,
         lastName: userData['last_name'] as String?,
         avatarUrl: userData['profile_photo_url'] as String?,
+        isStaff: userData['is_staff'] as bool? ?? false,
       );
     } on ApiException catch (_) {
       rethrow;
@@ -174,6 +176,7 @@ class AuthService {
         firstName: userData['first_name'] as String?,
         lastName: userData['last_name'] as String?,
         avatarUrl: userData['profile_photo_url'] as String?,
+        isStaff: userData['is_staff'] as bool? ?? false,
       );
     } on ApiException {
       rethrow;
@@ -218,6 +221,7 @@ class AuthService {
         firstName: userData['first_name'] as String?,
         lastName: userData['last_name'] as String?,
         avatarUrl: userData['profile_photo_url'] as String?,
+        isStaff: userData['is_staff'] as bool? ?? false,
       );
     } on ApiException catch (_) {
       rethrow;
@@ -307,6 +311,7 @@ class AuthService {
         firstName: userData['first_name'] as String?,
         lastName: userData['last_name'] as String?,
         avatarUrl: userData['profile_photo_url'] as String?,
+        isStaff: userData['is_staff'] as bool? ?? false,
       );
     } on ApiException catch (_) {
       rethrow;
@@ -347,6 +352,7 @@ class AuthService {
         firstName: userData['first_name'] as String?,
         lastName: userData['last_name'] as String?,
         avatarUrl: userData['profile_photo_url'] as String?,
+        isStaff: userData['is_staff'] as bool? ?? false,
       );
     } on ApiException {
       rethrow;

@@ -21,7 +21,6 @@ class OrderService {
   final ApiClient _apiClient = ApiClient();
 
   /// Fetches the current user's orders with optional status filter.
-  /// Falls back to mock data if API call fails (for dev/testing).
   Future<List<Order>> fetchOrders({OrderStatus? status}) async {
     try {
       final params = {
@@ -40,9 +39,8 @@ class OrderService {
           .map((orderJson) => _mapOrderFromJson(orderJson as Map<String, dynamic>))
           .toList();
     } on ApiException catch (e) {
-      debugPrint('Failed to fetch orders: $e, using mock data');
-      // Fall back to mock data for development
-      return _getMockOrders();
+      debugPrint('Failed to fetch orders: $e');
+      return [];
     }
   }
 
@@ -124,30 +122,4 @@ class OrderService {
     );
   }
 
-  /// Returns mock order data for development/testing when API is unavailable.
-  List<Order> _getMockOrders() {
-    return const [
-      Order(
-        id: 'o_001',
-        productName: 'Potatoes',
-        quantityKg: 5,
-        status: OrderStatus.pending,
-        hubName: 'Hub Ain Sebaa',
-      ),
-      Order(
-        id: 'o_002',
-        productName: 'Tomatoes',
-        quantityKg: 3,
-        status: OrderStatus.triggered,
-        hubName: 'Hub Centre',
-      ),
-      Order(
-        id: 'o_003',
-        productName: 'Onions',
-        quantityKg: 4,
-        status: OrderStatus.completed,
-        hubName: 'Hub East',
-      ),
-    ];
-  }
 }

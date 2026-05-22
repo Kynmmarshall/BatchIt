@@ -56,6 +56,8 @@ import 'package:batchit/screens/profile/settings_screen.dart';
 import 'package:batchit/screens/profile/profile_edit_screen.dart';
 import 'package:batchit/screens/providers/become_provider_screen.dart';
 import 'package:batchit/screens/orders/my_batches_screen.dart';
+import 'package:batchit/screens/admin/admin_providers_screen.dart';
+import 'package:batchit/screens/more/batch_chat_screen.dart';
 import 'package:batchit/screens/orders/create_order_screen.dart';
 import 'package:batchit/themes/app_motion.dart';
 import 'package:batchit/themes/app_theme.dart';
@@ -193,6 +195,13 @@ class BatchItApp extends StatelessWidget {
                 return _buildRoute(const MyBatchesScreen());
               case AppRoutes.createOrder:
                 return _buildRoute(const CreateOrderScreen());
+              case AppRoutes.batchChat:
+                final args = settingsRoute.arguments as Map<String, dynamic>?;
+                final batchId = args?['batchId'] as String? ?? '';
+                final batchName = args?['batchName'] as String? ?? 'Chat';
+                return _buildRoute(BatchChatScreen(batchId: batchId, batchName: batchName));
+              case AppRoutes.adminProviders:
+                return _buildRoute(const AdminProvidersScreen());
               default:
                 return _fallbackRoute();
             }

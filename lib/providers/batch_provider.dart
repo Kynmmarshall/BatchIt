@@ -21,14 +21,16 @@
 import 'dart:io';
 import 'package:batchit/models/batch.dart';
 import 'package:batchit/providers/order_provider.dart';
+import 'package:batchit/services/provider_service.dart';
 import 'package:batchit/services/batch_service.dart';
 import 'package:flutter/material.dart';
 
 class BatchProvider extends ChangeNotifier {
-  BatchProvider(this._batchService, this._orderProvider);
+  BatchProvider(this._batchService, this._orderProvider, this._providerService);
 
   final BatchService _batchService;
   final OrderProvider _orderProvider;
+  final ProviderService _providerService;
 
   List<Batch> _batches = const [];
   List<Batch> _myCreatedBatches = const [];
@@ -90,6 +92,15 @@ class BatchProvider extends ChangeNotifier {
       notes: notes,
       image: image,
     );
+
+    if (providerId != null && providerId.isNotEmpty) {
+      try {
+        await _providerService.followProvider(providerId);
+      } catch (e) {
+        debugPrint('[BatchProvider] auto-follow on create failed: $e');
+      }
+    }
+
     _batches = [batch, ..._batches];
     _myCreatedBatches = [batch, ..._myCreatedBatches];
     notifyListeners();
@@ -105,8 +116,23 @@ class BatchProvider extends ChangeNotifier {
   ///   - quantityKg: Amount user is committing to this batch
   Future<void> joinBatch({required String batchId, required double quantityKg}) async {
     try {
+      Batch? batch;
+      try {
+        batch = _batches.firstWhere((batch) => batch.id == batchId);
+      } catch (_) {
+        batch = await _batchService.fetchBatchById(batchId);
+      }
+
       // Call backend API to join batch
       await _batchService.joinBatch(batchId, quantityKg);
+
+      if (batch.providerId != null && batch.providerId!.isNotEmpty) {
+        try {
+          await _providerService.followProvider(batch.providerId!);
+        } catch (e) {
+          debugPrint('[BatchProvider] auto-follow on join failed: $e');
+        }
+      }
       
       // Update local state
       _batches = _batches

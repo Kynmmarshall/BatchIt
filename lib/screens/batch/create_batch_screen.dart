@@ -4,6 +4,7 @@ import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/models/provider_profile.dart';
 import 'package:batchit/providers/batch_provider.dart';
 import 'package:batchit/providers/provider_provider.dart';
+import 'package:batchit/services/provider_service.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/app_primary_button.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
@@ -56,6 +57,7 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
   String _selectedProduct = 'Potatoes';
   ProviderProfile? _selectedProvider;
   File? _batchImage;
+  final ProviderService _providerService = ProviderService();
 
   @override
   void initState() {
@@ -138,6 +140,13 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context)!.batchCreated)),
       );
+      if (_selectedProvider != null) {
+        try {
+          await _providerService.followProvider(_selectedProvider!.id);
+        } catch (e) {
+          debugPrint('[CreateBatchScreen] auto-follow provider failed: $e');
+        }
+      }
       Navigator.pushNamed(context, AppRoutes.batchDetails, arguments: batch.id);
     } catch (e) {
       if (!mounted) return;
@@ -152,6 +161,7 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final myProviderProfile = context.watch<ProviderProvider>().myProfile;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.createBatch)),
@@ -620,6 +630,7 @@ class _ProviderPickerSheetState extends State<_ProviderPickerSheet> {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final myProviderProfile = context.watch<ProviderProvider>().myProfile;
 
     return DraggableScrollableSheet(
       initialChildSize: 0.75,
@@ -740,13 +751,13 @@ class _ProviderPickerSheetState extends State<_ProviderPickerSheet> {
                     radius: 20,
                     backgroundColor: scheme.secondaryContainer,
                     child: Icon(
-                      Icons.storefront_rounded,
+                      myProviderProfile == null ? Icons.storefront_rounded : Icons.verified_rounded,
                       color: scheme.onSecondaryContainer,
                       size: 18,
                     ),
                   ),
                   title: Text(
-                    l10n.becomeProvider,
+                    myProviderProfile == null ? l10n.becomeProvider : 'My Provider Profile',
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: scheme.primary,
                       fontWeight: FontWeight.w600,

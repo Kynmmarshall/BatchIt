@@ -49,6 +49,7 @@ class _BecomeProviderScreenState extends State<BecomeProviderScreen> {
   final List<File> _documents = [];
   File? _logo;
   final ImagePicker _picker = ImagePicker();
+  bool _editingExistingProfile = false;
 
   @override
   void initState() {
@@ -59,6 +60,43 @@ class _BecomeProviderScreenState extends State<BecomeProviderScreen> {
       _emailCtrl.text = user.email;
       _ownerNameCtrl.text = user.displayName;
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      final provider = context.read<ProviderProvider>();
+      await provider.loadMyProfile();
+      if (!mounted) return;
+      final profile = provider.myProfile;
+      if (profile != null) {
+        _applyProfileValues(profile);
+      }
+    });
+  }
+
+  void _applyProfileValues(ProviderProfile profile) {
+    _businessNameCtrl.text = profile.businessName;
+    _ownerNameCtrl.text = profile.ownerName;
+    _regNumberCtrl.text = profile.registrationNumber;
+    _phoneCtrl.text = profile.phone;
+    _emailCtrl.text = profile.email;
+    _addressCtrl.text = profile.address;
+    _latCtrl.text = profile.latitude?.toString() ?? '';
+    _lngCtrl.text = profile.longitude?.toString() ?? '';
+    _descriptionCtrl.text = profile.description;
+    _selectedCategory = profile.category;
+  }
+
+  void _enterEditMode(ProviderProfile profile) {
+    _applyProfileValues(profile);
+    setState(() {
+      _editingExistingProfile = true;
+      _currentStep = 0;
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_pageController.hasClients) return;
+      _pageController.jumpToPage(0);
+    });
   }
 
   @override
@@ -129,26 +167,43 @@ class _BecomeProviderScreenState extends State<BecomeProviderScreen> {
     final provider = context.read<ProviderProvider>();
 
     try {
-      await provider.submitProviderProfile(
-        businessName: _businessNameCtrl.text.trim(),
-        ownerName: _ownerNameCtrl.text.trim(),
-        category: _selectedCategory,
-        registrationNumber: _regNumberCtrl.text.trim(),
-        phone: _phoneCtrl.text.trim(),
-        email: _emailCtrl.text.trim(),
-        address: _addressCtrl.text.trim(),
-        latitude: double.tryParse(_latCtrl.text.trim()),
-        longitude: double.tryParse(_lngCtrl.text.trim()),
-        description: _descriptionCtrl.text.trim(),
-        documents: _documents.isEmpty ? null : _documents,
-        logo: _logo,
-      );
+      if (provider.hasProfile) {
+        await provider.updateMyProviderProfile(
+          businessName: _businessNameCtrl.text.trim(),
+          ownerName: _ownerNameCtrl.text.trim(),
+          category: _selectedCategory,
+          registrationNumber: _regNumberCtrl.text.trim(),
+          phone: _phoneCtrl.text.trim(),
+          email: _emailCtrl.text.trim(),
+          address: _addressCtrl.text.trim(),
+          latitude: double.tryParse(_latCtrl.text.trim()),
+          longitude: double.tryParse(_lngCtrl.text.trim()),
+          description: _descriptionCtrl.text.trim(),
+        );
+      } else {
+        await provider.submitProviderProfile(
+          businessName: _businessNameCtrl.text.trim(),
+          ownerName: _ownerNameCtrl.text.trim(),
+          category: _selectedCategory,
+          registrationNumber: _regNumberCtrl.text.trim(),
+          phone: _phoneCtrl.text.trim(),
+          email: _emailCtrl.text.trim(),
+          address: _addressCtrl.text.trim(),
+          latitude: double.tryParse(_latCtrl.text.trim()),
+          longitude: double.tryParse(_lngCtrl.text.trim()),
+          description: _descriptionCtrl.text.trim(),
+          documents: _documents.isEmpty ? null : _documents,
+          logo: _logo,
+        );
+      }
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.providerSubmitSuccess)),
-      );
-      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.providerSubmitSuccess)));
+      if (provider.hasProfile) {
+        setState(() => _editingExistingProfile = false);
+      } else {
+        Navigator.of(context).pop();
+      }
     } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -162,14 +217,16 @@ class _BecomeProviderScreenState extends State<BecomeProviderScreen> {
     final l10n = AppLocalizations.of(context)!;
     final providerState = context.watch<ProviderProvider>();
 
-    // If the user already has a profile, show its status instead of the form
-    if (providerState.hasProfile) {
-      return _ProfileStatusView(profile: providerState.myProfile!);
+    if (providerState.hasProfile && !_editingExistingProfile) {
+      return _ProfileStatusView(
+        profile: providerState.myProfile!,
+        onEdit: () => _enterEditMode(providerState.myProfile!),
+      );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.becomeProvider),
+        title: Text(providerState.hasProfile ? 'My Provider Profile' : l10n.becomeProvider),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4),
           child: _StepProgressBar(
@@ -742,9 +799,10 @@ class _Step3DocumentsDescription extends StatelessWidget {
 // ─── Profile Status View (already submitted) ──────────────────────────────────
 
 class _ProfileStatusView extends StatelessWidget {
-  const _ProfileStatusView({required this.profile});
+  const _ProfileStatusView({required this.profile, required this.onEdit});
 
   final ProviderProfile profile;
+  final VoidCallback onEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -813,6 +871,15 @@ class _ProfileStatusView extends StatelessWidget {
                     ),
                   ),
                 ),
+              const SizedBox(height: AppSpacing.md),
+              SizedBox(
+                width: double.infinity,
+                child: AppPrimaryButton(
+                  label: 'My Provider Profile',
+                  icon: Icons.edit_rounded,
+                  onPressed: onEdit,
+                ),
+              ),
             ],
           ),
         ),

@@ -26,6 +26,7 @@ class UserProfile {
     this.firstName,
     this.lastName,
     this.avatarUrl,
+    this.isStaff = false,
   });
 
   final String id;
@@ -34,6 +35,7 @@ class UserProfile {
   final String? firstName;
   final String? lastName;
   final String? avatarUrl;
+  final bool isStaff;
 
   UserProfile copyWith({
     String? id,
@@ -42,6 +44,7 @@ class UserProfile {
     String? firstName,
     String? lastName,
     String? avatarUrl,
+    bool? isStaff,
   }) {
     return UserProfile(
       id: id ?? this.id,
@@ -50,6 +53,7 @@ class UserProfile {
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       avatarUrl: avatarUrl ?? this.avatarUrl,
+      isStaff: isStaff ?? this.isStaff,
     );
   }
 

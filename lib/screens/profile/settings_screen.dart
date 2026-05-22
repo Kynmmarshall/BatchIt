@@ -1,6 +1,7 @@
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/providers/app_settings_provider.dart';
+import 'package:batchit/services/settings_service.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,8 @@ import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
+
+  static final _settingsSvc = SettingsService();
 
   @override
   Widget build(BuildContext context) {
@@ -32,20 +35,14 @@ class SettingsScreen extends StatelessWidget {
                     const SizedBox(height: AppSpacing.sm),
                     SegmentedButton<String>(
                       segments: [
-                        ButtonSegment<String>(
-                          value: 'en',
-                          label: Text(l10n.english),
-                        ),
-                        ButtonSegment<String>(
-                          value: 'fr',
-                          label: Text(l10n.french),
-                        ),
+                        ButtonSegment<String>(value: 'en', label: Text(l10n.english)),
+                        ButtonSegment<String>(value: 'fr', label: Text(l10n.french)),
                       ],
                       selected: {settings.locale.languageCode},
                       onSelectionChanged: (value) {
-                        context
-                            .read<AppSettingsProvider>()
-                            .setLocale(Locale(value.first));
+                        final lang = value.first;
+                        context.read<AppSettingsProvider>().setLocale(Locale(lang));
+                        _settingsSvc.updateSettings({'language': lang}).ignore();
                       },
                     ),
                     const SizedBox(height: AppSpacing.sm),
@@ -55,6 +52,10 @@ class SettingsScreen extends StatelessWidget {
                       value: settings.themeMode == ThemeMode.dark,
                       onChanged: (_) {
                         context.read<AppSettingsProvider>().toggleTheme();
+                        final isDark = settings.themeMode != ThemeMode.dark;
+                        _settingsSvc
+                            .updateSettings({'theme': isDark ? 'dark' : 'light'})
+                            .ignore();
                       },
                     ),
                   ],
