@@ -1723,6 +1723,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Change Image'**
   String get batchImageChange;
+
+  /// No description provided for @myBatchesSectionCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Batches I Created'**
+  String get myBatchesSectionCreated;
+
+  /// No description provided for @myBatchesSectionJoined.
+  ///
+  /// In en, this message translates to:
+  /// **'Batches I Joined'**
+  String get myBatchesSectionJoined;
+
+  /// No description provided for @myBatchesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No batches yet'**
+  String get myBatchesEmpty;
+
+  /// No description provided for @myBatchesEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a batch or join one from the home screen.'**
+  String get myBatchesEmptySubtitle;
+
+  /// No description provided for @myBatchesCreatedBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get myBatchesCreatedBadge;
+
+  /// No description provided for @myBatchesFilled.
+  ///
+  /// In en, this message translates to:
+  /// **'{current} / {total} filled'**
+  String myBatchesFilled(String current, String total);
+
+  /// No description provided for @myBatchesJoinBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Join a Batch'**
+  String get myBatchesJoinBtn;
+
+  /// No description provided for @myBatchesEditQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Quantity'**
+  String get myBatchesEditQuantity;
+
+  /// No description provided for @myBatchesUpdateQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get myBatchesUpdateQuantity;
+
+  /// No description provided for @myBatchesNewQuantityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'New quantity in kg'**
+  String get myBatchesNewQuantityHint;
+
+  /// No description provided for @myBatchesQuantityUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity updated'**
+  String get myBatchesQuantityUpdated;
+
+  /// No description provided for @myBatchesQuantityError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update quantity'**
+  String get myBatchesQuantityError;
 }
 
 class _AppLocalizationsDelegate

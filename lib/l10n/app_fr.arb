@@ -287,5 +287,24 @@
   "mapOpenError": "Impossible d'ouvrir Maps. Veuillez réessayer.",
   "batchImageLabel": "Image du produit (optionnel)",
   "batchImageHint": "Appuyer pour ajouter une photo",
-  "batchImageChange": "Changer l'image"
+  "batchImageChange": "Changer l'image",
+
+  "myBatchesSectionCreated": "Batches que j'ai créés",
+  "myBatchesSectionJoined": "Batches que j'ai rejoints",
+  "myBatchesEmpty": "Aucun batch pour le moment",
+  "myBatchesEmptySubtitle": "Créez un batch ou rejoignez-en un depuis l'accueil.",
+  "myBatchesCreatedBadge": "Créé",
+  "myBatchesFilled": "{current} / {total} remplis",
+  "@myBatchesFilled": {
+    "placeholders": {
+      "current": {"type": "String"},
+      "total": {"type": "String"}
+    }
+  },
+  "myBatchesJoinBtn": "Rejoindre un batch",
+  "myBatchesEditQuantity": "Modifier la quantité",
+  "myBatchesUpdateQuantity": "Mettre à jour",
+  "myBatchesNewQuantityHint": "Nouvelle quantité en kg",
+  "myBatchesQuantityUpdated": "Quantité mise à jour",
+  "myBatchesQuantityError": "Échec de la mise à jour"
 }

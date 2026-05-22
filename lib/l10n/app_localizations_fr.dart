@@ -876,4 +876,43 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get batchImageChange => 'Changer l\'image';
+
+  @override
+  String get myBatchesSectionCreated => 'Batches que j\'ai créés';
+
+  @override
+  String get myBatchesSectionJoined => 'Batches que j\'ai rejoints';
+
+  @override
+  String get myBatchesEmpty => 'Aucun batch pour le moment';
+
+  @override
+  String get myBatchesEmptySubtitle =>
+      'Créez un batch ou rejoignez-en un depuis l\'accueil.';
+
+  @override
+  String get myBatchesCreatedBadge => 'Créé';
+
+  @override
+  String myBatchesFilled(String current, String total) {
+    return '$current / $total remplis';
+  }
+
+  @override
+  String get myBatchesJoinBtn => 'Rejoindre un batch';
+
+  @override
+  String get myBatchesEditQuantity => 'Modifier la quantité';
+
+  @override
+  String get myBatchesUpdateQuantity => 'Mettre à jour';
+
+  @override
+  String get myBatchesNewQuantityHint => 'Nouvelle quantité en kg';
+
+  @override
+  String get myBatchesQuantityUpdated => 'Quantité mise à jour';
+
+  @override
+  String get myBatchesQuantityError => 'Échec de la mise à jour';
 }

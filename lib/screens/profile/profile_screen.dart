@@ -150,7 +150,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         spacing: AppSpacing.xs,
                         runSpacing: AppSpacing.xs,
                         children: [
-                          Chip(label: Text(l10n.mvpBadge)),
                           Chip(label: Text(localeLabel)),
                           Chip(label: Text(themeLabel)),
                         ],

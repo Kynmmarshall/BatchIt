@@ -89,25 +89,31 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
-  /// Updates order status and reconstructs order with new status.
-  /// Notifies listeners to trigger order detail view refresh.
-  /// No-op if order ID not found in list.
-  ///
-  /// Parameters:
-  ///   - id: ID of order to update
-  ///   - status: New OrderStatus (e.g., triggered, delivered)
+  /// Updates order status locally.
   void updateOrderStatus(String id, OrderStatus status) {
     final index = _orders.indexWhere((o) => o.id == id);
     if (index == -1) return;
     final old = _orders[index];
-    final updated = Order(
+    _orders[index] = Order(
       id: old.id,
       productName: old.productName,
       quantityKg: old.quantityKg,
       status: status,
       hubName: old.hubName,
+      batchId: old.batchId,
     );
-    _orders[index] = updated;
+    notifyListeners();
+  }
+
+  /// Sends a quantity update to the backend and refreshes the local order.
+  Future<void> updateQuantity(String orderId, double newQuantityKg) async {
+    final updated = await _orderService.updateOrderQuantity(orderId, newQuantityKg);
+    final index = _orders.indexWhere((o) => o.id == orderId);
+    if (index != -1) {
+      _orders[index] = updated;
+    } else {
+      _orders = [updated, ..._orders];
+    }
     notifyListeners();
   }
 }

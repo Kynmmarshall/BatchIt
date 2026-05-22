@@ -166,6 +166,7 @@ class BatchService {
           json['location'] as String? ?? '',
       hubName: json['hub_name'] as String? ??
           json['provider_name'] as String? ?? '',
+      imageUrl: json['image_url'] as String?,
     );
   }
 

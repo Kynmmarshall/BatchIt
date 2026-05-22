@@ -287,5 +287,24 @@
   "mapOpenError": "Could not open Maps. Please try again.",
   "batchImageLabel": "Product Image (Optional)",
   "batchImageHint": "Tap to add a product photo",
-  "batchImageChange": "Change Image"
+  "batchImageChange": "Change Image",
+
+  "myBatchesSectionCreated": "Batches I Created",
+  "myBatchesSectionJoined": "Batches I Joined",
+  "myBatchesEmpty": "No batches yet",
+  "myBatchesEmptySubtitle": "Create a batch or join one from the home screen.",
+  "myBatchesCreatedBadge": "Created",
+  "myBatchesFilled": "{current} / {total} filled",
+  "@myBatchesFilled": {
+    "placeholders": {
+      "current": {"type": "String"},
+      "total": {"type": "String"}
+    }
+  },
+  "myBatchesJoinBtn": "Join a Batch",
+  "myBatchesEditQuantity": "Edit Quantity",
+  "myBatchesUpdateQuantity": "Update",
+  "myBatchesNewQuantityHint": "New quantity in kg",
+  "myBatchesQuantityUpdated": "Quantity updated",
+  "myBatchesQuantityError": "Failed to update quantity"
 }

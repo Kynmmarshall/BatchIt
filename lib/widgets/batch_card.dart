@@ -51,14 +51,25 @@ class BatchCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(18),
                   ),
                   clipBehavior: Clip.antiAlias,
-                  child: Image.asset(
-                    imagePath,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
-                      color: scheme.surfaceContainerHighest,
-                      child: Icon(Icons.inventory_2_outlined, color: scheme.onSurfaceVariant),
-                    ),
-                  ),
+                  child: batch.imageUrl != null && batch.imageUrl!.isNotEmpty
+                      ? Image.network(
+                          batch.imageUrl!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => Container(
+                            color: scheme.surfaceContainerHighest,
+                            child: Icon(Icons.inventory_2_outlined,
+                                color: scheme.onSurfaceVariant),
+                          ),
+                        )
+                      : Image.asset(
+                          imagePath,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => Container(
+                            color: scheme.surfaceContainerHighest,
+                            child: Icon(Icons.inventory_2_outlined,
+                                color: scheme.onSurfaceVariant),
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(height: 8),

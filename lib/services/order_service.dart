@@ -78,23 +78,21 @@ class OrderService {
   }
 
   /// Updates an order's status (e.g., mark as delivered or completed).
-  /// Typically called by provider to trigger or fulfill.
-  Future<Order> updateOrderStatus(
-    String orderId,
-    OrderStatus newStatus,
-  ) async {
-    try {
-      final response = await _apiClient.patch(
-        '/orders/$orderId/',
-        body: {
-          'status': newStatus.name,
-        },
-      );
+  Future<Order> updateOrderStatus(String orderId, OrderStatus newStatus) async {
+    final response = await _apiClient.patch(
+      '/orders/$orderId/',
+      body: {'status': newStatus.name},
+    );
+    return _mapOrderFromJson(response as Map<String, dynamic>);
+  }
 
-      return _mapOrderFromJson(response as Map<String, dynamic>);
-    } on ApiException catch (e) {
-      rethrow;
-    }
+  /// Updates the quantity committed to a joined batch.
+  Future<Order> updateOrderQuantity(String orderId, double newQuantityKg) async {
+    final response = await _apiClient.patch(
+      '/orders/$orderId/',
+      body: {'quantity_kg': newQuantityKg},
+    );
+    return _mapOrderFromJson(response as Map<String, dynamic>);
   }
 
   /// Deletes an order (typically only by order owner or admin).

@@ -860,4 +860,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get batchImageChange => 'Change Image';
+
+  @override
+  String get myBatchesSectionCreated => 'Batches I Created';
+
+  @override
+  String get myBatchesSectionJoined => 'Batches I Joined';
+
+  @override
+  String get myBatchesEmpty => 'No batches yet';
+
+  @override
+  String get myBatchesEmptySubtitle =>
+      'Create a batch or join one from the home screen.';
+
+  @override
+  String get myBatchesCreatedBadge => 'Created';
+
+  @override
+  String myBatchesFilled(String current, String total) {
+    return '$current / $total filled';
+  }
+
+  @override
+  String get myBatchesJoinBtn => 'Join a Batch';
+
+  @override
+  String get myBatchesEditQuantity => 'Edit Quantity';
+
+  @override
+  String get myBatchesUpdateQuantity => 'Update';
+
+  @override
+  String get myBatchesNewQuantityHint => 'New quantity in kg';
+
+  @override
+  String get myBatchesQuantityUpdated => 'Quantity updated';
+
+  @override
+  String get myBatchesQuantityError => 'Failed to update quantity';
 }
