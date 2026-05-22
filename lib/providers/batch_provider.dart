@@ -31,9 +31,11 @@ class BatchProvider extends ChangeNotifier {
   final OrderProvider _orderProvider;
 
   List<Batch> _batches = const [];
+  List<Batch> _myCreatedBatches = const [];
   bool _isLoading = false;
 
   List<Batch> get batches => _batches;
+  List<Batch> get myCreatedBatches => _myCreatedBatches;
   bool get isLoading => _isLoading;
 
   /// Fetches nearby batches from service and updates _batches list.
@@ -45,6 +47,15 @@ class BatchProvider extends ChangeNotifier {
 
     _batches = await _batchService.fetchNearbyBatches();
 
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  /// Fetches batches created by the authenticated user.
+  Future<void> loadMyCreatedBatches() async {
+    _isLoading = true;
+    notifyListeners();
+    _myCreatedBatches = await _batchService.fetchMyCreatedBatches();
     _isLoading = false;
     notifyListeners();
   }
@@ -80,6 +91,7 @@ class BatchProvider extends ChangeNotifier {
       image: image,
     );
     _batches = [batch, ..._batches];
+    _myCreatedBatches = [batch, ..._myCreatedBatches];
     notifyListeners();
     return batch;
   }

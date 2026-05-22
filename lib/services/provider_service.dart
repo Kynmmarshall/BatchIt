@@ -11,7 +11,9 @@ class ProviderService {
     try {
       final response = await _apiClient.get('/providers/');
       debugPrint('[ProviderService] fetchVerifiedProviders response: $response');
-      final items = response as List<dynamic>? ?? [];
+      final items = response is List
+          ? response
+          : (response as Map<String, dynamic>?)?['results'] as List<dynamic>? ?? [];
       debugPrint('[ProviderService] Total items from API: ${items.length}');
       final verified = items
           .map((e) => ProviderProfile.fromJson(e as Map<String, dynamic>))

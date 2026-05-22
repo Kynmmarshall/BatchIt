@@ -66,8 +66,9 @@ class BatchService {
     DateTime? expiresAt,
     File? image,
   }) async {
-    final expires = expiresAt?.toIso8601String() ??
-        DateTime.now().add(const Duration(days: 7)).toIso8601String();
+    final expires = (expiresAt ?? DateTime.now().toUtc().add(const Duration(days: 7)))
+        .toUtc()
+        .toIso8601String();
 
     final dynamic response;
     if (image != null) {
@@ -101,6 +102,20 @@ class BatchService {
     }
 
     return _mapBatchFromJson(response as Map<String, dynamic>);
+  }
+
+  /// Fetches batches created by the authenticated user.
+  Future<List<Batch>> fetchMyCreatedBatches() async {
+    try {
+      final response = await _apiClient.get('/batches/', params: {'creator': 'me'});
+      final List<dynamic> batchList = response is List ? response : response['results'] ?? [];
+      return batchList
+          .map((json) => _mapBatchFromJson(json as Map<String, dynamic>))
+          .toList();
+    } on ApiException catch (e) {
+      debugPrint('[BatchService] fetchMyCreatedBatches failed: $e');
+      return [];
+    }
   }
 
   /// Fetches a specific batch by ID.
@@ -139,15 +154,18 @@ class BatchService {
   }
 
   /// Maps backend batch JSON to frontend Batch model.
-  /// Handles field name differences between backend and frontend.
   Batch _mapBatchFromJson(Map<String, dynamic> json) {
     return Batch(
-      id: json['batch_id'] as String? ?? json['id'] as String? ?? 'unknown',
+      id: json['id'] as String? ?? json['batch_id'] as String? ?? 'unknown',
       productName: json['product_name'] as String? ?? 'Unknown Product',
-      bulkSizeKg: (json['total_quantity'] as num?)?.toDouble() ?? 0.0,
-      currentQuantityKg: (json['filled_quantity'] as num?)?.toDouble() ?? 0.0,
-      locationName: json['location'] as String? ?? 'Unknown Location',
-      hubName: json['provider_name'] as String? ?? 'Unknown Hub',
+      bulkSizeKg: (json['bulk_size_kg'] as num?)?.toDouble() ??
+          (json['total_quantity'] as num?)?.toDouble() ?? 0.0,
+      currentQuantityKg: (json['current_quantity_kg'] as num?)?.toDouble() ??
+          (json['filled_quantity'] as num?)?.toDouble() ?? 0.0,
+      locationName: json['location_name'] as String? ??
+          json['location'] as String? ?? '',
+      hubName: json['hub_name'] as String? ??
+          json['provider_name'] as String? ?? '',
     );
   }
 

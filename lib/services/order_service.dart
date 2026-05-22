@@ -107,7 +107,6 @@ class OrderService {
   }
 
   /// Maps backend order JSON to frontend Order model.
-  /// Handles field name differences and status enum conversion.
   Order _mapOrderFromJson(Map<String, dynamic> json) {
     final statusStr = json['status'] as String? ?? 'pending';
     final status = OrderStatus.values.firstWhere(
@@ -116,11 +115,13 @@ class OrderService {
     );
 
     return Order(
-      id: json['order_id'] as String? ?? json['id'] as String? ?? 'unknown',
-      productName: json['product_name'] as String? ?? json['product'] as String? ?? 'Unknown Product',
-      quantityKg: (json['quantity_requested'] as num?)?.toDouble() ?? 0.0,
+      id: json['id'] as String? ?? json['order_id'] as String? ?? 'unknown',
+      productName: json['product_name'] as String? ?? 'Unknown Product',
+      quantityKg: (json['quantity_kg'] as num?)?.toDouble() ??
+          (json['quantity_requested'] as num?)?.toDouble() ?? 0.0,
       status: status,
-      hubName: json['provider_name'] as String? ?? json['provider'] as String? ?? 'Unknown Hub',
+      hubName: json['hub_name'] as String? ??
+          json['provider_name'] as String? ?? '',
       batchId: json['batch_id'] as String?,
     );
   }

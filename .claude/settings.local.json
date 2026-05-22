@@ -12,7 +12,8 @@
       "Bash(ConvertTo-Csv -NoTypeInformation)",
       "Bash(Out-String)",
       "Bash(Remove-Item \"C:\\\\Users\\\\kynm\\\\Desktop\\\\BatchIt\\\\lib\\\\screens\\\\orders\\\\my_orders_screen.dart\")",
-      "PowerShell(Remove-Item \"C:\\\\Users\\\\kynm\\\\Desktop\\\\BatchIt\\\\lib\\\\screens\\\\orders\\\\my_orders_screen.dart\" -Confirm:$false)"
+      "PowerShell(Remove-Item \"C:\\\\Users\\\\kynm\\\\Desktop\\\\BatchIt\\\\lib\\\\screens\\\\orders\\\\my_orders_screen.dart\" -Confirm:$false)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\kynm\\\\Desktop\\\\BatchIt-Backend\" -Recurse -Force)"
     ]
   }
 }

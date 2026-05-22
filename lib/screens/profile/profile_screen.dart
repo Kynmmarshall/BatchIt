@@ -75,6 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     final userName = auth.user?.displayName ?? l10n.profileDefaultName;
     final userEmail = auth.user?.email ?? l10n.profileDefaultEmail;
+    final avatarUrl = auth.user?.avatarUrl;
     final localeLabel = settings.locale.languageCode == 'fr' ? l10n.french : l10n.english;
     final themeLabel = settings.themeMode == ThemeMode.dark ? l10n.dark : l10n.light;
     final totalOrders = orders.length;
@@ -98,13 +99,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           CircleAvatar(
                             radius: 28,
                             backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                            child: Text(
-                              _initials(userName),
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                                    fontWeight: FontWeight.w700,
+                            backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
+                                ? NetworkImage(avatarUrl)
+                                : null,
+                            child: avatarUrl != null && avatarUrl.isNotEmpty
+                                ? null
+                                : Text(
+                                    _initials(userName),
+                                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                          color: Theme.of(context).colorScheme.onPrimaryContainer,
+                                          fontWeight: FontWeight.w700,
+                                        ),
                                   ),
-                            ),
                           ),
                           const SizedBox(width: AppSpacing.md),
                           Expanded(
