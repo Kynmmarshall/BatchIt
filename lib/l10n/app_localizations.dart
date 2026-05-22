@@ -1361,13 +1361,13 @@ abstract class AppLocalizations {
   /// No description provided for @providerRegistrationNumber.
   ///
   /// In en, this message translates to:
-  /// **'Registration / License Number'**
+  /// **'ID Card Number'**
   String get providerRegistrationNumber;
 
   /// No description provided for @providerRegistrationNumberHint.
   ///
   /// In en, this message translates to:
-  /// **'Enter your business registration number'**
+  /// **'Enter your ID card number'**
   String get providerRegistrationNumberHint;
 
   /// No description provided for @providerPhone.

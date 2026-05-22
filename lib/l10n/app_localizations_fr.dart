@@ -681,12 +681,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get providerCategory => 'Catégorie d\'activité';
 
   @override
-  String get providerRegistrationNumber =>
-      'Numéro d\'immatriculation / licence';
+  String get providerRegistrationNumber => 'Numéro de carte d\'identité';
 
   @override
   String get providerRegistrationNumberHint =>
-      'Entrez votre numéro d\'immatriculation';
+      'Entrez votre numéro de carte d\'identité';
 
   @override
   String get providerPhone => 'Numéro de téléphone';

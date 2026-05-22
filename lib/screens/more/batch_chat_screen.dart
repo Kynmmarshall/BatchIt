@@ -22,6 +22,7 @@ class _BatchChatScreenState extends State<BatchChatScreen> {
   List<ChatMessage> _messages = [];
   bool _isLoading = true;
   bool _isSending = false;
+  ChatMessage? _replyTo;
 
   @override
   void initState() {
@@ -123,10 +124,14 @@ class _BatchChatScreenState extends State<BatchChatScreen> {
                         itemBuilder: (_, i) {
                           final msg = _messages[i];
                           final isMe = msg.senderId == myId;
-                          return _MessageBubble(
-                            message: msg,
+                          return _SwipeToReply(
                             isMe: isMe,
-                            scheme: scheme,
+                            onReply: () => setState(() => _replyTo = msg),
+                            child: _MessageBubble(
+                              message: msg,
+                              isMe: isMe,
+                              scheme: scheme,
+                            ),
                           );
                         },
                       ),
@@ -136,6 +141,8 @@ class _BatchChatScreenState extends State<BatchChatScreen> {
             isSending: _isSending,
             onSend: _send,
             scheme: scheme,
+            replyTo: _replyTo,
+            onCancelReply: () => setState(() => _replyTo = null),
           ),
         ],
       ),
@@ -223,12 +230,16 @@ class _InputBar extends StatelessWidget {
     required this.isSending,
     required this.onSend,
     required this.scheme,
+    this.replyTo,
+    required this.onCancelReply,
   });
 
   final TextEditingController controller;
   final bool isSending;
   final VoidCallback onSend;
   final ColorScheme scheme;
+  final ChatMessage? replyTo;
+  final VoidCallback onCancelReply;
 
   @override
   Widget build(BuildContext context) {
@@ -236,42 +247,146 @@ class _InputBar extends StatelessWidget {
       color: scheme.surface,
       elevation: 4,
       child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-              AppSpacing.md, AppSpacing.xs, AppSpacing.sm, AppSpacing.sm),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: controller,
-                  minLines: 1,
-                  maxLines: 4,
-                  textCapitalization: TextCapitalization.sentences,
-                  decoration: InputDecoration(
-                    hintText: 'Type a message…',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(24)),
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.md, vertical: AppSpacing.sm),
-                  ),
-                  onSubmitted: (_) => onSend(),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (replyTo != null)
+              Container(
+                padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.md, AppSpacing.xs, AppSpacing.xs, AppSpacing.xs),
+                color: scheme.surfaceContainerHighest,
+                child: Row(
+                  children: [
+                    Icon(Icons.reply_rounded, size: 16, color: scheme.primary),
+                    const SizedBox(width: AppSpacing.xs),
+                    Expanded(
+                      child: Text(
+                        replyTo!.content,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: scheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close_rounded, size: 16),
+                      onPressed: onCancelReply,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(width: AppSpacing.xs),
-              isSending
-                  ? const Padding(
-                      padding: EdgeInsets.all(12),
-                      child: SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(strokeWidth: 2)))
-                  : IconButton.filled(
-                      onPressed: onSend,
-                      icon: const Icon(Icons.send_rounded),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.md, AppSpacing.xs, AppSpacing.sm, AppSpacing.sm),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: controller,
+                      minLines: 1,
+                      maxLines: 4,
+                      textCapitalization: TextCapitalization.sentences,
+                      decoration: InputDecoration(
+                        hintText: 'Type a message…',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(24)),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+                      ),
+                      onSubmitted: (_) => onSend(),
                     ),
-            ],
-          ),
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                  isSending
+                      ? const Padding(
+                          padding: EdgeInsets.all(12),
+                          child: SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(strokeWidth: 2)))
+                      : IconButton.filled(
+                          onPressed: onSend,
+                          icon: const Icon(Icons.send_rounded),
+                        ),
+                ],
+              ),
+            ),
+          ],
         ),
+      ),
+    );
+  }
+}
+
+class _SwipeToReply extends StatefulWidget {
+  const _SwipeToReply({
+    required this.child,
+    required this.isMe,
+    required this.onReply,
+  });
+
+  final Widget child;
+  final bool isMe;
+  final VoidCallback onReply;
+
+  @override
+  State<_SwipeToReply> createState() => _SwipeToReplyState();
+}
+
+class _SwipeToReplyState extends State<_SwipeToReply> {
+  double _dragOffset = 0;
+  bool _triggered = false;
+  static const _threshold = 60.0;
+
+  void _onUpdate(DragUpdateDetails d) {
+    final delta = widget.isMe ? -d.delta.dx : d.delta.dx;
+    if (delta < 0) return;
+    setState(() => _dragOffset = (_dragOffset + delta).clamp(0.0, _threshold));
+    if (!_triggered && _dragOffset >= _threshold) {
+      _triggered = true;
+      widget.onReply();
+    }
+  }
+
+  void _onEnd(DragEndDetails _) {
+    setState(() {
+      _dragOffset = 0;
+      _triggered = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return GestureDetector(
+      onHorizontalDragUpdate: _onUpdate,
+      onHorizontalDragEnd: _onEnd,
+      child: Stack(
+        children: [
+          if (_dragOffset > 0)
+            Positioned(
+              left: widget.isMe ? null : 0,
+              right: widget.isMe ? 0 : null,
+              top: 0,
+              bottom: 0,
+              child: Opacity(
+                opacity: (_dragOffset / _threshold).clamp(0.0, 1.0),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Icon(Icons.reply_rounded,
+                      color: scheme.primary, size: 20),
+                ),
+              ),
+            ),
+          Transform.translate(
+            offset: Offset(widget.isMe ? -_dragOffset : _dragOffset, 0),
+            child: widget.child,
+          ),
+        ],
       ),
     );
   }

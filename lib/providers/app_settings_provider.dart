@@ -37,4 +37,11 @@ class AppSettingsProvider extends ChangeNotifier {
     _themeMode = _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
     notifyListeners();
   }
+
+  /// Applies a specific theme mode directly (used when loading persisted settings).
+  void applyTheme(ThemeMode mode) {
+    if (_themeMode == mode) return;
+    _themeMode = mode;
+    notifyListeners();
+  }
 }

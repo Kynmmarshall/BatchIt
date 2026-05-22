@@ -1,5 +1,7 @@
 import 'package:batchit/core/app_routes.dart';
+import 'package:batchit/providers/app_settings_provider.dart';
 import 'package:batchit/providers/auth_provider.dart';
+import 'package:batchit/services/settings_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,28 +22,37 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
-  /// Initializes auth state and navigates to appropriate screen.
+  /// Initializes auth state, loads persisted settings, then navigates.
   Future<void> _initializeAndNavigate() async {
     try {
-      // Initialize auth by checking for persisted token
       final authProvider = context.read<AuthProvider>();
       await authProvider.initialize();
 
-      // After init completes, check if user is authenticated
-      if (!mounted) {
-        debugPrint('[BatchIt][splash] widget unmounted during init');
-        return;
-      }
+      if (!mounted) return;
 
       final isAuthenticated = authProvider.isAuthenticated;
-      debugPrint('[BatchIt][splash] init complete isAuthenticated=$isAuthenticated');
 
-      // Navigate to appropriate route
+      // Load persisted theme/language from backend so user never has to re-set them.
+      if (isAuthenticated) {
+        try {
+          final settings = await SettingsService().fetchSettings();
+          if (mounted) {
+            final appSettings = context.read<AppSettingsProvider>();
+            appSettings.setLocale(Locale(settings.language));
+            appSettings.applyTheme(
+              settings.theme == 'dark' ? ThemeMode.dark : ThemeMode.light,
+            );
+          }
+        } catch (_) {}
+      }
+
+      debugPrint('[BatchIt][splash] init complete isAuthenticated=$isAuthenticated');
+      if (!mounted) return;
+
       if (isAuthenticated) {
         debugPrint('[BatchIt][splash] navigating -> ${AppRoutes.shell}');
         Navigator.pushReplacementNamed(context, AppRoutes.shell);
       } else {
-        // Small delay for visual feedback
         await Future.delayed(const Duration(seconds: 1));
         if (!mounted) return;
         debugPrint('[BatchIt][splash] navigating -> ${AppRoutes.onboarding}');
@@ -50,7 +61,6 @@ class _SplashScreenState extends State<SplashScreen> {
     } catch (e) {
       debugPrint('[BatchIt][splash] init error: $e');
       if (!mounted) return;
-      // On error, navigate to onboarding
       Navigator.pushReplacementNamed(context, AppRoutes.onboarding);
     }
   }

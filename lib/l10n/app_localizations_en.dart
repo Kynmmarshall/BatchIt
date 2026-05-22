@@ -667,11 +667,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get providerCategory => 'Business Category';
 
   @override
-  String get providerRegistrationNumber => 'Registration / License Number';
+  String get providerRegistrationNumber => 'ID Card Number';
 
   @override
-  String get providerRegistrationNumberHint =>
-      'Enter your business registration number';
+  String get providerRegistrationNumberHint => 'Enter your ID card number';
 
   @override
   String get providerPhone => 'Phone Number';

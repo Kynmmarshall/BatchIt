@@ -2,6 +2,7 @@ import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/models/provider_profile.dart';
 import 'package:batchit/providers/provider_provider.dart';
+import 'package:batchit/services/provider_service.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/app_primary_button.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
@@ -23,7 +24,38 @@ class ProviderDetailScreen extends StatefulWidget {
 }
 
 class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
+  final _providerService = ProviderService();
   bool _isFollowing = false;
+  bool _isLoadingFollow = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFollowStatus();
+  }
+
+  Future<void> _loadFollowStatus() async {
+    final followed = await _providerService.fetchFollowedProviders();
+    if (!mounted) return;
+    setState(() {
+      _isFollowing = followed.any((p) => p.id == widget.providerId);
+      _isLoadingFollow = false;
+    });
+  }
+
+  Future<void> _toggleFollow() async {
+    final wasFollowing = _isFollowing;
+    setState(() => _isFollowing = !_isFollowing);
+    try {
+      if (wasFollowing) {
+        await _providerService.unfollowProvider(widget.providerId);
+      } else {
+        await _providerService.followProvider(widget.providerId);
+      }
+    } catch (_) {
+      if (mounted) setState(() => _isFollowing = wasFollowing);
+    }
+  }
 
   ProviderProfile? _resolve(ProviderProvider state) =>
       state.findById(widget.providerId);
@@ -52,17 +84,27 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
       appBar: AppBar(
         title: Text(provider.businessName),
         actions: [
-          IconButton(
-            icon: Icon(
-              _isFollowing
-                  ? Icons.notifications_active_rounded
-                  : Icons.notifications_none_rounded,
+          if (_isLoadingFollow)
+            const Padding(
+              padding: EdgeInsets.all(12),
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+            )
+          else
+            IconButton(
+              icon: Icon(
+                _isFollowing
+                    ? Icons.notifications_active_rounded
+                    : Icons.notifications_none_rounded,
+              ),
+              tooltip: _isFollowing
+                  ? l10n.providerCardFollowing
+                  : l10n.providerCardFollow,
+              onPressed: _toggleFollow,
             ),
-            tooltip: _isFollowing
-                ? l10n.providerCardFollowing
-                : l10n.providerCardFollow,
-            onPressed: () => setState(() => _isFollowing = !_isFollowing),
-          ),
         ],
       ),
       body: AppScreenContainer(

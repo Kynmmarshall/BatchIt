@@ -27,6 +27,22 @@ class ProviderService {
     }
   }
 
+  /// Fetches ALL providers (verified and pending) — used by the map view.
+  Future<List<ProviderProfile>> fetchAllProviders() async {
+    try {
+      final response = await _apiClient.get('/providers/');
+      final items = response is List
+          ? response
+          : (response as Map<String, dynamic>?)?['results'] as List<dynamic>? ?? [];
+      return items
+          .map((e) => ProviderProfile.fromJson(e as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      debugPrint('[ProviderService] fetchAllProviders error: $e');
+      return [];
+    }
+  }
+
   /// Returns the current user's provider profile, or null if not yet submitted.
   Future<ProviderProfile?> fetchMyProviderProfile() async {
     try {

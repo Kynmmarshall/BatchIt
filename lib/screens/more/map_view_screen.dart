@@ -43,7 +43,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
   }
 
   Future<void> _load() async {
-    final providers = await _service.fetchVerifiedProviders();
+    final providers = await _service.fetchAllProviders();
     if (!mounted) return;
     setState(() {
       _providers = providers;

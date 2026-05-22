@@ -24,6 +24,7 @@
 /// - Apply platform-consistent bottom safe area
 /// ============================================================================
 import 'package:batchit/l10n/app_localizations.dart';
+import 'package:batchit/providers/notification_provider.dart';
 import 'package:batchit/screens/batch/create_batch_screen.dart';
 import 'package:batchit/screens/home/home_screen.dart';
 import 'package:batchit/screens/more/more_screen.dart';
@@ -31,6 +32,7 @@ import 'package:batchit/screens/notifications/notifications_screen.dart';
 import 'package:batchit/screens/profile/profile_screen.dart';
 import 'package:batchit/themes/app_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MainNavigationShell extends StatefulWidget {
   const MainNavigationShell({super.key});
@@ -45,8 +47,19 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
   int _index = 0;
 
   @override
+  void initState() {
+    super.initState();
+    // Load notifications so the unread badge is populated immediately.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) context.read<NotificationProvider>().load();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final unreadCount = context.watch<NotificationProvider>().unreadCount;
+    final hasUnread = unreadCount > 0;
 
     final screens = [
       const HomeScreen(),
@@ -72,9 +85,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
           child: NavigationBar(
             selectedIndex: _index,
             onDestinationSelected: (value) {
-              setState(() {
-                _index = value;
-              });
+              setState(() => _index = value);
             },
             destinations: [
               NavigationDestination(
@@ -88,8 +99,8 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
                 label: l10n.createBatch,
               ),
               NavigationDestination(
-                icon: const Icon(Icons.notifications_none_rounded, size: AppIcons.lg),
-                selectedIcon: const Icon(Icons.notifications_rounded, size: AppIcons.lg),
+                icon: _NotifIcon(hasUnread: hasUnread, selected: false),
+                selectedIcon: _NotifIcon(hasUnread: hasUnread, selected: true),
                 label: l10n.notificationsScreenTitle,
               ),
               NavigationDestination(
@@ -106,6 +117,32 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Bell icon that turns green and shows a badge dot when there are unread notifications.
+class _NotifIcon extends StatelessWidget {
+  const _NotifIcon({required this.hasUnread, required this.selected});
+
+  final bool hasUnread;
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = hasUnread ? Colors.green : null;
+    final icon = Icon(
+      selected ? Icons.notifications_rounded : Icons.notifications_none_rounded,
+      size: AppIcons.lg,
+      color: color,
+    );
+
+    if (!hasUnread) return icon;
+
+    return Badge(
+      backgroundColor: Colors.green,
+      smallSize: 8,
+      child: icon,
     );
   }
 }

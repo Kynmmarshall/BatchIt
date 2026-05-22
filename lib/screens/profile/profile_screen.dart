@@ -295,7 +295,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     )
                                   : null,
                               label: Text(provider.businessName),
-                              onSelected: (selected) => _toggleFollow(provider, selected),
+                              onSelected: (_) => Navigator.pushNamed(
+                                context,
+                                AppRoutes.providerDetail,
+                                arguments: provider.id,
+                              ),
                             );
                           }).toList(),
                         ),
@@ -339,35 +343,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
-  }
-
-  Future<void> _toggleFollow(ProviderProfile provider, bool selected) async {
-    setState(() {
-      if (selected) {
-        if (_followedProviders.every((p) => p.id != provider.id)) {
-          _followedProviders.add(provider);
-        }
-      } else {
-        _followedProviders.removeWhere((p) => p.id == provider.id);
-      }
-    });
-
-    try {
-      if (selected) {
-        await _providerService.followProvider(provider.id);
-      } else {
-        await _providerService.unfollowProvider(provider.id);
-      }
-    } catch (_) {
-      if (!mounted) return;
-      setState(() {
-        if (selected) {
-          _followedProviders.removeWhere((p) => p.id == provider.id);
-        } else if (_followedProviders.every((p) => p.id != provider.id)) {
-          _followedProviders.add(provider);
-        }
-      });
-    }
   }
 
   String _initials(String name) {
