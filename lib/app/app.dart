@@ -66,8 +66,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
-class BatchItApp extends StatelessWidget {
+class BatchItApp extends StatefulWidget {
   const BatchItApp({super.key});
+
+  @override
+  State<BatchItApp> createState() => _BatchItAppState();
+}
+
+class _BatchItAppState extends State<BatchItApp> {
+  Offset? _languageButtonOffset;
+
+  void _handleLanguageDrag(DragUpdateDetails details, Size bounds) {
+    setState(() {
+      final current = _languageButtonOffset ?? const Offset(0, 0);
+      final next = current + details.delta;
+      _languageButtonOffset = Offset(
+        next.dx.clamp(0.0, bounds.width),
+        next.dy.clamp(0.0, bounds.height),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,25 +122,44 @@ class BatchItApp extends StatelessWidget {
               return const SizedBox.shrink();
             }
 
-            return Stack(
-              children: [
-                child,
-                Positioned(
-                  top: 10,
-                  right: 10,
-                  child: SafeArea(
-                    child: _LanguageSwitcherButton(
-                      onPressed: () {
-                        final provider = context.read<AppSettingsProvider>();
-                        final nextLocale = provider.locale.languageCode == 'en'
-                            ? const Locale('fr')
-                            : const Locale('en');
-                        provider.setLocale(nextLocale);
-                      },
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                final buttonOffset = _languageButtonOffset ??
+                    Offset(
+                      12,
+                      MediaQuery.of(context).padding.top + 12,
+                    );
+
+                return Stack(
+                  children: [
+                    child,
+                    Positioned(
+                      left: buttonOffset.dx,
+                      top: buttonOffset.dy,
+                      child: SafeArea(
+                        child: GestureDetector(
+                          onPanUpdate: (details) {
+                            final bounds = Size(
+                              constraints.maxWidth - 56,
+                              constraints.maxHeight - 56,
+                            );
+                            _handleLanguageDrag(details, bounds);
+                          },
+                          child: _LanguageSwitcherButton(
+                            onPressed: () {
+                              final provider = context.read<AppSettingsProvider>();
+                              final nextLocale = provider.locale.languageCode == 'en'
+                                  ? const Locale('fr')
+                                  : const Locale('en');
+                              provider.setLocale(nextLocale);
+                            },
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ],
+                  ],
+                );
+              },
             );
           },
           initialRoute: startupRoute,

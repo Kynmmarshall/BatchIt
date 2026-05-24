@@ -34,10 +34,12 @@ class BatchProvider extends ChangeNotifier {
 
   List<Batch> _batches = const [];
   List<Batch> _myCreatedBatches = const [];
+  List<Batch> _myJoinedBatches = const [];
   bool _isLoading = false;
 
   List<Batch> get batches => _batches;
   List<Batch> get myCreatedBatches => _myCreatedBatches;
+  List<Batch> get myJoinedBatches => _myJoinedBatches;
   bool get isLoading => _isLoading;
 
   /// Fetches nearby batches from service and updates _batches list.
@@ -58,6 +60,15 @@ class BatchProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     _myCreatedBatches = await _batchService.fetchMyCreatedBatches();
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  /// Fetches batches the authenticated user has joined as a participant.
+  Future<void> loadMyJoinedBatches() async {
+    _isLoading = true;
+    notifyListeners();
+    _myJoinedBatches = await _batchService.fetchMyJoinedBatches();
     _isLoading = false;
     notifyListeners();
   }
@@ -133,7 +144,12 @@ class BatchProvider extends ChangeNotifier {
           debugPrint('[BatchProvider] auto-follow on join failed: $e');
         }
       }
-      
+
+      // Add to joined list immediately so ChatScreen shows it without a reload.
+      if (!_myJoinedBatches.any((b) => b.id == batchId)) {
+        _myJoinedBatches = [batch, ..._myJoinedBatches];
+      }
+
       // Update local state
       _batches = _batches
           .map(

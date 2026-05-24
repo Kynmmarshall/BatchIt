@@ -74,6 +74,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Access your account securely by using your\nemail and password';
 
   @override
+  String get guestLogin => 'Guest Login';
+
+  @override
   String get registerNow => 'Register Now';
 
   @override
@@ -192,6 +195,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get batchNotFound => 'Batch not found';
+
+  @override
+  String get providerNotFound => 'Provider not found';
 
   @override
   String get routeNotFound => 'Route not found';

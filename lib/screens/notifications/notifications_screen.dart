@@ -100,7 +100,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   void _handleTap(AppNotification notif, NotificationProvider provider) {
     if (!notif.isRead) provider.markRead(notif.id);
     if (notif.relatedBatchId != null) {
-      if (notif.type == 'batch_full' || notif.type == 'provider_message') {
+      if (notif.type == 'batch_full' ||
+          notif.type == 'batch_created' ||
+          notif.type == 'batch_joined' ||
+          notif.type == 'provider_message') {
         Navigator.pushNamed(context, AppRoutes.batchDetails,
             arguments: notif.relatedBatchId);
       }
@@ -189,6 +192,9 @@ class _NotificationCard extends StatelessWidget {
 
   IconData _iconForType(String type) {
     switch (type) {
+      case 'batch_created':
+      case 'batch_joined':
+        return Icons.add_alert_rounded;
       case 'batch_full':
         return Icons.inventory_2_outlined;
       case 'provider_approved':

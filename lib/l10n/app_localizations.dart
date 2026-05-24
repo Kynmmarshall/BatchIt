@@ -224,6 +224,12 @@ abstract class AppLocalizations {
   /// **'Access your account securely by using your\nemail and password'**
   String get loginSubtitle;
 
+  /// No description provided for @guestLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest Login'**
+  String get guestLogin;
+
   /// No description provided for @registerNow.
   ///
   /// In en, this message translates to:
@@ -445,6 +451,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Batch not found'**
   String get batchNotFound;
+
+  /// No description provided for @providerNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider not found'**
+  String get providerNotFound;
 
   /// No description provided for @routeNotFound.
   ///

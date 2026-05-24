@@ -1,3 +1,4 @@
+import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/providers/batch_provider.dart';
 import 'package:batchit/themes/app_spacing.dart';
@@ -204,24 +205,44 @@ class _JoinBatchScreenState extends State<JoinBatchScreen> {
                         onPressed: () async {
                           final value = double.tryParse(_quantityController.text.trim());
                           final quantity = value ?? _selectedQuantityKg;
-                          if (quantity <= 0) {
-                            return;
-                          }
+                          if (quantity <= 0) return;
+
+                          // Capture context-dependent objects before the async gap.
+                          final batchProvider = context.read<BatchProvider>();
+                          final messenger = ScaffoldMessenger.of(context);
+                          final nav = Navigator.of(context);
+                          final batchId = widget.batchId;
+                          final batchName = batch.productName;
+                          final successText = l10n.joinSuccess;
+                          final errorText = l10n.errorMessage;
 
                           try {
-                            await context.read<BatchProvider>().joinBatch(
-                                  batchId: widget.batchId,
-                                  quantityKg: quantity,
-                                );
-                            if (!mounted) return;
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(l10n.joinSuccess)),
+                            await batchProvider.joinBatch(
+                              batchId: batchId,
+                              quantityKg: quantity,
                             );
-                            Navigator.pop(context);
+                            // Pop the join screen first, then offer to open the chat.
+                            nav.pop();
+                            messenger.showSnackBar(
+                              SnackBar(
+                                content: Text(successText),
+                                duration: const Duration(seconds: 5),
+                                action: SnackBarAction(
+                                  label: 'Open Chat',
+                                  onPressed: () => nav.pushNamed(
+                                    AppRoutes.batchChat,
+                                    arguments: {
+                                      'batchId': batchId,
+                                      'batchName': batchName,
+                                    },
+                                  ),
+                                ),
+                              ),
+                            );
                           } catch (e) {
                             if (!mounted) return;
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(l10n.errorMessage)),
+                            messenger.showSnackBar(
+                              SnackBar(content: Text(errorText)),
                             );
                           }
                         },

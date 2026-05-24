@@ -74,6 +74,9 @@ class AppLocalizationsFr extends AppLocalizations {
       'Accedez a votre compte en toute securite avec\nvotre e-mail et mot de passe';
 
   @override
+  String get guestLogin => 'Connexion invite';
+
+  @override
   String get registerNow => 'Inscrivez-vous';
 
   @override
@@ -192,6 +195,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get batchNotFound => 'Batch introuvable';
+
+  @override
+  String get providerNotFound => 'Prestataire introuvable';
 
   @override
   String get routeNotFound => 'Route introuvable';

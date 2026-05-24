@@ -120,16 +120,20 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.7),
-                  shape: BoxShape.circle,
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, AppRoutes.shell);
+                },
+                style: TextButton.styleFrom(
+                  foregroundColor: primaryText,
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(999),
+                    side: const BorderSide(color: Color(0xFFD7DDE5)),
+                  ),
                 ),
-                child: IconButton(
-                  onPressed: () => Navigator.of(context).maybePop(),
-                  icon: const Icon(Icons.arrow_back_rounded),
-                  color: primaryText,
-                ),
+                icon: const Icon(Icons.person_outline_rounded, size: 18),
+                label: Text(l10n.guestLogin),
               ),
               const SizedBox(height: 24),
               Text(

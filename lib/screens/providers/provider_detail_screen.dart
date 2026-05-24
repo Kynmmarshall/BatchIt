@@ -27,11 +27,41 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
   final _providerService = ProviderService();
   bool _isFollowing = false;
   bool _isLoadingFollow = true;
+  ProviderProfile? _provider;
+  bool _isLoadingProvider = true;
 
   @override
   void initState() {
     super.initState();
+    _loadProvider();
     _loadFollowStatus();
+  }
+
+  Future<void> _loadProvider() async {
+    final stateProvider = context.read<ProviderProvider>().findById(widget.providerId);
+    if (stateProvider != null) {
+      if (!mounted) return;
+      setState(() {
+        _provider = stateProvider;
+        _isLoadingProvider = false;
+      });
+      return;
+    }
+
+    try {
+      final fetched = await _providerService.fetchProviderById(widget.providerId);
+      if (!mounted) return;
+      setState(() {
+        _provider = fetched;
+        _isLoadingProvider = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _provider = null;
+        _isLoadingProvider = false;
+      });
+    }
   }
 
   Future<void> _loadFollowStatus() async {
@@ -64,9 +94,9 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final state = context.watch<ProviderProvider>();
-    final provider = _resolve(state);
+    final provider = _provider ?? _resolve(state);
 
-    if (state.isLoading && provider == null) {
+    if ((_isLoadingProvider || state.isLoading) && provider == null) {
       return Scaffold(
         appBar: AppBar(title: Text(l10n.providerDetailTitle)),
         body: const Center(child: CircularProgressIndicator()),
@@ -76,42 +106,42 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
     if (provider == null) {
       return Scaffold(
         appBar: AppBar(title: Text(l10n.providerDetailTitle)),
-        body: Center(child: Text(l10n.batchNotFound)),
+        body: Center(child: Text(l10n.providerNotFound)),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
         title: Text(provider.businessName),
-        actions: [
-          if (_isLoadingFollow)
-            const Padding(
-              padding: EdgeInsets.all(12),
-              child: SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              ),
-            )
-          else
-            IconButton(
-              icon: Icon(
-                _isFollowing
-                    ? Icons.notifications_active_rounded
-                    : Icons.notifications_none_rounded,
-              ),
-              tooltip: _isFollowing
-                  ? l10n.providerCardFollowing
-                  : l10n.providerCardFollow,
-              onPressed: _toggleFollow,
-            ),
-        ],
       ),
       body: AppScreenContainer(
         child: ListView(
           children: [
             // ── Hero header ─────────────────────────────────────────────
             _HeroHeader(provider: provider),
+
+            const SizedBox(height: AppSpacing.sm),
+
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: _isLoadingFollow ? null : _toggleFollow,
+                icon: _isLoadingFollow
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Icon(
+                        _isFollowing
+                            ? Icons.notifications_active_rounded
+                            : Icons.notifications_none_rounded,
+                      ),
+                label: Text(
+                  _isFollowing ? l10n.providerCardFollowing : l10n.providerCardFollow,
+                ),
+              ),
+            ),
 
             const SizedBox(height: AppSpacing.md),
 

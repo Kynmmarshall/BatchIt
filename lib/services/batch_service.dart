@@ -116,6 +116,20 @@ class BatchService {
     }
   }
 
+  /// Fetches batches the authenticated user has joined as a participant.
+  Future<List<Batch>> fetchMyJoinedBatches() async {
+    try {
+      final response = await _apiClient.get('/batches/', params: {'participant': 'me'});
+      final List<dynamic> batchList = response is List ? response : response['results'] ?? [];
+      return batchList
+          .map((json) => _mapBatchFromJson(json as Map<String, dynamic>))
+          .toList();
+    } on ApiException catch (e) {
+      debugPrint('[BatchService] fetchMyJoinedBatches failed: $e');
+      return [];
+    }
+  }
+
   /// Fetches a specific batch by ID.
   Future<Batch> fetchBatchById(String batchId) async {
     final response = await _apiClient.get('/batches/$batchId/');

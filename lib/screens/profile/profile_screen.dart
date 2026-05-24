@@ -286,16 +286,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           spacing: AppSpacing.xs,
                           runSpacing: AppSpacing.xs,
                           children: _followedProviders.map((provider) {
-                            return FilterChip(
-                              selected: true,
+                            return ActionChip(
                               avatar: provider.logoUrl != null && provider.logoUrl!.isNotEmpty
                                   ? CircleAvatar(
                                       backgroundImage: NetworkImage(provider.logoUrl!),
                                       radius: 10,
                                     )
-                                  : null,
+                                  : const Icon(Icons.storefront_rounded, size: 18),
                               label: Text(provider.businessName),
-                              onSelected: (_) => Navigator.pushNamed(
+                              onPressed: () => Navigator.pushNamed(
                                 context,
                                 AppRoutes.providerDetail,
                                 arguments: provider.id,

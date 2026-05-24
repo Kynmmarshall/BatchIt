@@ -1,5 +1,6 @@
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
+import 'package:batchit/models/batch.dart';
 import 'package:batchit/providers/batch_provider.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
@@ -18,7 +19,10 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) context.read<BatchProvider>().loadMyCreatedBatches();
+      if (!mounted) return;
+      final provider = context.read<BatchProvider>();
+      provider.loadMyCreatedBatches();
+      provider.loadMyJoinedBatches();
     });
   }
 
@@ -28,14 +32,20 @@ class _ChatScreenState extends State<ChatScreen> {
     final batchProvider = context.watch<BatchProvider>();
     final scheme = Theme.of(context).colorScheme;
 
-    final batches = batchProvider.myCreatedBatches;
+    // Merge created + joined, deduplicating by ID.
+    final createdIds = batchProvider.myCreatedBatches.map((b) => b.id).toSet();
+    final created = batchProvider.myCreatedBatches;
+    final joined = batchProvider.myJoinedBatches
+        .where((b) => !createdIds.contains(b.id))
+        .toList();
+    final allBatches = [...created, ...joined];
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.chatTitle)),
       body: AppScreenContainer(
-        child: batchProvider.isLoading
+        child: batchProvider.isLoading && allBatches.isEmpty
             ? const Center(child: CircularProgressIndicator())
-            : batches.isEmpty
+            : allBatches.isEmpty
                 ? Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -73,34 +83,76 @@ class _ChatScreenState extends State<ChatScreen> {
                       ],
                     ),
                   )
-                : ListView.builder(
-                    itemCount: batches.length,
-                    itemBuilder: (_, i) {
-                      final batch = batches[i];
-                      return Card(
-                        margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: scheme.primaryContainer,
-                            child: Icon(Icons.inventory_2_outlined,
-                                color: scheme.onPrimaryContainer),
-                          ),
-                          title: Text(batch.productName),
-                          subtitle: Text(batch.locationName,
-                              style: TextStyle(color: scheme.onSurfaceVariant)),
-                          trailing: const Icon(Icons.chevron_right_rounded),
-                          onTap: () => Navigator.pushNamed(
-                            context,
-                            AppRoutes.batchChat,
-                            arguments: {
-                              'batchId': batch.id,
-                              'batchName': batch.productName,
-                            },
-                          ),
-                        ),
-                      );
-                    },
+                : ListView(
+                    children: [
+                      if (created.isNotEmpty) ...[
+                        _SectionHeader(label: 'Batches I Created'),
+                        ...created.map((b) => _BatchChatTile(batch: b)),
+                        const SizedBox(height: AppSpacing.sm),
+                      ],
+                      if (joined.isNotEmpty) ...[
+                        _SectionHeader(label: 'Batches I Joined'),
+                        ...joined.map((b) => _BatchChatTile(batch: b)),
+                      ],
+                    ],
                   ),
+      ),
+    );
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  const _SectionHeader({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(4, 8, 4, 4),
+      child: Text(
+        label,
+        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.4,
+            ),
+      ),
+    );
+  }
+}
+
+class _BatchChatTile extends StatelessWidget {
+  const _BatchChatTile({required this.batch});
+
+  final Batch batch;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: scheme.primaryContainer,
+          child: Icon(Icons.inventory_2_outlined,
+              color: scheme.onPrimaryContainer),
+        ),
+        title: Text(batch.productName),
+        subtitle: Text(
+          batch.locationName,
+          style: TextStyle(color: scheme.onSurfaceVariant),
+        ),
+        trailing: const Icon(Icons.chevron_right_rounded),
+        onTap: () => Navigator.pushNamed(
+          context,
+          AppRoutes.batchChat,
+          arguments: {
+            'batchId': batch.id,
+            'batchName': batch.productName,
+          },
+        ),
       ),
     );
   }
