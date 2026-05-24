@@ -6,8 +6,10 @@ import 'package:batchit/services/provider_service.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/app_primary_button.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
+import 'package:batchit/widgets/provider_distance.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -29,12 +31,35 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
   bool _isLoadingFollow = true;
   ProviderProfile? _provider;
   bool _isLoadingProvider = true;
+  Position? _currentPosition;
 
   @override
   void initState() {
     super.initState();
     _loadProvider();
     _loadFollowStatus();
+    _loadCurrentLocation();
+  }
+
+  Future<void> _loadCurrentLocation() async {
+    try {
+      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) return;
+
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        return;
+      }
+
+      final position = await Geolocator.getCurrentPosition();
+      if (!mounted) return;
+      setState(() => _currentPosition = position);
+    } catch (_) {}
   }
 
   Future<void> _loadProvider() async {
@@ -201,6 +226,10 @@ class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
                   icon: Icons.place_rounded,
                   label: l10n.providerAddress,
                   value: provider.address,
+                ),
+                ProviderDistanceLine(
+                  provider: provider,
+                  currentPosition: _currentPosition,
                 ),
                 if (provider.latitude != null && provider.longitude != null) ...[
                   const SizedBox(height: AppSpacing.xs),

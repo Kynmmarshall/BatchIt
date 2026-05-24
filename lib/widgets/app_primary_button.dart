@@ -9,6 +9,7 @@ class AppPrimaryButton extends StatelessWidget {
     this.isLoading = false,
     this.icon,
     this.isSecondary = false,
+    this.isDestructive = false,
   });
 
   final String label;
@@ -16,14 +17,25 @@ class AppPrimaryButton extends StatelessWidget {
   final bool isLoading;
   final IconData? icon;
   final bool isSecondary;
+  final bool isDestructive;
 
   @override
   Widget build(BuildContext context) {
     final effectiveCallback = isLoading ? null : onPressed;
     final content = _content();
+    final scheme = Theme.of(context).colorScheme;
+
+    final destructiveOutlinedStyle = OutlinedButton.styleFrom(
+      foregroundColor: scheme.error,
+      side: BorderSide(color: scheme.error),
+    );
 
     final button = isSecondary
-        ? OutlinedButton(onPressed: effectiveCallback, child: content)
+        ? OutlinedButton(
+            onPressed: effectiveCallback,
+            style: isDestructive ? destructiveOutlinedStyle : null,
+            child: content,
+          )
         : FilledButton(onPressed: effectiveCallback, child: content);
 
     // Row + Expanded gives the button tight finite width — cannot produce

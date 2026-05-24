@@ -15,18 +15,11 @@ class BatchCard extends StatelessWidget {
   final String joinLabel;
   final VoidCallback onTap;
 
-
-  String _resolveImagePath() {
-    // Use the batch model's image path to map product -> asset filename.
-    return batch.imageAssetPath;
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context)!;
-    final imagePath = _resolveImagePath();
     final progressPct = (batch.progress * 100).round();
 
     return InkWell(
@@ -62,7 +55,7 @@ class BatchCard extends StatelessWidget {
                           ),
                         )
                       : Image.asset(
-                          imagePath,
+                          batch.imageAssetPath,
                           fit: BoxFit.cover,
                           errorBuilder: (_, __, ___) => Container(
                             color: scheme.surfaceContainerHighest,
@@ -84,6 +77,7 @@ class BatchCard extends StatelessWidget {
               ),
               const SizedBox(height: 2),
               Text(
+                // "25% filled"
                 l10n.batchProgressFilled(progressPct),
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: scheme.onSurfaceVariant,
@@ -98,14 +92,15 @@ class BatchCard extends StatelessWidget {
                         style: theme.textTheme.titleMedium,
                         children: [
                           TextSpan(
-                            text: '${formatKg(batch.bulkSizeKg)} ',
+                            // e.g. "50 kg" / "12 units" / "20 L"
+                            text: formatQty(batch.currentQuantityKg, batch.unit),
                             style: theme.textTheme.titleLarge?.copyWith(
                               color: scheme.primary,
                               fontWeight: FontWeight.w800,
                             ),
                           ),
                           TextSpan(
-                            text: l10n.perKg,
+                            text: ' / ${formatQty(batch.bulkSizeKg, batch.unit)}',
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: scheme.onSurfaceVariant,
                               fontWeight: FontWeight.w700,
@@ -119,7 +114,7 @@ class BatchCard extends StatelessWidget {
                     width: 36,
                     height: 36,
                     child: FilledButton(
-                      onPressed: onTap, 
+                      onPressed: onTap,
                       style: FilledButton.styleFrom(
                         padding: EdgeInsets.zero,
                         shape: RoundedRectangleBorder(

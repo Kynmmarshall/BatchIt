@@ -1,26 +1,26 @@
-/// ============================================================================
-/// [HomeScreen] - Main dashboard for browsing and discovering batches
-/// ============================================================================
-/// StatefulWidget that displays a personalized dashboard with:
-/// - Welcome header with quick notification button
-/// - Tappable search box that navigates to SearchResultsScreen
-/// - Quick stats (active batches count, open batches count)
-/// - Active batches carousel (top 3 batches)
-/// - Filter chips to view all/open/full batches
-/// - Full list of filtered batches with cards and progress indicators
-///
-/// Responsibilities:
-/// - Load nearby batches on mount (via addPostFrameCallback)
-/// - Apply local filter to batch list based on user selection
-/// - Render gradient hero header with MetaCh brand messaging
-/// - Display batch cards with tap → batch details navigation
-/// - Provide batch info summary (progress %, join button, etc.)
-///
-/// State:
-/// - _selectedFilter: Current view (nearby/open/full) - default nearby
-/// - Watches BatchProvider for batches list and loading state
-/// - Uses AppLocalizations for EN/FR text labels
-/// ============================================================================
+// ============================================================================
+// [HomeScreen] - Main dashboard for browsing and discovering batches
+// ============================================================================
+// StatefulWidget that displays a personalized dashboard with:
+// - Welcome header with quick notification button
+// - Tappable search box that navigates to SearchResultsScreen
+// - Quick stats (active batches count, open batches count)
+// - Active batches carousel (top 3 batches)
+// - Filter chips to view all/open/full batches
+// - Full list of filtered batches with cards and progress indicators
+//
+// Responsibilities:
+// - Load nearby batches on mount (via addPostFrameCallback)
+// - Apply local filter to batch list based on user selection
+// - Render gradient hero header with MetaCh brand messaging
+// - Display batch cards with tap -> batch details navigation
+// - Provide batch info summary (progress %, join button, etc.)
+//
+// State:
+// - _selectedFilter: Current view (nearby/open/full) - default nearby
+// - Watches BatchProvider for batches list and loading state
+// - Uses AppLocalizations for EN/FR text labels
+// ============================================================================
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/models/batch.dart';
@@ -59,12 +59,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Filters batch list based on selected filter criteria.
   /// Returns the complete list for 'nearby' mode.
-  /// Returns only open batches (!isFull) for 'open' mode.
+  /// Returns only batches that can still be joined for 'open' mode.
   /// Returns only full batches (isFull) for 'full' mode.
   List<Batch> _applyFilter(List<Batch> batches) {
     switch (_selectedFilter) {
       case _BatchFilter.open:
-        return batches.where((batch) => !batch.isFull).toList();
+        return batches.where((batch) => batch.canJoin).toList();
       case _BatchFilter.full:
         return batches.where((batch) => batch.isFull).toList();
       case _BatchFilter.nearby:
@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
       (_BatchFilter.full, l10n.full),
     ];
     final activeBatches = batchProvider.batches.take(3).toList(growable: false);
-    final openCount = batchProvider.batches.where((batch) => !batch.isFull).length;
+    final openCount = batchProvider.batches.where((batch) => batch.canJoin).length;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -225,17 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       fontWeight: FontWeight.w800,
                     ),
                   ),
-                  const Spacer(),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      l10n.seeAll,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: scheme.primary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
+                  
                 ],
               ),
               const SizedBox(height: 10),
@@ -324,17 +314,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: theme.textTheme.titleLarge?.copyWith(
                       color: scheme.onSurface,
                       fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  const Spacer(),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      l10n.seeAll,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: scheme.primary,
-                        fontWeight: FontWeight.w600,
-                      ),
                     ),
                   ),
                 ],

@@ -107,9 +107,21 @@ class _BatchChatScreenState extends State<BatchChatScreen> {
           ),
         ],
       ),
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
+          Positioned.fill(
+            child: Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/background/chat.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+          Column(
+            children: [
+              Expanded(
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _messages.isEmpty
@@ -146,6 +158,8 @@ class _BatchChatScreenState extends State<BatchChatScreen> {
           ),
         ],
       ),
+        ]
+    )
     );
   }
 }
@@ -171,17 +185,6 @@ class _MessageBubble extends StatelessWidget {
           crossAxisAlignment:
               isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
-            if (!isMe)
-              Padding(
-                padding: const EdgeInsets.only(left: 4, bottom: 2),
-                child: Text(
-                  message.senderName,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: scheme.primary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                ),
-              ),
             Container(
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * 0.72,
@@ -197,18 +200,46 @@ class _MessageBubble extends StatelessWidget {
                   bottomRight: Radius.circular(isMe ? 4 : 16),
                 ),
               ),
-              child: Text(
-                message.content,
-                style: TextStyle(color: isMe ? scheme.onPrimary : scheme.onSurface),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 2, left: 4, right: 4),
-              child: Text(
-                _formatTime(message.sentAt),
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: scheme.onSurfaceVariant,
-                    ),
+              child: Column(
+                crossAxisAlignment:
+                    isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          isMe ? 'me' : message.senderName,
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                color: isMe
+                                    ? scheme.onPrimary.withOpacity(0.95)
+                                    : scheme.primary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        _formatTime(message.sentAt),
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelSmall
+                            ?.copyWith(
+                              color: isMe
+                                  ? scheme.onPrimary.withOpacity(0.85)
+                                  : scheme.onSurfaceVariant,
+                            ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    message.content,
+                    style: TextStyle(
+                        color: isMe ? scheme.onPrimary : scheme.onSurface),
+                  ),
+                ],
               ),
             ),
           ],

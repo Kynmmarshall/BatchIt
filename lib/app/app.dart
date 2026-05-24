@@ -32,6 +32,7 @@
 /// ============================================================================
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
+import 'package:batchit/models/batch.dart';
 import 'package:batchit/models/auth/verification_code_args.dart';
 import 'package:batchit/providers/app_settings_provider.dart';
 import 'package:batchit/providers/auth_provider.dart';
@@ -224,10 +225,17 @@ class _BatchItAppState extends State<BatchItApp> {
                 if (id == null) return _fallbackRoute();
                 return _buildRoute(ProviderDetailScreen(providerId: id));
               case AppRoutes.createBatch:
-                final providerId = settingsRoute.arguments as String?;
-                return _buildRoute(
-                  CreateBatchScreen(preselectedProviderId: providerId),
-                );
+                final args = settingsRoute.arguments;
+                if (args is Map<String, dynamic>) {
+                  return _buildRoute(
+                    CreateBatchScreen(
+                      preselectedProviderId: args['providerId'] as String?,
+                      editingBatch: args['batch'] as Batch?,
+                    ),
+                  );
+                }
+                final providerId = args as String?;
+                return _buildRoute(CreateBatchScreen(preselectedProviderId: providerId));
               case AppRoutes.myBatches:
                 return _buildRoute(const MyBatchesScreen());
               case AppRoutes.createOrder:

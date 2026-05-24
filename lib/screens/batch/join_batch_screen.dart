@@ -1,6 +1,8 @@
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
+import 'package:batchit/models/batch.dart';
 import 'package:batchit/providers/batch_provider.dart';
+import 'package:batchit/services/api_client.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/app_primary_button.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
@@ -19,7 +21,34 @@ class JoinBatchScreen extends StatefulWidget {
 
 class _JoinBatchScreenState extends State<JoinBatchScreen> {
   final TextEditingController _quantityController = TextEditingController();
-  double _selectedQuantityKg = 5;
+  double _selectedQuantityKg = 1;
+  bool _isRefreshing = true;
+  bool _isSubmitting = false;
+
+  /// Quick-pick quantities per unit type.
+  static List<double> _presetsFor(String unit) {
+    switch (unit) {
+      case 'g':
+        return [100, 250, 500];
+      case 'L':
+        return [1, 5, 10];
+      case 'mL':
+        return [250, 500, 1000];
+      case 'units':
+        return [1, 2, 5];
+      case 'boxes':
+        return [1, 2, 3];
+      case 'kg':
+      default:
+        return [5, 10, 15];
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _refreshBatch());
+  }
 
   @override
   void dispose() {
@@ -27,10 +56,72 @@ class _JoinBatchScreenState extends State<JoinBatchScreen> {
     super.dispose();
   }
 
+  Future<void> _refreshBatch() async {
+    if (!mounted) return;
+    setState(() => _isRefreshing = true);
+    try {
+      await context.read<BatchProvider>().refreshBatch(widget.batchId);
+    } catch (e) {
+      debugPrint('[JoinBatchScreen] batch refresh failed: $e');
+    } finally {
+      if (mounted) setState(() => _isRefreshing = false);
+    }
+  }
+
+  Future<void> _confirmJoin(Batch batch) async {
+    final value = double.tryParse(_quantityController.text.trim());
+    final quantity = value ?? _selectedQuantityKg;
+    if (quantity <= 0) return;
+
+    final batchProvider = context.read<BatchProvider>();
+    final messenger = ScaffoldMessenger.of(context);
+    final nav = Navigator.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    final batchId = widget.batchId;
+    final batchName = batch.productName;
+
+    setState(() => _isSubmitting = true);
+    try {
+      await batchProvider.joinBatch(batchId: batchId, quantityKg: quantity);
+      if (!mounted) return;
+
+      nav.pop();
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(l10n.joinSuccess),
+          duration: const Duration(seconds: 5),
+          action: SnackBarAction(
+            label: 'Open Chat',
+            onPressed: () => nav.pushNamed(
+              AppRoutes.batchChat,
+              arguments: {'batchId': batchId, 'batchName': batchName},
+            ),
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      messenger.showSnackBar(
+        SnackBar(content: Text(_joinErrorMessage(e, l10n))),
+      );
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
+  }
+
+  String _joinErrorMessage(Object error, AppLocalizations l10n) {
+    if (error is ApiException && error.message.isNotEmpty) {
+      return error.message;
+    }
+    return l10n.errorMessage;
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final batch = context.watch<BatchProvider>().findById(widget.batchId);
+    final canJoin = batch != null && batch.canJoin;
+    final canSubmit = canJoin && !_isRefreshing && !_isSubmitting;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
 
@@ -38,7 +129,11 @@ class _JoinBatchScreenState extends State<JoinBatchScreen> {
       return Scaffold(
         appBar: AppBar(title: Text(l10n.joinBatch)),
         body: AppScreenContainer(
-          child: Center(child: Text(l10n.batchNotFound)),
+          child: Center(
+            child: _isRefreshing
+                ? const CircularProgressIndicator()
+                : Text(l10n.batchNotFound),
+          ),
         ),
       );
     }
@@ -48,6 +143,21 @@ class _JoinBatchScreenState extends State<JoinBatchScreen> {
       body: AppScreenContainer(
         child: ListView(
           children: [
+            if (_isRefreshing) const LinearProgressIndicator(),
+            if (_isRefreshing) const SizedBox(height: AppSpacing.md),
+            if (!canJoin)
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  child: Text(
+                    batch.isFull
+                        ? 'This batch is already full.'
+                        : 'This batch is no longer open for joining.',
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                ),
+              ),
+            if (!canJoin) const SizedBox(height: AppSpacing.md),
             AppStaggeredFade(
               index: 0,
               child: Container(
@@ -163,16 +273,17 @@ class _JoinBatchScreenState extends State<JoinBatchScreen> {
                       const SizedBox(height: AppSpacing.xs),
                       TextFormField(
                         controller: _quantityController,
-                        keyboardType: TextInputType.number,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
                         decoration: InputDecoration(
                           labelText: l10n.joinQuantityHint,
+                          suffixText: batch.unit,
                         ),
                         onChanged: (value) {
                           final parsed = double.tryParse(value.trim());
                           if (parsed != null && parsed > 0) {
-                            setState(() {
-                              _selectedQuantityKg = parsed;
-                            });
+                            setState(() => _selectedQuantityKg = parsed);
                           }
                         },
                       ),
@@ -180,72 +291,22 @@ class _JoinBatchScreenState extends State<JoinBatchScreen> {
                       Wrap(
                         spacing: 10,
                         runSpacing: 10,
-                        children: [
-                          _QuantityChip(
-                            label: '5 kg',
-                            selected: _selectedQuantityKg == 5,
-                            onTap: () => _setQuantity(5),
-                          ),
-                          _QuantityChip(
-                            label: '10 kg',
-                            selected: _selectedQuantityKg == 10,
-                            onTap: () => _setQuantity(10),
-                          ),
-                          _QuantityChip(
-                            label: '15 kg',
-                            selected: _selectedQuantityKg == 15,
-                            onTap: () => _setQuantity(15),
-                          ),
-                        ],
+                        children: _presetsFor(batch.unit)
+                            .map(
+                              (qty) => _QuantityChip(
+                                label: '$qty ${batch.unit}',
+                                selected: _selectedQuantityKg == qty,
+                                onTap: () => _setQuantity(qty),
+                              ),
+                            )
+                            .toList(),
                       ),
                       const SizedBox(height: AppSpacing.md),
                       AppPrimaryButton(
                         label: l10n.joinConfirm,
                         icon: Icons.check_circle_outline,
-                        onPressed: () async {
-                          final value = double.tryParse(_quantityController.text.trim());
-                          final quantity = value ?? _selectedQuantityKg;
-                          if (quantity <= 0) return;
-
-                          // Capture context-dependent objects before the async gap.
-                          final batchProvider = context.read<BatchProvider>();
-                          final messenger = ScaffoldMessenger.of(context);
-                          final nav = Navigator.of(context);
-                          final batchId = widget.batchId;
-                          final batchName = batch.productName;
-                          final successText = l10n.joinSuccess;
-                          final errorText = l10n.errorMessage;
-
-                          try {
-                            await batchProvider.joinBatch(
-                              batchId: batchId,
-                              quantityKg: quantity,
-                            );
-                            // Pop the join screen first, then offer to open the chat.
-                            nav.pop();
-                            messenger.showSnackBar(
-                              SnackBar(
-                                content: Text(successText),
-                                duration: const Duration(seconds: 5),
-                                action: SnackBarAction(
-                                  label: 'Open Chat',
-                                  onPressed: () => nav.pushNamed(
-                                    AppRoutes.batchChat,
-                                    arguments: {
-                                      'batchId': batchId,
-                                      'batchName': batchName,
-                                    },
-                                  ),
-                                ),
-                              ),
-                            );
-                          } catch (e) {
-                            if (!mounted) return;
-                            messenger.showSnackBar(
-                              SnackBar(content: Text(errorText)),
-                            );
-                          }
-                        },
+                        isLoading: _isSubmitting,
+                        onPressed: canSubmit ? () => _confirmJoin(batch) : null,
                       ),
                     ],
                   ),
@@ -291,10 +352,10 @@ class _QuantityChip extends StatelessWidget {
         color: selected ? scheme.onPrimary : scheme.onSurface,
         fontWeight: FontWeight.w600,
       ),
-      side: BorderSide(color: selected ? scheme.primary : scheme.outlineVariant),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(22),
+      side: BorderSide(
+        color: selected ? scheme.primary : scheme.outlineVariant,
       ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
     );
   }
 }

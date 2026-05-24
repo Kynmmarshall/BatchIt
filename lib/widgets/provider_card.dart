@@ -2,12 +2,15 @@ import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/models/provider_profile.dart';
 import 'package:batchit/themes/app_spacing.dart';
+import 'package:batchit/widgets/provider_distance.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 class ProviderCard extends StatelessWidget {
   const ProviderCard({
     super.key,
     required this.provider,
+    this.currentPosition,
     this.isFollowing = false,
     this.onFollowToggle,
     this.onTap,
@@ -15,6 +18,7 @@ class ProviderCard extends StatelessWidget {
   });
 
   final ProviderProfile provider;
+  final Position? currentPosition;
   final bool isFollowing;
   final VoidCallback? onFollowToggle;
   final VoidCallback? onTap;
@@ -43,6 +47,11 @@ class ProviderCard extends StatelessWidget {
               _Header(provider: provider, scheme: scheme, theme: theme),
               const SizedBox(height: AppSpacing.sm),
               _AddressRow(provider: provider, scheme: scheme, theme: theme),
+              ProviderDistanceLine(
+                provider: provider,
+                currentPosition: currentPosition,
+                compact: true,
+              ),
               if (provider.description.isNotEmpty) ...[
                 const SizedBox(height: AppSpacing.xs),
                 Text(

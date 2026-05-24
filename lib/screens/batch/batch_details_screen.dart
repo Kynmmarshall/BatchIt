@@ -1,5 +1,6 @@
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/core/formatters.dart';
+import 'package:batchit/providers/auth_provider.dart';
 import 'package:batchit/themes/app_icons.dart';
 import 'package:batchit/themes/app_motion.dart';
 import 'package:batchit/l10n/app_localizations.dart';
@@ -20,6 +21,9 @@ class BatchDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final batch = context.watch<BatchProvider>().findById(batchId);
+    final user = context.watch<AuthProvider>().user;
+    final canManage = batch != null && user != null && (user.isStaff || batch.creatorId == user.id);
+    final canJoin = batch != null && batch.canJoin;
 
     if (batch == null) {
       return Scaffold(
@@ -101,7 +105,8 @@ class BatchDetailsScreen extends StatelessWidget {
                               Expanded(
                                 child: _DetailStatChip(
                                   label: l10n.quantity,
-                                  value: '${formatKg(batch.currentQuantityKg)} / ${formatKg(batch.bulkSizeKg)}',
+                                  value:
+                                      '${formatQty(batch.currentQuantityKg, batch.unit)} / ${formatQty(batch.bulkSizeKg, batch.unit)}',
                                 ),
                               ),
                             ],
@@ -167,18 +172,105 @@ class BatchDetailsScreen extends StatelessWidget {
             const Spacer(),
             AppStaggeredFade(
               index: 2,
-              child: AppPrimaryButton(
-                label: l10n.joinBatch,
-                icon: Icons.group_add_rounded,
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    AppRoutes.joinBatch,
-                    arguments: batchId,
-                  );
-                },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  AppPrimaryButton(
+                    label: l10n.joinBatch,
+                    icon: Icons.group_add_rounded,
+                    onPressed: canJoin
+                        ? () {
+                            Navigator.pushNamed(
+                              context,
+                              AppRoutes.joinBatch,
+                              arguments: batchId,
+                            );
+                          }
+                        : null,
+                  ),
+                  if (canManage) ...[
+                    const SizedBox(height: AppSpacing.sm),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: AppPrimaryButton(
+                            label: l10n.editBatch,
+                            icon: Icons.edit_outlined,
+                            isSecondary: true,
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                context,
+                                AppRoutes.createBatch,
+                                arguments: {'batch': batch, 'providerId': batch.providerId},
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: AppSpacing.sm),
+                        Expanded(
+                          child: AppPrimaryButton(
+                            label: l10n.deleteBatch,
+                            icon: Icons.delete_outline_rounded,
+                            isSecondary: true,
+                            isDestructive: true,
+                            onPressed: () async {
+                              final confirm = await showDialog<bool>(
+                                context: context,
+                                builder: (dialogContext) => AlertDialog(
+                                  title: Text(l10n.deleteBatchDialogTitle),
+                                  content: Text(
+                                    l10n.deleteBatchDialogMessage,
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(dialogContext, false),
+                                      child: Text(l10n.cancelDeleteBatch),
+                                    ),
+                                    FilledButton(
+                                      onPressed: () => Navigator.pop(dialogContext, true),
+                                      style: FilledButton.styleFrom(
+                                        backgroundColor: Theme.of(dialogContext).colorScheme.error,
+                                        foregroundColor: Theme.of(dialogContext).colorScheme.onError,
+                                      ),
+                                      child: Text(l10n.confirmDeleteBatch),
+                                    ),
+                                  ],
+                                ),
+                              );
+                              if (confirm != true || !context.mounted) return;
+                              try {
+                                await context.read<BatchProvider>().deleteBatch(batchId);
+                                if (!context.mounted) return;
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(l10n.batchDeleted)),
+                                );
+                              } catch (_) {
+                                if (!context.mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(l10n.errorMessage)),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
               ),
             ),
+            if (!canJoin) ...[
+              const SizedBox(height: AppSpacing.sm),
+              Text(
+                batch.isFull
+                    ? 'This batch is already full.'
+                    : 'This batch is no longer open for joining.',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+              ),
+            ],
           ],
         ),
       ),

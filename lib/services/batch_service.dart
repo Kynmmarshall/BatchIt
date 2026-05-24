@@ -59,6 +59,7 @@ class BatchService {
     required String productName,
     required double bulkSizeKg,
     required String location,
+    String unit = 'kg',
     String? providerId,
     String? notes,
     DateTime? expiresAt,
@@ -73,6 +74,7 @@ class BatchService {
       final fields = <String, String>{
         'product_name': productName,
         'total_quantity': bulkSizeKg.toString(),
+        'unit': unit,
         'location': location,
         if (providerId != null) 'provider_id': providerId,
         'notes': notes ?? '',
@@ -90,6 +92,7 @@ class BatchService {
         body: {
           'product_name': productName,
           'total_quantity': bulkSizeKg,
+          'unit': unit,
           'location': location,
           if (providerId != null) 'provider_id': providerId,
           'notes': notes ?? '',
@@ -139,16 +142,20 @@ class BatchService {
   /// Updates a batch (requires ownership or admin).
   Future<Batch> updateBatch(
     String batchId, {
+    String? productName,
+    double? bulkSizeKg,
+    String? location,
     String? status,
-    double? currentQuantityKg,
     String? notes,
   }) async {
     final body = <String, dynamic>{};
+    if (productName != null) body['product_name'] = productName;
+    if (bulkSizeKg != null) body['total_quantity'] = bulkSizeKg;
+    if (location != null) body['location_name'] = location;
     if (status != null) body['status'] = status;
-    if (currentQuantityKg != null) body['filled_quantity'] = currentQuantityKg;
     if (notes != null) body['notes'] = notes;
 
-    final response = await _apiClient.patch('/batches/$batchId/', body: body);
+    final response = await _apiClient.patch('/batches/$batchId/edit/', body: body);
     return _mapBatchFromJson(response as Map<String, dynamic>);
   }
 
@@ -162,7 +169,7 @@ class BatchService {
 
   /// Deletes a batch (requires ownership).
   Future<void> deleteBatch(String batchId) async {
-    await _apiClient.delete('/batches/$batchId/');
+    await _apiClient.delete('/batches/$batchId/edit/');
   }
 
   /// Maps backend batch JSON to frontend Batch model.
@@ -170,16 +177,20 @@ class BatchService {
     return Batch(
       id: json['id'] as String? ?? json['batch_id'] as String? ?? 'unknown',
       providerId: json['provider_id'] as String?,
+      creatorId: json['creator_id'] as String?,
+      status: json['status'] as String? ?? 'open',
       productName: json['product_name'] as String? ?? 'Unknown Product',
       bulkSizeKg: (json['bulk_size_kg'] as num?)?.toDouble() ??
           (json['total_quantity'] as num?)?.toDouble() ?? 0.0,
       currentQuantityKg: (json['current_quantity_kg'] as num?)?.toDouble() ??
           (json['filled_quantity'] as num?)?.toDouble() ?? 0.0,
+      unit: json['unit'] as String? ?? 'kg',
       locationName: json['location_name'] as String? ??
           json['location'] as String? ?? '',
       hubName: json['hub_name'] as String? ??
           json['provider_name'] as String? ?? '',
       imageUrl: json['image_url'] as String?,
+      notes: json['notes'] as String?,
     );
   }
 

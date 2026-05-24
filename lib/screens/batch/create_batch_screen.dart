@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:batchit/core/app_routes.dart';
 import 'package:batchit/l10n/app_localizations.dart';
+import 'package:batchit/models/batch.dart';
 import 'package:batchit/models/provider_profile.dart';
 import 'package:batchit/providers/batch_provider.dart';
 import 'package:batchit/providers/provider_provider.dart';
@@ -28,9 +29,10 @@ class _ProviderPicked extends _PickerResult {
 // ─────────────────────────────────────────────────────────────────────────────
 
 class CreateBatchScreen extends StatefulWidget {
-  const CreateBatchScreen({super.key, this.preselectedProviderId});
+  const CreateBatchScreen({super.key, this.preselectedProviderId, this.editingBatch});
 
   final String? preselectedProviderId;
+  final Batch? editingBatch;
 
   @override
   State<CreateBatchScreen> createState() => _CreateBatchScreenState();
@@ -48,21 +50,36 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
     _PresetOption(value: 'Onions', labelKey: 'productOnions'),
   ];
 
-  static const _bulkOptions = <_PresetOption>[
-    _PresetOption(value: '50', labelKey: 'bulkKg50'),
-    _PresetOption(value: '30', labelKey: 'bulkKg30'),
-    _PresetOption(value: '40', labelKey: 'bulkKg40'),
-  ];
-
   String _selectedProduct = 'Potatoes';
+  String _selectedUnit = 'kg';
   ProviderProfile? _selectedProvider;
   File? _batchImage;
   final ProviderService _providerService = ProviderService();
 
+  static const _unitOptions = [
+    ('kg',    'kg',    [10, 25, 50, 100]),
+    ('g',     'g',     [250, 500, 1000, 2000]),
+    ('L',     'L',     [5, 10, 20, 50]),
+    ('mL',    'mL',    [500, 1000, 2000, 5000]),
+    ('units', 'units', [6, 12, 24, 50]),
+    ('boxes', 'boxes', [1, 2, 5, 10]),
+  ];
+
+  List<int> get _currentPresets {
+    for (final opt in _unitOptions) {
+      if (opt.$1 == _selectedUnit) return opt.$3;
+    }
+    return [10, 25, 50, 100];
+  }
+
   @override
   void initState() {
     super.initState();
-    _productController.text = 'Potatoes';
+    final editingBatch = widget.editingBatch;
+    _productController.text = editingBatch?.productName ?? 'Potatoes';
+    _noteController.text = editingBatch?.notes ?? '';
+    _bulkController.text = editingBatch?.bulkSizeKg.toString() ?? '50';
+    _selectedProduct = editingBatch?.productName ?? 'Potatoes';
     WidgetsBinding.instance.addPostFrameCallback((_) => _loadProviders());
   }
 
@@ -72,8 +89,9 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
     if (pp.verifiedProviders.isEmpty) {
       await pp.loadVerifiedProviders();
     }
-    if (!mounted || widget.preselectedProviderId == null) return;
-    final found = pp.findById(widget.preselectedProviderId!);
+    final providerId = widget.editingBatch?.providerId ?? widget.preselectedProviderId;
+    if (!mounted || providerId == null) return;
+    final found = pp.findById(providerId);
     if (found != null) setState(() => _selectedProvider = found);
   }
 
@@ -120,38 +138,60 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
     }
   }
 
-  Future<void> _createBatch() async {
+  Future<void> _submitBatch() async {
     if (!_formKey.currentState!.validate()) return;
     final bulk = double.tryParse(_bulkController.text.trim());
     if (bulk == null || bulk <= 0) return;
 
+    // Capture context-sensitive objects before any await.
+    final batchProvider = context.read<BatchProvider>();
+    final messenger = ScaffoldMessenger.of(context);
+    final nav = Navigator.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    final isEditing = widget.editingBatch != null;
+    final location = _selectedProvider?.businessName ?? 'Auto';
+    final productName = _productController.text.trim();
+    final notes = _noteController.text.trim().isEmpty ? null : _noteController.text.trim();
+
     try {
-      final batch = await context.read<BatchProvider>().createBatch(
-        productName: _productController.text.trim(),
-        bulkSizeKg: bulk,
-        location: _selectedProvider?.businessName ?? 'Auto',
-        providerId: _selectedProvider?.id,
-        notes: _noteController.text.trim().isEmpty
-            ? null
-            : _noteController.text.trim(),
-        image: _batchImage,
-      );
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.batchCreated)),
-      );
-      if (_selectedProvider != null) {
+      final batch = isEditing
+          ? await batchProvider.updateBatch(
+              widget.editingBatch!.id,
+              productName: productName,
+              bulkSizeKg: bulk,
+              location: location,
+              status: widget.editingBatch!.status,
+              notes: notes,
+            )
+          : await batchProvider.createBatch(
+              productName: productName,
+              bulkSizeKg: bulk,
+              location: location,
+              unit: _selectedUnit,
+              providerId: _selectedProvider?.id,
+              notes: notes,
+              image: _batchImage,
+            );
+
+      if (!isEditing && _selectedProvider != null) {
         try {
           await _providerService.followProvider(_selectedProvider!.id);
         } catch (e) {
           debugPrint('[CreateBatchScreen] auto-follow provider failed: $e');
         }
       }
-      Navigator.pushNamed(context, AppRoutes.batchDetails, arguments: batch.id);
+
+      messenger.showSnackBar(
+        SnackBar(content: Text(isEditing ? 'Batch updated.' : l10n.batchCreated)),
+      );
+      if (isEditing) {
+        nav.pop(batch.id);
+      } else {
+        nav.pushNamed(AppRoutes.batchDetails, arguments: batch.id);
+      }
     } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.errorMessage)),
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.errorMessage)),
       );
     }
   }
@@ -161,10 +201,10 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    final myProviderProfile = context.watch<ProviderProvider>().myProfile;
+    final isEditing = widget.editingBatch != null;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.createBatch)),
+      appBar: AppBar(title: Text(isEditing ? 'Edit Batch' : l10n.createBatch)),
       body: AppScreenContainer(
         child: Form(
           key: _formKey,
@@ -192,7 +232,7 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        l10n.createBatchTitle,
+                        isEditing ? 'Edit batch details' : l10n.createBatchTitle,
                         style: theme.textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.w800,
                           color: scheme.onSurface,
@@ -256,6 +296,32 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
                         ),
                         const SizedBox(height: AppSpacing.lg),
 
+                        // ── Unit of measurement ────────────────────────────
+                        Text(
+                          'Unit of measurement',
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.xs),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: _unitOptions.map((opt) {
+                            final selected = _selectedUnit == opt.$1;
+                            return _PresetChip(
+                              label: opt.$2,
+                              selected: selected,
+                              onTap: () => setState(() {
+                                _selectedUnit = opt.$1;
+                                // Reset quantity to first preset for new unit
+                                _bulkController.text = opt.$3.first.toString();
+                              }),
+                            );
+                          }).toList(),
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+
                         // ── Bulk size ──────────────────────────────────────
                         Text(
                           l10n.bulkSelection,
@@ -267,24 +333,25 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
                         Wrap(
                           spacing: 10,
                           runSpacing: 10,
-                          children: _bulkOptions
-                              .map(
-                                (opt) => _PresetChip(
-                                  label: _localizedLabel(l10n, opt.labelKey),
-                                  selected:
-                                      _bulkController.text.trim() == opt.value,
-                                  onTap: () => setState(
-                                    () => _bulkController.text = opt.value,
-                                  ),
-                                ),
-                              )
-                              .toList(),
+                          children: _currentPresets.map((qty) {
+                            final label = '$qty $_selectedUnit';
+                            return _PresetChip(
+                              label: label,
+                              selected: _bulkController.text.trim() == qty.toString(),
+                              onTap: () => setState(
+                                () => _bulkController.text = qty.toString(),
+                              ),
+                            );
+                          }).toList(),
                         ),
                         const SizedBox(height: AppSpacing.sm),
                         TextFormField(
                           controller: _bulkController,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(labelText: l10n.bulkSize),
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          decoration: InputDecoration(
+                            labelText: '${l10n.bulkSize} ($_selectedUnit)',
+                            suffixText: _selectedUnit,
+                          ),
                           validator: (v) =>
                               v == null || v.trim().isEmpty ? l10n.bulkSize : null,
                         ),
@@ -391,9 +458,9 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
                         ),
                         const SizedBox(height: AppSpacing.md),
                         AppPrimaryButton(
-                          label: l10n.submit,
-                          icon: Icons.add_task_rounded,
-                          onPressed: _createBatch,
+                          label: isEditing ? 'Save Changes' : l10n.submit,
+                          icon: isEditing ? Icons.save_outlined : Icons.add_task_rounded,
+                          onPressed: _submitBatch,
                         ),
                       ],
                     ),
@@ -409,20 +476,10 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
 
   String _localizedLabel(AppLocalizations l10n, String key) {
     switch (key) {
-      case 'productPotatoes':
-        return l10n.productPotatoes;
-      case 'productTomatoes':
-        return l10n.productTomatoes;
-      case 'productOnions':
-        return l10n.productOnions;
-      case 'bulkKg50':
-        return l10n.bulkKg50;
-      case 'bulkKg30':
-        return l10n.bulkKg30;
-      case 'bulkKg40':
-        return l10n.bulkKg40;
-      default:
-        return key;
+      case 'productPotatoes': return l10n.productPotatoes;
+      case 'productTomatoes': return l10n.productTomatoes;
+      case 'productOnions':   return l10n.productOnions;
+      default:                return key;
     }
   }
 }

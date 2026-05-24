@@ -13,8 +13,8 @@ class AppColors {
   static const Color lightMuted = Color(0xFF678277);
   static const Color darkMuted = Color(0xFF93AEA2);
 
-  static const Color lightStroke = Color.fromARGB(255, 231, 248, 239);
-  static const Color darkStroke = Color.fromARGB(255, 77, 120, 104);
+  static const Color lightStroke = Color.fromARGB(255, 110, 179, 142);
+  static const Color darkStroke = Color.fromARGB(255, 100, 161, 139);
 
   static const List<Color> lightPageGradient = [
     Color(0xFFEAF7F1),

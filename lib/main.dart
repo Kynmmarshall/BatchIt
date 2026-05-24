@@ -43,11 +43,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => AuthProvider(AuthService())),
         ChangeNotifierProvider(create: (_) => OrderProvider(OrderService())),
         ChangeNotifierProvider(
-          create: (context) => BatchProvider(
-            BatchService(),
-            context.read<OrderProvider>(),
-            providerService,
-          ),
+          create: (_) => BatchProvider(BatchService(), providerService),
         ),
         ChangeNotifierProvider(
           create: (_) => ProviderProvider(providerService),

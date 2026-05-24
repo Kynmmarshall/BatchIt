@@ -521,7 +521,7 @@ abstract class AppLocalizations {
   /// No description provided for @notificationsScreenTitle.
   ///
   /// In en, this message translates to:
-  /// **'Notifications'**
+  /// **'Notifs'**
   String get notificationsScreenTitle;
 
   /// No description provided for @notificationsScreenSubtitle.
@@ -719,7 +719,7 @@ abstract class AppLocalizations {
   /// No description provided for @createBatch.
   ///
   /// In en, this message translates to:
-  /// **'Create Batch'**
+  /// **'New'**
   String get createBatch;
 
   /// No description provided for @createBatchTitle.
@@ -841,6 +841,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Batch Details'**
   String get batchDetails;
+
+  /// No description provided for @editBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Batch'**
+  String get editBatch;
+
+  /// No description provided for @deleteBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Batch'**
+  String get deleteBatch;
+
+  /// No description provided for @deleteBatchDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete batch?'**
+  String get deleteBatchDialogTitle;
+
+  /// No description provided for @deleteBatchDialogMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently delete the batch and its chat group.'**
+  String get deleteBatchDialogMessage;
+
+  /// No description provided for @cancelDeleteBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelDeleteBatch;
+
+  /// No description provided for @confirmDeleteBatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get confirmDeleteBatch;
+
+  /// No description provided for @batchDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Batch deleted.'**
+  String get batchDeleted;
 
   /// No description provided for @joinBatch.
   ///

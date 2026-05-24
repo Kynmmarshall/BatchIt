@@ -1,40 +1,36 @@
-/// ============================================================================
-/// [BatchProvider] - Manages batch listings and batch-related operations
-/// ============================================================================
-/// Extends ChangeNotifier to provide reactive state management for batches.
-/// Coordinates with BatchService for data fetching and with OrderProvider for
-/// order creation when batches become full.
-///
-/// Responsibilities:
-/// - Maintain cached list of available batches (_batches)
-/// - Expose loading state during async operations
-/// - Load nearby batches from service (home screen on mount)
-/// - Find individual batch by ID (detail views)
-/// - Create new batches (form submission)
-/// - Update batch quantities when users join (joinBatch)
-/// - Trigger Order creation when batch reaches fill threshold
-///
-/// Dependencies:
-/// - BatchService: Provides backend API calls for batch operations
-/// - OrderProvider: Receives notification to create orders when batch fills
-/// ============================================================================
+// ============================================================================
+// [BatchProvider] - Manages batch listings and batch-related operations
+// ============================================================================
+// Extends ChangeNotifier to provide reactive state management for batches.
+//
+// Responsibilities:
+// - Maintain cached list of available batches (_batches)
+// - Expose loading state during async operations
+// - Load nearby batches from service (home screen on mount)
+// - Find individual batch by ID (detail views)
+// - Create new batches (form submission)
+// - Update batch quantities when users join (joinBatch)
+//
+// Note: joining a batch via /batches/<id>/join/ is the single source of
+// truth. Do NOT also call /orders/ - that would double-count the quantity.
+// ============================================================================
 import 'dart:io';
 import 'package:batchit/models/batch.dart';
-import 'package:batchit/providers/order_provider.dart';
+import 'package:batchit/services/api_client.dart';
 import 'package:batchit/services/provider_service.dart';
 import 'package:batchit/services/batch_service.dart';
 import 'package:flutter/material.dart';
 
 class BatchProvider extends ChangeNotifier {
-  BatchProvider(this._batchService, this._orderProvider, this._providerService);
+  BatchProvider(this._batchService, this._providerService);
 
   final BatchService _batchService;
-  final OrderProvider _orderProvider;
   final ProviderService _providerService;
 
   List<Batch> _batches = const [];
   List<Batch> _myCreatedBatches = const [];
   List<Batch> _myJoinedBatches = const [];
+  List<Batch> _cachedBatches = const [];
   bool _isLoading = false;
 
   List<Batch> get batches => _batches;
@@ -42,20 +38,27 @@ class BatchProvider extends ChangeNotifier {
   List<Batch> get myJoinedBatches => _myJoinedBatches;
   bool get isLoading => _isLoading;
 
-  /// Fetches nearby batches from service and updates _batches list.
-  /// Sets loading state before and after fetch for UI feedback.
-  /// Called on HomeScreen mount and during manual refresh.
   Future<void> loadNearbyBatches() async {
     _isLoading = true;
     notifyListeners();
 
-    _batches = await _batchService.fetchNearbyBatches();
+    final openBatches = await _batchService.fetchNearbyBatches(status: 'open');
+    final filledBatches = await _batchService.fetchNearbyBatches(
+      status: 'filled',
+    );
+    final merged = <String, Batch>{};
+    for (final b in openBatches) {
+      merged[b.id] = b;
+    }
+    for (final b in filledBatches) {
+      merged[b.id] = b;
+    }
+    _batches = merged.values.toList(growable: false);
 
     _isLoading = false;
     notifyListeners();
   }
 
-  /// Fetches batches created by the authenticated user.
   Future<void> loadMyCreatedBatches() async {
     _isLoading = true;
     notifyListeners();
@@ -64,7 +67,6 @@ class BatchProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Fetches batches the authenticated user has joined as a participant.
   Future<void> loadMyJoinedBatches() async {
     _isLoading = true;
     notifyListeners();
@@ -73,24 +75,30 @@ class BatchProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Returns batch with matching ID or null if not found.
-  /// Linear search through cached _batches list.
   Batch? findById(String id) {
-    for (final batch in _batches) {
-      if (batch.id == id) {
-        return batch;
-      }
+    for (final batch in [
+      ..._batches,
+      ..._myCreatedBatches,
+      ..._myJoinedBatches,
+      ..._cachedBatches,
+    ]) {
+      if (batch.id == id) return batch;
     }
     return null;
   }
 
-  /// Creates a new batch via service and prepends to _batches list.
-  /// Notifies listeners to update UI with new batch in feed.
-  /// Returns the created batch for caller to display confirmation.
+  Future<Batch> refreshBatch(String batchId) async {
+    final refreshed = await _batchService.fetchBatchById(batchId);
+    _cacheBatch(refreshed);
+    notifyListeners();
+    return refreshed;
+  }
+
   Future<Batch> createBatch({
     required String productName,
     required double bulkSizeKg,
     required String location,
+    String unit = 'kg',
     String? providerId,
     String? notes,
     File? image,
@@ -99,6 +107,7 @@ class BatchProvider extends ChangeNotifier {
       productName: productName,
       bulkSizeKg: bulkSizeKg,
       location: location,
+      unit: unit,
       providerId: providerId,
       notes: notes,
       image: image,
@@ -118,23 +127,83 @@ class BatchProvider extends ChangeNotifier {
     return batch;
   }
 
-  /// Joins a batch by calling the backend service and updating local state.
-  /// If batch reaches full threshold after join, creates Order and notifies OrderProvider.
-  /// This implements the business logic: batch full → auto-trigger order.
+  Future<Batch> updateBatch(
+    String batchId, {
+    String? productName,
+    double? bulkSizeKg,
+    String? location,
+    String? status,
+    String? notes,
+  }) async {
+    final updated = await _batchService.updateBatch(
+      batchId,
+      productName: productName,
+      bulkSizeKg: bulkSizeKg,
+      location: location,
+      status: status,
+      notes: notes,
+    );
+    _batches = _batches
+        .map((b) => b.id == batchId ? updated : b)
+        .toList(growable: false);
+    _myCreatedBatches = _myCreatedBatches
+        .map((b) => b.id == batchId ? updated : b)
+        .toList(growable: false);
+    _myJoinedBatches = _myJoinedBatches
+        .map((b) => b.id == batchId ? updated : b)
+        .toList(growable: false);
+    _cachedBatches = _upsertBatch(_cachedBatches, updated);
+    notifyListeners();
+    return updated;
+  }
+
+  Future<void> deleteBatch(String batchId) async {
+    await _batchService.deleteBatch(batchId);
+    _batches = _batches.where((b) => b.id != batchId).toList(growable: false);
+    _myCreatedBatches = _myCreatedBatches
+        .where((b) => b.id != batchId)
+        .toList(growable: false);
+    _myJoinedBatches = _myJoinedBatches
+        .where((b) => b.id != batchId)
+        .toList(growable: false);
+    _cachedBatches = _cachedBatches
+        .where((b) => b.id != batchId)
+        .toList(growable: false);
+    notifyListeners();
+  }
+
+  /// Joins a batch.
   ///
-  /// Parameters:
-  ///   - batchId: ID of batch to update
-  ///   - quantityKg: Amount user is committing to this batch
-  Future<void> joinBatch({required String batchId, required double quantityKg}) async {
+  /// Only calls `/batches/<id>/join/` - that endpoint is the single source
+  /// of truth for quantity tracking. Do NOT call /orders/ afterwards; doing
+  /// so would double the recorded quantity for every join.
+  Future<void> joinBatch({
+    required String batchId,
+    required double quantityKg,
+  }) async {
     try {
-      Batch? batch;
-      try {
-        batch = _batches.firstWhere((batch) => batch.id == batchId);
-      } catch (_) {
-        batch = await _batchService.fetchBatchById(batchId);
+      final batch = await refreshBatch(batchId);
+
+      if (!batch.isOpen || batch.isFull) {
+        throw ApiException(
+          statusCode: 400,
+          message: batch.isFull
+              ? 'This batch is already full.'
+              : 'This batch is not open for joining.',
+        );
       }
 
-      // Call backend API to join batch
+      // Single backend call — /batches/<id>/join/ handles everything:
+      // participant record, filled_quantity update, full-batch notification.
+      final remainingQuantity = batch.bulkSizeKg - batch.currentQuantityKg;
+      if (quantityKg > remainingQuantity) {
+        throw ApiException(
+          statusCode: 400,
+          message:
+              'Only ${remainingQuantity.toStringAsFixed(2)} ${batch.unit} remaining in this batch.',
+        );
+      }
+
       await _batchService.joinBatch(batchId, quantityKg);
 
       if (batch.providerId != null && batch.providerId!.isNotEmpty) {
@@ -145,33 +214,76 @@ class BatchProvider extends ChangeNotifier {
         }
       }
 
-      // Add to joined list immediately so ChatScreen shows it without a reload.
-      if (!_myJoinedBatches.any((b) => b.id == batchId)) {
-        _myJoinedBatches = [batch, ..._myJoinedBatches];
-      }
+      final updatedQuantity = (batch.currentQuantityKg + quantityKg)
+          .clamp(0, batch.bulkSizeKg)
+          .toDouble();
 
-      // Update local state
-      _batches = _batches
-          .map(
-            (batch) => batch.id == batchId
-                ? Batch(
-                    id: batch.id,
-                    productName: batch.productName,
-                    bulkSizeKg: batch.bulkSizeKg,
-                    currentQuantityKg: batch.currentQuantityKg + quantityKg,
-                    locationName: batch.locationName,
-                    hubName: batch.hubName,
-                  )
-                : batch,
-          )
-          .toList(growable: false);
+      // Optimistic local update so the home screen reflects the change immediately.
+      final updatedBatch = Batch(
+        id: batch.id,
+        creatorId: batch.creatorId,
+        providerId: batch.providerId,
+        status: updatedQuantity >= batch.bulkSizeKg ? 'filled' : batch.status,
+        productName: batch.productName,
+        bulkSizeKg: batch.bulkSizeKg,
+        currentQuantityKg: updatedQuantity,
+        unit: batch.unit,
+        locationName: batch.locationName,
+        hubName: batch.hubName,
+        imageUrl: batch.imageUrl,
+        notes: batch.notes,
+      );
+
+      _cacheBatch(updatedBatch, addToJoined: true);
+
       notifyListeners();
-
-      // Persist the participation as an order via the backend.
-      await _orderProvider.createOrder(batchId: batchId, quantityKg: quantityKg);
+    } on ApiException catch (e) {
+      if (e.statusCode == 400) {
+        try {
+          await refreshBatch(batchId);
+        } catch (_) {
+          // Keep the original join failure; refresh is only for cache repair.
+        }
+      } else {
+        debugPrint('Failed to join batch: $e');
+      }
+      rethrow;
     } catch (e) {
       debugPrint('Failed to join batch: $e');
       rethrow;
     }
+  }
+
+  void _cacheBatch(
+    Batch batch, {
+    bool addToAvailable = false,
+    bool addToJoined = false,
+  }) {
+    _batches = _upsertBatch(_batches, batch, insertIfMissing: addToAvailable);
+    _myCreatedBatches = _upsertBatch(_myCreatedBatches, batch);
+    _myJoinedBatches = _upsertBatch(
+      _myJoinedBatches,
+      batch,
+      insertIfMissing: addToJoined,
+    );
+    _cachedBatches = _upsertBatch(_cachedBatches, batch, insertIfMissing: true);
+  }
+
+  List<Batch> _upsertBatch(
+    List<Batch> batches,
+    Batch batch, {
+    bool insertIfMissing = false,
+  }) {
+    var found = false;
+    final updated = batches
+        .map((item) {
+          if (item.id != batch.id) return item;
+          found = true;
+          return batch;
+        })
+        .toList(growable: false);
+
+    if (found || !insertIfMissing) return updated;
+    return [batch, ...updated];
   }
 }

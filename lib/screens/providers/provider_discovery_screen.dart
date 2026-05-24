@@ -8,6 +8,7 @@ import 'package:batchit/widgets/app_primary_button.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
 import 'package:batchit/widgets/provider_card.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
 class ProviderDiscoveryScreen extends StatefulWidget {
@@ -25,12 +26,14 @@ class _ProviderDiscoveryScreenState extends State<ProviderDiscoveryScreen> {
 
   List<ProviderProfile> _all = [];
   bool _loading = true;
+  Position? _currentPosition;
   String _query = '';
 
   @override
   void initState() {
     super.initState();
     _searchController.addListener(_onSearch);
+    _loadCurrentLocation();
     _load();
   }
 
@@ -43,6 +46,28 @@ class _ProviderDiscoveryScreenState extends State<ProviderDiscoveryScreen> {
   }
 
   void _onSearch() => setState(() => _query = _searchController.text);
+
+  Future<void> _loadCurrentLocation() async {
+    try {
+      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) return;
+
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        return;
+      }
+
+      final position = await Geolocator.getCurrentPosition();
+      if (!mounted) return;
+
+      setState(() => _currentPosition = position);
+    } catch (_) {}
+  }
 
   Future<void> _load() async {
     setState(() => _loading = true);
@@ -139,6 +164,7 @@ class _ProviderDiscoveryScreenState extends State<ProviderDiscoveryScreen> {
                   padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                   child: ProviderCard(
                     provider: p,
+                    currentPosition: _currentPosition,
                     isFollowing: _followed.contains(p.id),
                     onFollowToggle: () => _toggle(p).ignore(),
                   ),

@@ -236,7 +236,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Controlez les alertes qui doivent arriver sur cet appareil.';
 
   @override
-  String get notificationsScreenTitle => 'Notifications';
+  String get notificationsScreenTitle => 'Notifs';
 
   @override
   String get notificationsScreenSubtitle =>
@@ -345,7 +345,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get home => 'Accueil';
 
   @override
-  String get createBatch => 'Creer un batch';
+  String get createBatch => 'Nouveau';
 
   @override
   String get createBatchTitle => 'Creer un nouveau batch';
@@ -408,6 +408,28 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get batchDetails => 'Details du batch';
+
+  @override
+  String get editBatch => 'Modifier';
+
+  @override
+  String get deleteBatch => 'Supprimer';
+
+  @override
+  String get deleteBatchDialogTitle => 'Supprimer le batch ?';
+
+  @override
+  String get deleteBatchDialogMessage =>
+      'Cela supprimera definitivement le batch et son groupe de chat.';
+
+  @override
+  String get cancelDeleteBatch => 'Annuler';
+
+  @override
+  String get confirmDeleteBatch => 'Supprimer';
+
+  @override
+  String get batchDeleted => 'Batch supprime.';
 
   @override
   String get joinBatch => 'Rejoindre le batch';
