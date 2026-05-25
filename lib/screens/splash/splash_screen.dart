@@ -40,7 +40,11 @@ class _SplashScreenState extends State<SplashScreen> {
             final appSettings = context.read<AppSettingsProvider>();
             appSettings.setLocale(Locale(settings.language));
             appSettings.applyTheme(
-              settings.theme == 'dark' ? ThemeMode.dark : ThemeMode.light,
+              settings.theme == 'dark'
+                  ? ThemeMode.dark
+                  : settings.theme == 'light'
+                      ? ThemeMode.light
+                      : ThemeMode.system,
             );
           }
         } catch (_) {}

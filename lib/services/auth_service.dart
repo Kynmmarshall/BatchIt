@@ -21,7 +21,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final ApiClient _apiClient = ApiClient();
-  static const String _googleWebClientId = '569929198452-v57ct3srgu0pc5k7rtpnpsq3a4rf1mhk.apps.googleusercontent.com';
+  static const String _googleWebClientId = '434873490854-6ntukmrftsrv6n184mshqu1g3oi1677l.apps.googleusercontent.com';
 
   /// Logs in with email and password, returns user profile and stores auth token.
   /// Throws ApiException on network or validation error.

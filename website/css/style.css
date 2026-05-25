@@ -259,7 +259,7 @@ section { padding: 6rem 0; }
 #screenshots { background: var(--bg2); overflow: hidden; }
 .screens-row {
   display: flex; gap: 1.5rem; padding: 1rem 0 2rem;
-  animation: scroll-screens 28s linear infinite;
+  animation: scroll-screens 52s linear infinite;
   width: max-content;
 }
 .screens-row:hover { animation-play-state: paused; }

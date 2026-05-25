@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 
 class AppSettingsProvider extends ChangeNotifier {
   Locale _locale = const Locale('en');
-  ThemeMode _themeMode = ThemeMode.light;
+  ThemeMode _themeMode = ThemeMode.system;
 
   Locale get locale => _locale;
   ThemeMode get themeMode => _themeMode;
@@ -31,10 +31,21 @@ class AppSettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Toggles theme between light and dark mode, notifies listeners.
+  /// Cycles theme: system → light → dark → system.
   /// Called when user taps theme toggle in settings.
   void toggleTheme() {
-    _themeMode = _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    _themeMode = switch (_themeMode) {
+      ThemeMode.system => ThemeMode.light,
+      ThemeMode.light => ThemeMode.dark,
+      ThemeMode.dark => ThemeMode.system,
+    };
+    notifyListeners();
+  }
+
+  /// Sets theme mode directly (e.g. system, light, dark).
+  void setTheme(ThemeMode mode) {
+    if (_themeMode == mode) return;
+    _themeMode = mode;
     notifyListeners();
   }
 

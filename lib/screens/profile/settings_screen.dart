@@ -46,16 +46,40 @@ class SettingsScreen extends StatelessWidget {
                       },
                     ),
                     const SizedBox(height: AppSpacing.sm),
-                    SwitchListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(l10n.switchTheme),
-                      value: settings.themeMode == ThemeMode.dark,
-                      onChanged: (_) {
-                        context.read<AppSettingsProvider>().toggleTheme();
-                        final isDark = settings.themeMode != ThemeMode.dark;
-                        _settingsSvc
-                            .updateSettings({'theme': isDark ? 'dark' : 'light'})
-                            .ignore();
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      l10n.switchTheme,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    SegmentedButton<ThemeMode>(
+                      segments: const [
+                        ButtonSegment(
+                          value: ThemeMode.system,
+                          icon: Icon(Icons.brightness_auto_rounded),
+                          label: Text('System'),
+                        ),
+                        ButtonSegment(
+                          value: ThemeMode.light,
+                          icon: Icon(Icons.light_mode_rounded),
+                          label: Text('Light'),
+                        ),
+                        ButtonSegment(
+                          value: ThemeMode.dark,
+                          icon: Icon(Icons.dark_mode_rounded),
+                          label: Text('Dark'),
+                        ),
+                      ],
+                      selected: {settings.themeMode},
+                      onSelectionChanged: (value) {
+                        final mode = value.first;
+                        context.read<AppSettingsProvider>().setTheme(mode);
+                        final modeStr = switch (mode) {
+                          ThemeMode.dark => 'dark',
+                          ThemeMode.light => 'light',
+                          ThemeMode.system => 'system',
+                        };
+                        _settingsSvc.updateSettings({'theme': modeStr}).ignore();
                       },
                     ),
                   ],
