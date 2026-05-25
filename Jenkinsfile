@@ -239,18 +239,20 @@ pipeline {
             steps {
                 sh '''
                     echo "=== Ensuring batchit-debug keystore exists ==="
-                    mkdir -p ~/.android
-                    if [ ! -f ~/.android/batchit-debug.keystore ]; then
-                        echo "Keystore not found — generating it now..."
+                    # Gradle's JVM resolves user.home to /root on this server,
+                    # so the keystore must live at /root/.android/ (not ~/. which = /var/lib/jenkins)
+                    mkdir -p /root/.android
+                    if [ ! -f /root/.android/batchit-debug.keystore ]; then
+                        echo "Keystore not found — generating now..."
                         keytool -genkey -v \
-                            -keystore ~/.android/batchit-debug.keystore \
+                            -keystore /root/.android/batchit-debug.keystore \
                             -alias batchit \
                             -keyalg RSA -keysize 2048 -validity 10000 \
                             -storepass batchit123 -keypass batchit123 \
-                            -dname "CN=BatchIt, OU=Dev, O=BatchIt, L=Yaounde, S=Centre, C=CM"
-                        echo "✅ Keystore generated"
+                            -dname "CN=BatchIt,OU=Dev,O=BatchIt,L=Yaounde,S=Centre,C=CM"
+                        echo "✅ Keystore generated at /root/.android/"
                     else
-                        echo "✅ Keystore already exists"
+                        echo "✅ Keystore already present at /root/.android/"
                     fi
                 '''
             }
