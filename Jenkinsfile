@@ -235,6 +235,27 @@ pipeline {
     }
 }
         
+        stage('Ensure Signing Keystore') {
+            steps {
+                sh '''
+                    echo "=== Ensuring batchit-debug keystore exists ==="
+                    mkdir -p ~/.android
+                    if [ ! -f ~/.android/batchit-debug.keystore ]; then
+                        echo "Keystore not found — generating it now..."
+                        keytool -genkey -v \
+                            -keystore ~/.android/batchit-debug.keystore \
+                            -alias batchit \
+                            -keyalg RSA -keysize 2048 -validity 10000 \
+                            -storepass batchit123 -keypass batchit123 \
+                            -dname "CN=BatchIt, OU=Dev, O=BatchIt, L=Yaounde, S=Centre, C=CM"
+                        echo "✅ Keystore generated"
+                    else
+                        echo "✅ Keystore already exists"
+                    fi
+                '''
+            }
+        }
+
         stage('Build APK & AppBundle') {
             steps {
                 sh '''

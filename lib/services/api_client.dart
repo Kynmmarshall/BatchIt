@@ -36,6 +36,12 @@ class ApiClient {
     debugPrint('[BatchIt][api] ApiClient initialized — baseUrl: $_baseUrl');
   }
 
+  /// Replaces the internal HTTP client — for use in tests only.
+  @visibleForTesting
+  void setHttpClientForTest(http.Client client) {
+    _httpClient = client;
+  }
+
   /// Sets the authentication token for subsequent requests.
   /// Called after successful login or token refresh.
   /// Persists token to local storage.
