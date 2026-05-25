@@ -59,5 +59,6 @@ class AppRoutes {
   static const String batchChat = '/batch-chat';
   // args: String batchId
   static const String adminProviders = '/admin-providers';
+  static const String aboutUs = '/about-us';
 }
 

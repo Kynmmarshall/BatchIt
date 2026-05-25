@@ -60,6 +60,7 @@ import 'package:batchit/screens/orders/my_batches_screen.dart';
 import 'package:batchit/screens/admin/admin_providers_screen.dart';
 import 'package:batchit/screens/more/batch_chat_screen.dart';
 import 'package:batchit/screens/orders/create_order_screen.dart';
+import 'package:batchit/screens/profile/about_us_screen.dart';
 import 'package:batchit/themes/app_motion.dart';
 import 'package:batchit/themes/app_theme.dart';
 import 'package:batchit/widgets/main_navigation_shell.dart';
@@ -247,6 +248,8 @@ class _BatchItAppState extends State<BatchItApp> {
                 return _buildRoute(BatchChatScreen(batchId: batchId, batchName: batchName));
               case AppRoutes.adminProviders:
                 return _buildRoute(const AdminProvidersScreen());
+              case AppRoutes.aboutUs:
+                return _buildRoute(const AboutUsScreen());
               default:
                 return _fallbackRoute();
             }

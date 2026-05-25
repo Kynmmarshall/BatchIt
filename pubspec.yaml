@@ -36,6 +36,7 @@ flutter:
     - assets/background/
     - assets/onboaring/
     - assets/batches/
+    - assets/team/
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true

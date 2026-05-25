@@ -243,6 +243,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         },
                       ),
                       _BecomeProviderTile(l10n: l10n),
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: const Icon(Icons.people_rounded),
+                        title: const Text('About Us'),
+                        subtitle: const Text('Meet the team behind BatchIt'),
+                        trailing: const Icon(Icons.chevron_right_rounded),
+                        onTap: () => Navigator.pushNamed(context, AppRoutes.aboutUs),
+                      ),
                     ],
                   ),
                 ),
@@ -324,6 +332,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             );
                           }
                         },
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Theme.of(context).colorScheme.error,
+                    backgroundColor: Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.18),
+                    side: BorderSide(
+                      color: Theme.of(context).colorScheme.error.withValues(alpha: 0.45),
+                    ),
+                  ),
                   icon: const Icon(Icons.logout_rounded),
                   label: auth.isLoading
                       ? const SizedBox(
@@ -331,10 +346,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           width: 18,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : Text(
-                          l10n.logout,
-                          style: TextStyle(color: Theme.of(context).colorScheme.error),
-                        ),
+                      : Text(l10n.logout),
                 ),
               ),
             ),
