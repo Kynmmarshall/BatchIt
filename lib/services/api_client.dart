@@ -25,7 +25,7 @@ class ApiClient {
 
   late http.Client _httpClient;
   String? _authToken;
-  String _baseUrl = AppConstants.apiBaseUrl;
+  final String _baseUrl = AppConstants.apiBaseUrl;
 
   factory ApiClient() {
     return _instance;

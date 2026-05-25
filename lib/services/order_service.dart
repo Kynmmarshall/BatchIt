@@ -50,29 +50,20 @@ class OrderService {
     required String batchId,
     required double quantityKg,
   }) async {
-    try {
-      final response = await _apiClient.post(
-        '/orders/',
-        body: {
-          'batch_id': batchId,
-          'quantity_requested': quantityKg,
-        },
-      );
-
-      return _mapOrderFromJson(response as Map<String, dynamic>);
-    } on ApiException catch (e) {
-      rethrow;
-    }
+    final response = await _apiClient.post(
+      '/orders/',
+      body: {
+        'batch_id': batchId,
+        'quantity_requested': quantityKg,
+      },
+    );
+    return _mapOrderFromJson(response as Map<String, dynamic>);
   }
 
   /// Fetches a specific order by ID.
   Future<Order> fetchOrderById(String orderId) async {
-    try {
-      final response = await _apiClient.get('/orders/$orderId/');
-      return _mapOrderFromJson(response as Map<String, dynamic>);
-    } on ApiException catch (e) {
-      rethrow;
-    }
+    final response = await _apiClient.get('/orders/$orderId/');
+    return _mapOrderFromJson(response as Map<String, dynamic>);
   }
 
   /// Updates an order's status (e.g., mark as delivered or completed).
@@ -95,11 +86,7 @@ class OrderService {
 
   /// Deletes an order (typically only by order owner or admin).
   Future<void> deleteOrder(String orderId) async {
-    try {
-      await _apiClient.delete('/orders/$orderId/');
-    } on ApiException catch (e) {
-      rethrow;
-    }
+    await _apiClient.delete('/orders/$orderId/');
   }
 
   /// Maps backend order JSON to frontend Order model.
