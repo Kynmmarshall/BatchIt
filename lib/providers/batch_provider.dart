@@ -134,6 +134,7 @@ class BatchProvider extends ChangeNotifier {
     String? location,
     String? status,
     String? notes,
+    File? image,
   }) async {
     final updated = await _batchService.updateBatch(
       batchId,
@@ -142,6 +143,7 @@ class BatchProvider extends ChangeNotifier {
       location: location,
       status: status,
       notes: notes,
+      image: image,
     );
     _batches = _batches
         .map((b) => b.id == batchId ? updated : b)

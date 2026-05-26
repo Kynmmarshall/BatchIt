@@ -61,18 +61,31 @@ class BatchDetailsScreen extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: Image.asset(
-                        batch.imageAssetPath,
-                        width: 96,
-                        height: 96,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Container(
-                          width: 96,
-                          height: 96,
-                          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                          child: const Icon(Icons.inventory_2_outlined),
-                        ),
-                      ),
+                      child: batch.imageUrl != null && batch.imageUrl!.isNotEmpty
+                          ? Image.network(
+                              batch.imageUrl!,
+                              width: 96,
+                              height: 96,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => Container(
+                                width: 96,
+                                height: 96,
+                                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                                child: const Icon(Icons.inventory_2_outlined),
+                              ),
+                            )
+                          : Image.asset(
+                              batch.imageAssetPath,
+                              width: 96,
+                              height: 96,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => Container(
+                                width: 96,
+                                height: 96,
+                                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                                child: const Icon(Icons.inventory_2_outlined),
+                              ),
+                            ),
                     ),
                     const SizedBox(width: AppSpacing.md),
                     Expanded(
@@ -193,10 +206,7 @@ class BatchDetailsScreen extends StatelessWidget {
                     Row(
                       children: [
                         Expanded(
-                          child: AppPrimaryButton(
-                            label: l10n.editBatch,
-                            icon: Icons.edit_outlined,
-                            isSecondary: true,
+                          child: OutlinedButton.icon(
                             onPressed: () {
                               Navigator.pushNamed(
                                 context,
@@ -204,15 +214,26 @@ class BatchDetailsScreen extends StatelessWidget {
                                 arguments: {'batch': batch, 'providerId': batch.providerId},
                               );
                             },
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Theme.of(context).colorScheme.primary,
+                              backgroundColor: Theme.of(context)
+                                  .colorScheme
+                                  .primaryContainer
+                                  .withValues(alpha: 0.18),
+                              side: BorderSide(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withValues(alpha: 0.45),
+                              ),
+                            ),
+                            icon: const Icon(Icons.edit_outlined),
+                            label: Text(l10n.editBatch),
                           ),
                         ),
                         const SizedBox(width: AppSpacing.sm),
                         Expanded(
-                          child: AppPrimaryButton(
-                            label: l10n.deleteBatch,
-                            icon: Icons.delete_outline_rounded,
-                            isSecondary: true,
-                            isDestructive: true,
+                          child: OutlinedButton.icon(
                             onPressed: () async {
                               final confirm = await showDialog<bool>(
                                 context: context,
@@ -252,6 +273,21 @@ class BatchDetailsScreen extends StatelessWidget {
                                 );
                               }
                             },
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Theme.of(context).colorScheme.error,
+                              backgroundColor: Theme.of(context)
+                                  .colorScheme
+                                  .errorContainer
+                                  .withValues(alpha: 0.18),
+                              side: BorderSide(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .error
+                                    .withValues(alpha: 0.45),
+                              ),
+                            ),
+                            icon: const Icon(Icons.delete_outline_rounded),
+                            label: Text(l10n.deleteBatch),
                           ),
                         ),
                       ],

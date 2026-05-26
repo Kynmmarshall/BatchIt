@@ -162,6 +162,7 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
               location: location,
               status: widget.editingBatch!.status,
               notes: notes,
+              image: _batchImage,
             )
           : await batchProvider.createBatch(
               productName: productName,
@@ -427,6 +428,43 @@ class _CreateBatchScreenState extends State<CreateBatchScreen> {
                                       ),
                                     ],
                                   )
+                                : (isEditing && widget.editingBatch?.imageUrl != null && widget.editingBatch!.imageUrl!.isNotEmpty)
+                                    ? Stack(
+                                        fit: StackFit.expand,
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(12),
+                                            child: Image.network(
+                                              widget.editingBatch!.imageUrl!,
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (_, __, ___) => Center(
+                                                child: Icon(
+                                                  Icons.add_photo_alternate_rounded,
+                                                  size: 36,
+                                                  color: scheme.onSurfaceVariant,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: AppSpacing.xs,
+                                            right: AppSpacing.xs,
+                                            child: FilledButton.icon(
+                                              onPressed: _pickImage,
+                                              style: FilledButton.styleFrom(
+                                                padding: const EdgeInsets.symmetric(
+                                                    horizontal: AppSpacing.sm,
+                                                    vertical: 4),
+                                                tapTargetSize:
+                                                    MaterialTapTargetSize.shrinkWrap,
+                                                textStyle: theme.textTheme.labelSmall,
+                                              ),
+                                              icon: const Icon(Icons.edit_rounded, size: 14),
+                                              label: Text(l10n.batchImageChange),
+                                            ),
+                                          ),
+                                        ],
+                                      )
                                 : Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [

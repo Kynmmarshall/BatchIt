@@ -147,15 +147,31 @@ class BatchService {
     String? location,
     String? status,
     String? notes,
+    File? image,
   }) async {
-    final body = <String, dynamic>{};
-    if (productName != null) body['product_name'] = productName;
-    if (bulkSizeKg != null) body['total_quantity'] = bulkSizeKg;
-    if (location != null) body['location_name'] = location;
-    if (status != null) body['status'] = status;
-    if (notes != null) body['notes'] = notes;
-
-    final response = await _apiClient.patch('/batches/$batchId/edit/', body: body);
+    final dynamic response;
+    if (image != null) {
+      final fields = <String, String>{};
+      if (productName != null) fields['product_name'] = productName;
+      if (bulkSizeKg != null) fields['total_quantity'] = bulkSizeKg.toString();
+      if (location != null) fields['location_name'] = location;
+      if (status != null) fields['status'] = status;
+      if (notes != null) fields['notes'] = notes;
+      response = await _apiClient.patchMultipart(
+        '/batches/$batchId/edit/',
+        fields: fields,
+        file: image,
+        fileField: 'image',
+      );
+    } else {
+      final body = <String, dynamic>{};
+      if (productName != null) body['product_name'] = productName;
+      if (bulkSizeKg != null) body['total_quantity'] = bulkSizeKg;
+      if (location != null) body['location_name'] = location;
+      if (status != null) body['status'] = status;
+      if (notes != null) body['notes'] = notes;
+      response = await _apiClient.patch('/batches/$batchId/edit/', body: body);
+    }
     return _mapBatchFromJson(response as Map<String, dynamic>);
   }
 
