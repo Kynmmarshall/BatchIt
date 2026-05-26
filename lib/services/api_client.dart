@@ -26,6 +26,7 @@ class ApiClient {
   late http.Client _httpClient;
   String? _authToken;
   String? _refreshToken;
+  String? get authToken => _authToken;
   String? get refreshToken => _refreshToken;
   final String _baseUrl = AppConstants.apiBaseUrl;
 

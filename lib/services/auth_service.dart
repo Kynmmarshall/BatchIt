@@ -269,6 +269,17 @@ class AuthService {
     try {
       final tokenRestored = await _apiClient.restoreAuthToken();
       if (tokenRestored && _apiClient.isAuthenticated) {
+        final currentToken = _apiClient.authToken;
+        if (currentToken != null && currentToken.split('.').length != 3) {
+          final exchange = await _apiClient.post('/auth/exchange-token/', body: {});
+          final access = exchange['access'] as String?;
+          final refresh = exchange['refresh'] as String?;
+          if (access != null && access.isNotEmpty) {
+            await _apiClient.setAuthTokens(accessToken: access, refreshToken: refresh);
+            _apiClient.setRefreshCallback(refreshToken);
+          }
+        }
+
         // Try to fetch current user to validate token
         await getCurrentUser();
       }
