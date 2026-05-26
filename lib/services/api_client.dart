@@ -25,6 +25,8 @@ class ApiClient {
 
   late http.Client _httpClient;
   String? _authToken;
+  String? _refreshToken;
+  String? get refreshToken => _refreshToken;
   final String _baseUrl = AppConstants.apiBaseUrl;
 
   factory ApiClient() {
@@ -55,10 +57,24 @@ class ApiClient {
     }
   }
 
+  /// Sets both access and refresh tokens (JWT flow).
+  Future<void> setAuthTokens({required String accessToken, String? refreshToken}) async {
+    _authToken = accessToken;
+    _refreshToken = refreshToken;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('auth_token', accessToken);
+      if (refreshToken != null) await prefs.setString('refresh_token', refreshToken);
+    } catch (e) {
+      debugPrint('Failed to save auth tokens to storage: $e');
+    }
+  }
+
   /// Clears the authentication token (e.g., on logout).
   /// Removes token from local storage.
   Future<void> clearAuthToken() async {
     _authToken = null;
+    _refreshToken = null;
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove('auth_token');
@@ -73,8 +89,10 @@ class ApiClient {
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('auth_token');
+      final refresh = prefs.getString('refresh_token');
       if (token != null && token.isNotEmpty) {
         _authToken = token;
+        _refreshToken = refresh;
         return true;
       }
     } catch (e) {
@@ -124,7 +142,12 @@ class ApiClient {
       'Accept': 'application/json',
     };
     if (_authToken != null) {
-      headers['Authorization'] = 'Token $_authToken';
+      // If token looks like a JWT (contains two dots), send as Bearer
+      if (_authToken!.split('.').length == 3) {
+        headers['Authorization'] = 'Bearer $_authToken';
+      } else {
+        headers['Authorization'] = 'Token $_authToken';
+      }
     }
     return headers;
   }
@@ -185,7 +208,11 @@ class ApiClient {
     final request = http.MultipartRequest('POST', uri);
 
     if (_authToken != null) {
-      request.headers['Authorization'] = 'Token $_authToken';
+      if (_authToken!.split('.').length == 3) {
+        request.headers['Authorization'] = 'Bearer $_authToken';
+      } else {
+        request.headers['Authorization'] = 'Token $_authToken';
+      }
     }
     request.headers['Accept'] = 'application/json';
     request.fields.addAll(fields);
@@ -217,7 +244,11 @@ class ApiClient {
     final request = http.MultipartRequest('PATCH', uri);
 
     if (_authToken != null) {
-      request.headers['Authorization'] = 'Token $_authToken';
+      if (_authToken!.split('.').length == 3) {
+        request.headers['Authorization'] = 'Bearer $_authToken';
+      } else {
+        request.headers['Authorization'] = 'Token $_authToken';
+      }
     }
     request.headers['Accept'] = 'application/json';
     request.fields.addAll(fields);

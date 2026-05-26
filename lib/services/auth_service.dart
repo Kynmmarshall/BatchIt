@@ -40,10 +40,18 @@ class AuthService {
 
       // Extract token and user data from response
       // Expected response: { 'token': '...', 'user': { 'id': '...', 'name': '...', 'email': '...' } }
-      final token = response['token'] as String?;
-      if (token != null) {
-        await _apiClient.setAuthToken(token);
+      // Support both legacy 'token' and new JWT 'access'/'refresh' fields
+      final access = response['access'] as String?;
+      final refresh = response['refresh'] as String?;
+      if (access != null) {
+        await _apiClient.setAuthTokens(accessToken: access, refreshToken: refresh);
         _apiClient.setRefreshCallback(refreshToken);
+      } else {
+        final token = response['token'] as String?;
+        if (token != null) {
+          await _apiClient.setAuthToken(token);
+          _apiClient.setRefreshCallback(refreshToken);
+        }
       }
 
       final userData = response['user'] as Map<String, dynamic>?;
@@ -84,10 +92,17 @@ class AuthService {
         },
       );
 
-      final token = response['token'] as String?;
-      if (token != null) {
-        await _apiClient.setAuthToken(token);
+      final access = response['access'] as String?;
+      final refresh = response['refresh'] as String?;
+      if (access != null) {
+        await _apiClient.setAuthTokens(accessToken: access, refreshToken: refresh);
         _apiClient.setRefreshCallback(refreshToken);
+      } else {
+        final token = response['token'] as String?;
+        if (token != null) {
+          await _apiClient.setAuthToken(token);
+          _apiClient.setRefreshCallback(refreshToken);
+        }
       }
 
       final userData = response['user'] as Map<String, dynamic>?;
@@ -158,10 +173,17 @@ class AuthService {
       debugPrint('[BatchIt][auth] Google backend login succeeded');
 
       // Extract token and user data from response
-      final token = response['token'] as String?;
-      if (token != null) {
-        await _apiClient.setAuthToken(token);
+      final access = response['access'] as String?;
+      final refresh = response['refresh'] as String?;
+      if (access != null) {
+        await _apiClient.setAuthTokens(accessToken: access, refreshToken: refresh);
         _apiClient.setRefreshCallback(refreshToken);
+      } else {
+        final token = response['token'] as String?;
+        if (token != null) {
+          await _apiClient.setAuthToken(token);
+          _apiClient.setRefreshCallback(refreshToken);
+        }
       }
 
       final userData = response['user'] as Map<String, dynamic>?;
@@ -363,6 +385,21 @@ class AuthService {
   /// Returns true if a new token was obtained and stored.
   Future<bool> refreshToken() async {
     try {
+      // Try JWT refresh first (expects {'refresh': '<refresh>'} -> {'access': '...'})
+      // _apiClient.restoreAuthToken already sets tokens in client state when needed
+      // use stored refresh token from ApiClient (via shared prefs)
+      // Call backend JWT refresh endpoint
+      final refreshToken = _apiClient.refreshToken;
+      if (refreshToken != null && refreshToken.isNotEmpty) {
+        final response = await _apiClient.post('/token/refresh/', body: {'refresh': refreshToken});
+        final access = response['access'] as String?;
+        if (access != null && access.isNotEmpty) {
+          await _apiClient.setAuthToken(access);
+          return true;
+        }
+      }
+
+      // Fallback: legacy token refresh endpoint
       final response = await _apiClient.post('/auth/refresh/', body: {});
       final token = response['token'] as String?;
       if (token != null && token.isNotEmpty) {
