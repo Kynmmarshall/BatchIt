@@ -176,21 +176,54 @@ class ProviderService {
     double? latitude,
     double? longitude,
     required String description,
+    List<File>? documents,
+    File? logo,
   }) async {
-    final body = <String, dynamic>{
-      'business_name': businessName,
-      'owner_name': ownerName,
-      'category': category.name,
-      'registration_number': registrationNumber,
-      'phone': phone,
-      'email': email,
-      'address': address,
-      'description': description,
-      if (latitude != null) 'latitude': latitude,
-      if (longitude != null) 'longitude': longitude,
-    };
+    final hasFiles = (documents != null && documents.isNotEmpty) || logo != null;
 
-    final response = await _apiClient.patch('/providers/my-profile/', body: body);
+    final dynamic response;
+    if (hasFiles) {
+      final fields = <String, String>{
+        'business_name': businessName,
+        'owner_name': ownerName,
+        'category': category.name,
+        'registration_number': registrationNumber,
+        'phone': phone,
+        'email': email,
+        'address': address,
+        'description': description,
+        if (latitude != null) 'latitude': latitude.toString(),
+        if (longitude != null) 'longitude': longitude.toString(),
+      };
+
+      final fileEntries = <MapEntry<String, File>>[];
+      if (logo != null) fileEntries.add(MapEntry('logo', logo));
+      for (final doc in documents ?? <File>[]) {
+        fileEntries.add(MapEntry('documents', doc));
+      }
+
+      response = await _apiClient.patchMultipartFiles(
+        '/providers/my-profile/',
+        fields: fields,
+        files: fileEntries,
+      );
+    } else {
+      final body = <String, dynamic>{
+        'business_name': businessName,
+        'owner_name': ownerName,
+        'category': category.name,
+        'registration_number': registrationNumber,
+        'phone': phone,
+        'email': email,
+        'address': address,
+        'description': description,
+        if (latitude != null) 'latitude': latitude,
+        if (longitude != null) 'longitude': longitude,
+      };
+
+      response = await _apiClient.patch('/providers/my-profile/', body: body);
+    }
+
     return ProviderProfile.fromJson(response as Map<String, dynamic>);
   }
 }

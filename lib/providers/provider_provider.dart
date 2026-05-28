@@ -107,6 +107,8 @@ class ProviderProvider extends ChangeNotifier {
     double? latitude,
     double? longitude,
     required String description,
+    List<File>? documents,
+    File? logo,
   }) async {
     _isSubmitting = true;
     _error = null;
@@ -124,6 +126,8 @@ class ProviderProvider extends ChangeNotifier {
         latitude: latitude,
         longitude: longitude,
         description: description,
+        documents: documents,
+        logo: logo,
       );
     } catch (e) {
       _error = e.toString();

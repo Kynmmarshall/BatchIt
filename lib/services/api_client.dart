@@ -172,6 +172,25 @@ class ApiClient {
     });
   }
 
+  /// Performs an authenticated GET request and returns the raw response bytes.
+  /// Useful for file downloads that should include the current auth token.
+  Future<Uint8List> getBytes(String endpoint, {Map<String, String>? params}) async {
+    final uri = Uri.parse('$_baseUrl$endpoint');
+    final uriWithParams = params != null ? uri.replace(queryParameters: params) : uri;
+    debugPrint('[BatchIt][api] GET(bytes) $uriWithParams');
+    final result = await _withRefresh(() async {
+      final response = await _httpClient
+          .get(uriWithParams, headers: _buildHeaders())
+          .timeout(AppConstants.apiTimeout);
+      debugPrint('[BatchIt][api] GET(bytes) $endpoint → ${response.statusCode}');
+      if (response.statusCode < 200 || response.statusCode >= 300) {
+        throw _handleError(response);
+      }
+      return response.bodyBytes;
+    });
+    return result as Uint8List;
+  }
+
   /// Performs a POST request with JSON body.
   /// Returns parsed JSON response or throws an exception on error.
   Future<dynamic> post(String endpoint, {required Map<String, dynamic> body}) {
@@ -256,6 +275,38 @@ class ApiClient {
 
     if (file != null) {
       request.files.add(await http.MultipartFile.fromPath(fileField, file.path));
+    }
+
+    return _withRefresh(() async {
+      final streamed = await request.send().timeout(AppConstants.apiTimeout);
+      final response = await http.Response.fromStream(streamed);
+      return _handleResponse(response);
+    });
+  }
+
+  /// Performs a PATCH multipart/form-data request with multiple files.
+  Future<dynamic> patchMultipartFiles(
+    String endpoint, {
+    required Map<String, String> fields,
+    List<MapEntry<String, File>>? files,
+  }) async {
+    final uri = Uri.parse('$_baseUrl$endpoint');
+    final request = http.MultipartRequest('PATCH', uri);
+
+    if (_authToken != null) {
+      if (_authToken!.split('.').length == 3) {
+        request.headers['Authorization'] = 'Bearer $_authToken';
+      } else {
+        request.headers['Authorization'] = 'Token $_authToken';
+      }
+    }
+    request.headers['Accept'] = 'application/json';
+    request.fields.addAll(fields);
+
+    if (files != null) {
+      for (final entry in files) {
+        request.files.add(await http.MultipartFile.fromPath(entry.key, entry.value.path));
+      }
     }
 
     return _withRefresh(() async {

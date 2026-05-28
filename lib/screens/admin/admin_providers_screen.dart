@@ -1,7 +1,9 @@
 import 'package:batchit/services/api_client.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:open_filex/open_filex.dart';
 
 class AdminProvidersScreen extends StatefulWidget {
   const AdminProvidersScreen({super.key});
@@ -96,6 +98,26 @@ class _AdminProvidersScreenState extends State<AdminProvidersScreen> {
     }
   }
 
+  Future<void> _downloadDocument({
+    required String providerId,
+    required int index,
+    required String fileName,
+  }) async {
+    try {
+      final bytes = await _api.getBytes('/providers/$providerId/documents/$index/download/');
+      final safeName = fileName.isEmpty ? 'provider_document_${index + 1}' : fileName;
+      final file = File('${Directory.systemTemp.path}${Platform.pathSeparator}$safeName');
+      await file.writeAsBytes(bytes, flush: true);
+
+      final result = await OpenFilex.open(file.path);
+      if (result.type != ResultType.done && mounted) {
+        _showMessage('Saved to ${file.path}');
+      }
+    } catch (e) {
+      _showMessage('Unable to download document: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -148,6 +170,11 @@ class _AdminProvidersScreenState extends State<AdminProvidersScreen> {
                     itemCount: _providers.length,
                     itemBuilder: (_, i) => _ProviderCard(
                       data: _providers[i],
+                        onDownloadDocument: (providerId, index, fileName) => _downloadDocument(
+                          providerId: providerId,
+                          index: index,
+                          fileName: fileName,
+                        ),
                       onApprove: _statusFilter == 'pending'
                           ? () => _verify(_providers[i]['id'] as String, 'approve')
                           : null,
@@ -164,11 +191,13 @@ class _AdminProvidersScreenState extends State<AdminProvidersScreen> {
 class _ProviderCard extends StatelessWidget {
   const _ProviderCard({
     required this.data,
+    this.onDownloadDocument,
     this.onApprove,
     this.onReject,
   });
 
   final Map<String, dynamic> data;
+  final Future<void> Function(String providerId, int index, String fileName)? onDownloadDocument;
   final VoidCallback? onApprove;
   final VoidCallback? onReject;
 
@@ -176,6 +205,11 @@ class _ProviderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final status = data['status'] as String? ?? 'pending';
+    final documentUrls = (data['document_urls'] as List<dynamic>?)
+            ?.whereType<String>()
+            .toList() ??
+        const <String>[];
+    final providerId = data['id'] as String? ?? '';
 
     return Card(
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
@@ -202,6 +236,59 @@ class _ProviderCard extends StatelessWidget {
             _Info('Category', data['category'] as String? ?? ''),
             _Info('Address', data['address'] as String? ?? ''),
             _Info('Reg. Number', data['registration_number'] as String? ?? ''),
+            const SizedBox(height: AppSpacing.xs),
+            OutlinedButton.icon(
+              onPressed: (documentUrls.isEmpty || onDownloadDocument == null)
+                  ? null
+                  : () {
+                      showDialog<void>(
+                        context: context,
+                        builder: (dialogContext) => AlertDialog(
+                          title: const Text('Business Documents'),
+                          content: SizedBox(
+                            width: double.maxFinite,
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              itemCount: documentUrls.length,
+                              separatorBuilder: (_, __) => const SizedBox(height: 8),
+                              itemBuilder: (_, index) {
+                                final uri = Uri.tryParse(documentUrls[index]);
+                                final fileName = uri != null && uri.pathSegments.isNotEmpty
+                                    ? uri.pathSegments.last
+                                    : 'document_${index + 1}';
+                                return OutlinedButton.icon(
+                                  onPressed: () {
+                                    Navigator.pop(dialogContext);
+                                    onDownloadDocument!(providerId, index, fileName);
+                                  },
+                                  icon: const Icon(Icons.open_in_new_outlined, size: 18),
+                                  label: Text('Open document ${index + 1}'),
+                                );
+                              },
+                            ),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(dialogContext),
+                              child: const Text('Close'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+              icon: const Icon(Icons.description_outlined),
+              label: Text('View documents (${documentUrls.length})'),
+            ),
+            if (documentUrls.isEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                  'No documents uploaded yet.',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
+                ),
+              ),
             if (data['rejection_message'] != null &&
                 (data['rejection_message'] as String).isNotEmpty) ...[
               const SizedBox(height: AppSpacing.xs),

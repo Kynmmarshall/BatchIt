@@ -179,6 +179,8 @@ class _BecomeProviderScreenState extends State<BecomeProviderScreen> {
           latitude: double.tryParse(_latCtrl.text.trim()),
           longitude: double.tryParse(_lngCtrl.text.trim()),
           description: _descriptionCtrl.text.trim(),
+          documents: _documents.isEmpty ? null : _documents,
+          logo: _logo,
         );
       } else {
         await provider.submitProviderProfile(
