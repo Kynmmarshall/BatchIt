@@ -22,7 +22,8 @@ class BatchDetailsScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final batch = context.watch<BatchProvider>().findById(batchId);
     final user = context.watch<AuthProvider>().user;
-    final canManage = batch != null && user != null && (user.isStaff || batch.creatorId == user.id);
+    final isBatchCreator = batch != null && user != null && batch.creatorId == user.id;
+    final canManage = batch != null && user != null && (user.isStaff || isBatchCreator);
     final canJoin = batch != null && batch.canJoin;
 
     if (batch == null) {
