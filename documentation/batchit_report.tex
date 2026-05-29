@@ -1,0 +1,1456 @@
+% ============================================================
+%  BatchIt — SEN2241 Final Project Report
+%  Object Oriented Analysis Design and Implementation
+%  ICT University, Spring 2026
+% ============================================================
+\documentclass[12pt, a4paper]{report}
+
+% ── Encoding & Fonts ──────────────────────────────────────
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% ── Page Layout ───────────────────────────────────────────
+\usepackage[
+  top=3cm, bottom=2.8cm,
+  left=2.8cm, right=2.5cm,
+  headheight=15pt
+]{geometry}
+
+% ── Colors ────────────────────────────────────────────────
+\usepackage{xcolor}
+\definecolor{batchitGreen}{HTML}{0B8A62}
+\definecolor{batchitDark}{HTML}{085E43}
+\definecolor{batchitMid}{HTML}{38A47A}
+\definecolor{batchitLight}{HTML}{EAF7F1}
+\definecolor{batchitAccent}{HTML}{FFB347}
+\definecolor{batchitGray}{HTML}{678277}
+\definecolor{batchitStroke}{HTML}{6EB38E}
+\definecolor{batchitBg}{HTML}{F4F8F6}
+\definecolor{codebg}{HTML}{F8F8F8}
+\definecolor{codeframe}{HTML}{CCCCCC}
+\definecolor{linkblue}{HTML}{0B5E8A}
+\definecolor{tablehead}{HTML}{0B8A62}
+
+% ── Graphics & TikZ ───────────────────────────────────────
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{
+  shapes.geometric,
+  shapes.multipart,
+  arrows.meta,
+  positioning,
+  fit,
+  calc,
+  backgrounds,
+  shadows.blur
+}
+
+% ── Tables ────────────────────────────────────────────────
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{colortbl}
+
+% ── Listings ──────────────────────────────────────────────
+\usepackage{listings}
+\lstdefinelanguage{Dart}{
+  keywords={abstract,class,const,extends,factory,final,for,get,if,
+            import,in,null,override,required,return,set,static,
+            super,switch,this,throw,var,void,with,async,await,
+            Future,Stream,bool,double,int,String,List,Map,dynamic,
+            late,sealed,enum,mixin},
+  keywordstyle=\color{batchitDark}\bfseries,
+  commentstyle=\color{batchitGray}\itshape,
+  stringstyle=\color{batchitAccent!80!black},
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  sensitive=true
+}
+\lstdefinelanguage{Python}{
+  keywords={class,def,return,import,from,if,elif,else,for,while,
+            True,False,None,and,or,not,in,is,lambda,with,as,
+            try,except,finally,raise,pass,break,continue,async,await},
+  keywordstyle=\color{batchitDark}\bfseries,
+  commentstyle=\color{batchitGray}\itshape,
+  stringstyle=\color{batchitAccent!80!black},
+  morecomment=[l]{\#},
+  morestring=[b]',
+  morestring=[b]",
+  sensitive=true
+}
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{codebg},
+  frame=single,
+  framerule=0.4pt,
+  rulecolor=\color{codeframe},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=2,
+  showstringspaces=false,
+  numbers=left,
+  numberstyle=\tiny\color{batchitGray},
+  captionpos=b,
+  xleftmargin=1em,
+  xrightmargin=0.5em,
+}
+
+% ── Section/Chapter Formatting ────────────────────────────
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{batchitDark}}
+  {\color{batchitGreen}\normalfont\Large\bfseries
+   \chaptertitlename\ \thechapter}
+  {12pt}
+  {\huge\bfseries\color{batchitDark}}
+  [\vspace{4pt}{\color{batchitGreen}\rule{\textwidth}{1.5pt}}]
+\titlespacing*{\chapter}{0pt}{-10pt}{20pt}
+
+\titleformat{\section}
+  {\large\bfseries\color{batchitDark}}
+  {\color{batchitGreen}\thesection}{0.8em}{}
+  [{\color{batchitStroke}\vspace{2pt}\rule{\textwidth}{0.5pt}}]
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{batchitDark}}
+  {\color{batchitMid}\thesubsection}{0.7em}{}
+
+\titleformat{\subsubsection}
+  {\normalsize\bfseries\color{batchitGray}}
+  {\thesubsubsection}{0.7em}{}
+
+% ── Headers & Footers ─────────────────────────────────────
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{batchitGray}\textit{BatchIt --- Collaborative Bulk Purchasing Platform}}
+\fancyhead[R]{\small\color{batchitGray}\textit{SEN2241}}
+\fancyfoot[C]{\small\color{batchitGray}\thepage}
+\fancyfoot[L]{\small\color{batchitGray}\textit{ICT University, Spring 2026}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.3pt}
+\renewcommand{\headrule}{%
+  {\color{batchitStroke}\rule{\textwidth}{\headrulewidth}}}
+\renewcommand{\footrule}{%
+  {\color{batchitStroke!50}\rule{\textwidth}{\footrulewidth}}}
+
+% ── Misc ──────────────────────────────────────────────────
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable,skins}
+
+% ── Hyperref ──────────────────────────────────────────────
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=batchitDark,
+  urlcolor=linkblue,
+  citecolor=batchitGray,
+  pdftitle={BatchIt OOADI Final Report},
+  pdfauthor={Group 13 --- ICT University SEN2241},
+}
+
+% ── Spacing ───────────────────────────────────────────────
+\setstretch{1.45}
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+
+% ── Coloured box shortcuts ────────────────────────────────
+\tcbuselibrary{listings}
+\newenvironment{infobox}[1]{%
+  \begin{tcolorbox}[
+    enhanced,
+    colback=batchitLight,
+    colframe=batchitGreen,
+    boxrule=0.7pt,arc=4pt,
+    title={\small\bfseries #1},
+    fonttitle=\bfseries,
+    coltitle=white,
+    attach boxed title to top left={yshift=-2mm,xshift=8mm},
+    boxed title style={colback=batchitGreen,arc=3pt,boxrule=0pt}
+  ]
+}{%
+  \end{tcolorbox}
+}
+
+\newenvironment{notebox}{%
+  \begin{tcolorbox}[
+    enhanced,
+    colback=batchitAccent!15,
+    colframe=batchitAccent!70!black,
+    boxrule=0.5pt,arc=3pt
+  ]
+}{%
+  \end{tcolorbox}
+}
+
+% ── TikZ shared styles ────────────────────────────────────
+\tikzset{
+  umlbox/.style={
+    rectangle,draw=batchitGreen,fill=batchitLight,
+    rounded corners=3pt,minimum height=0.8cm,
+    text centered,font=\small
+  },
+  umlhead/.style={
+    rectangle,draw=batchitDark,fill=batchitGreen,
+    minimum height=0.7cm,text width=#1,
+    text centered,font=\small\bfseries,text=white
+  },
+  umlattr/.style={
+    rectangle,draw=batchitGreen!50,fill=batchitLight,
+    text width=#1,font=\scriptsize,
+    align=left,inner sep=4pt
+  },
+  umlmethod/.style={
+    rectangle,draw=batchitGreen!30,fill=white,
+    text width=#1,font=\scriptsize,
+    align=left,inner sep=4pt
+  },
+  actor/.style={
+    rectangle,rounded corners=5pt,
+    draw=batchitAccent!80!black,
+    fill=batchitAccent!20,
+    text width=2.5cm,minimum height=0.9cm,
+    align=center,font=\small\bfseries
+  },
+  sysbound/.style={
+    rectangle,rounded corners=8pt,
+    draw=batchitGreen,dashed,
+    fill=batchitLight!50,
+    inner sep=8pt
+  },
+  layerbox/.style={
+    rectangle,rounded corners=7pt,
+    draw=batchitGreen,fill=batchitLight,
+    text width=7.5cm,minimum height=1.1cm,
+    align=center,font=\small\bfseries,
+    drop shadow={opacity=0.12}
+  },
+  sidebox/.style={
+    rectangle,rounded corners=5pt,
+    draw=batchitAccent!80!black,fill=batchitAccent!15,
+    text width=3cm,minimum height=0.9cm,
+    align=center,font=\scriptsize\bfseries
+  },
+  dbbox/.style={
+    cylinder,shape border rotate=90,
+    draw=batchitDark,fill=batchitDark!12,
+    minimum height=1.2cm,text width=2.4cm,
+    align=center,font=\scriptsize\bfseries
+  },
+  cibox/.style={
+    rectangle,rounded corners=5pt,
+    draw=red!60!black,fill=red!8,
+    text width=3cm,minimum height=0.9cm,
+    align=center,font=\scriptsize\bfseries
+  },
+  arr/.style={->,>=Latex,thick,color=batchitDark,line width=1pt},
+  darr/.style={->,>=Latex,thick,dashed,color=batchitGray},
+  ucarr/.style={->,>=Latex,color=batchitDarkGreen},
+  lifeline/.style={dashed,color=batchitGray!60,line width=0.6pt},
+  seqarr/.style={->,>=Latex,color=batchitDark,line width=0.8pt},
+  seqret/.style={->,>=Latex,dashed,color=batchitMid,line width=0.7pt},
+  reln/.style={-,thick,color=batchitGreen},
+  aggr/.style={->,>={Latex},thick,color=batchitGreen,dashed},
+  comp/.style={->,>={Latex},thick,color=batchitDark,double},
+  inherit/.style={->,>={Latex},thick,color=batchitGray,dashed},
+  activation/.style={rectangle,draw=batchitDark,fill=batchitLight,minimum width=0.28cm},
+}
+
+% ═══════════════════════════════════════════════════════════
+%  DOCUMENT
+% ═══════════════════════════════════════════════════════════
+\begin{document}
+
+% ── Title Page ────────────────────────────────────────────
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[batchitGreen!10] (current page.north west) rectangle
+        ([yshift=-5.5cm]current page.north east);
+  \fill[batchitGreen] (current page.north west) rectangle
+        ([yshift=-2.8cm]current page.north east);
+  \node[text=white,font=\Large\bfseries] at
+        ([yshift=-1cm]current page.north) {%
+    ICT FACULTY};
+  \node[text=white,font=\normalsize] at
+        ([yshift=-1.9cm]current page.north) {%
+    ICT University \quad\textbullet\quad Spring 2026};
+  \node[text=batchitDark,font=\small\bfseries] at
+        ([yshift=-3.8cm]current page.north) {%
+    FINAL EXAMINATION};
+  \fill[batchitGreen] ([yshift=-24cm]current page.north west) rectangle
+        (current page.south east);
+  \node[text=white,font=\footnotesize] at
+        ([yshift=1cm]current page.south) {%
+    SEN2241 --- Object Oriented Analysis, Design and Implementation
+    \quad\textbullet\quad Instructor: Tekoh Palma Achu};
+\end{tikzpicture}
+
+\vspace*{3.0cm}
+\begin{center}
+  {\Large\bfseries\color{batchitDark} SEN2241}\\[2pt]
+  {\small\color{batchitGray} Object Oriented Analysis, Design and Implementation}\\[0.9cm]
+
+  \begin{tikzpicture}
+    \node[rectangle,rounded corners=14pt,
+          draw=batchitGreen,fill=white,
+          inner sep=18pt, drop shadow={opacity=0.18}] {%
+      \begin{minipage}{12cm}\centering
+        \includegraphics[width=3.4cm]{logo.png}\\[6pt]
+        {\Huge\bfseries\color{batchitDark} BatchIt}\\[3pt]
+        {\large\color{batchitMid}\textit{Buy Together Save Together}}\\[8pt]
+        {\color{batchitGreen}\rule{8cm}{0.8pt}}\\[8pt]
+        {\normalsize\color{batchitGray}Mobile + REST API Application}\\[2pt]
+        {\small\color{batchitGray}
+          Flutter (Dart) \textbullet\ Django REST Framework\textbullet\ PostgreSQL\textbullet\ Jenkins CI/CD}\\[10pt]
+        \begin{tabular}{rl}
+          \textbf{\color{batchitGray}Course Code:}     & SEN2241 \\[2pt]
+          \textbf{\color{batchitGray}Group Number:}    & Group 13 \\[2pt]
+          \textbf{\color{batchitGray}Instructor:}      & Tekoh Palma Achu \\[2pt]
+          \textbf{\color{batchitGray}Submission Date:} & 1\textsuperscript{st} Week of June 2026 \\[2pt]
+        \end{tabular}
+      \end{minipage}};
+  \end{tikzpicture}
+\end{center}
+\end{titlepage}
+
+% ── Group Information ─────────────────────────────────────
+\newpage
+\thispagestyle{fancy}
+\chapter*{Group Information}
+\addcontentsline{toc}{chapter}{Group Information}
+
+\vspace{0.6cm}
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\rowcolor{batchitLight}
+\textbf{Course Code / Title} & SEN2241 --- Object Oriented Analysis, Design and Implementation\\
+\midrule
+\textbf{Group Number}        & Group 13 \\
+\textbf{Project Topic}       & BatchIt --- Collaborative Bulk Purchasing Platform \\
+\textbf{GitHub (Frontend)}   & \url{https://github.com/Kynmmarshall/BatchIt} \\
+\textbf{GitHub (Backend)}    & \url{https://github.com/Kynmmarshall/BatchIt-Backend} \\
+\textbf{App Website}         & \url{https://batchit.duckdns.org} \\
+\bottomrule
+\end{tabularx}
+
+\vspace{0.8cm}
+{\large\bfseries\color{batchitDark} Team Members}
+
+\vspace{0.4cm}
+\begin{tabularx}{\textwidth}{c X X X c}
+\toprule
+\rowcolor{tablehead}
+\textcolor{white}{\textbf{SN}} &
+\textcolor{white}{\textbf{Member's Name}} &
+\textcolor{white}{\textbf{Registration Number}} &
+\textcolor{white}{\textbf{Team Role}} &
+\textcolor{white}{\textbf{\% Participation}}\\
+\midrule
+1 & Kamdeu Yamdjeuson    & ICTU20241386 & Scrum Master / DevOps \& VPS Setup & \% \\
+\rowcolor{batchitLight}
+2 & Njume Leslie         & ICTU2024 & Product Owner / Backend Lead    & \% \\
+3 & Atsimbong Joshua     & ICTU2024 & Flutter Developer / UI \& Maps & \% \\
+\rowcolor{batchitLight}
+4 & Chijioke Emmanuel    & ICTU2024 & Backend Developer / Realtime \& Chat & \% \\
+5 & Fru Chi              & ICTU2024 & Flutter Developer / Core Features & \% \\
+\bottomrule
+\end{tabularx}
+
+% ── Table of Contents ─────────────────────────────────────
+\newpage
+\tableofcontents
+
+% ═══════════════════════════════════════════════════════════
+\chapter{Introduction}
+% ═══════════════════════════════════════════════════════════
+
+\section{General Introduction}
+
+BatchIt is a mobile-first collaborative bulk purchasing platform that brings together individual consumers to form purchasing groups — called \textbf{batches} — enabling them to collectively order goods in bulk quantities at reduced per-unit prices. Built using a modern Object-Oriented technology stack consisting of \textbf{Flutter} (Dart) for the cross-platform mobile frontend and \textbf{Django REST Framework} (Python) for the backend API server, the application addresses the real-world challenge faced by low-to-middle income households and small businesses in sourcing essential commodities at affordable prices.
+
+The platform connects three categories of stakeholders: \textbf{Customers} who search for and join batches, \textbf{Providers} who are verified businesses offering products for group purchases, and \textbf{Administrators} who manage platform integrity through provider verification. The backend API is deployed on a Virtual Private Server (VPS) with an automated Continuous Integration and Continuous Deployment (CI/CD) pipeline powered by Jenkins, providing reliable, tested deliverables with each code push.
+
+\begin{infobox}{Application At a Glance}
+\begin{tabular}{ll}
+\textbf{App Name:}          & BatchIt\\
+\textbf{Package:}           & \texttt{com.example.batchit}\\
+\textbf{Backend URL:}       & \texttt{http://38.242.246.126/api}\\
+\textbf{Website:}           & \texttt{https://batchit.duckdns.org}\\
+\textbf{Primary Color:}     & \#0B8A62 (Teal Green)\\
+\textbf{Accent Color:}      & \#FFB347 (Warm Orange)\\
+\textbf{Supported Locales:} & English (en), French (fr)\\
+\textbf{Min Android SDK:}   & API 21 (Android 5.0)\\
+\end{tabular}
+\end{infobox}
+
+\section{Aim and Objectives}
+
+\subsection*{Aim}
+The aim of this project is to design, implement, and deploy a full-stack mobile application using Object-Oriented Programming principles that facilitates collaborative bulk purchasing among consumers in underserved markets, reducing per-unit costs and improving access to essential goods.
+
+\subsection*{Objectives}
+\begin{enumerate}[leftmargin=*, label=\textcolor{batchitGreen}{\textbf{\arabic*.}}]
+  \item Design a RESTful API backend using Django REST Framework with a PostgreSQL database, modelling all domain entities (Customer, Provider, Batch, Order, Notification) using OOP class hierarchies.
+  \item Implement a cross-platform Flutter mobile application with support for both English and French languages, employing the Provider pattern for reactive state management.
+  \item Develop secure multi-modal authentication supporting email/password login with 6-digit email verification codes and Google OAuth 2.0 integration.
+  \item Enable the full batch lifecycle: creation by providers/customers, discovery by nearby users, joining with quantity selection, and real-time-style group chat via REST polling.
+  \item Implement a provider verification workflow with document upload, admin review, and status notification.
+  \item Configure a Jenkins CI/CD pipeline on a VPS that automatically runs 315 unit and widget tests (83.6\% line coverage), builds a signed APK, and deploys the backend on each push to \texttt{main}.
+  \item Document the entire development process following Scrum methodology with product backlog, sprint planning, and retrospectives.
+\end{enumerate}
+
+\section{Problem Statement}
+
+In many developing economies, including Cameroon and similar markets, individual consumers face prohibitively high per-unit prices when purchasing essential goods such as food staples, household supplies, and electronics. Traditional retail markups, combined with limited access to wholesale channels, mean that low-income households pay significantly more per kilogram or unit compared to bulk purchasers.
+
+Simultaneously, small and medium-sized vendors lack a digital channel to reach groups of consumers willing to commit to bulk purchases in advance. Existing e-commerce platforms are designed primarily for individual transactions and do not support the concept of group commitment purchases.
+
+\textbf{BatchIt} addresses this problem by:
+\begin{itemize}[leftmargin=*]
+  \item Providing a marketplace where consumers \textit{collectively form purchasing groups} around specific products and quantities.
+  \item Allowing verified providers to list batches with pricing advantages that activate once the minimum quantity threshold is reached.
+  \item Offering transparency through a live progress indicator showing how filled each batch is, motivating participation.
+  \item Building trust through a provider verification system managed by platform administrators.
+\end{itemize}
+
+% ═══════════════════════════════════════════════════════════
+\chapter{Literature Review}
+% ═══════════════════════════════════════════════════════════
+
+\section{Software Development Methodologies}
+
+Software development methodologies provide structured processes for planning, executing, and managing software projects. The most widely adopted methodologies are compared below.
+
+\subsection{Comparison of Software Development Methodologies}
+
+\begin{longtable}{p{2.8cm} p{3.8cm} p{3.8cm} p{3.5cm}}
+\caption{Comparison of Software Development Methodologies}\label{tab:methodologies}\\
+\toprule
+\rowcolor{tablehead}
+\textcolor{white}{\textbf{Criterion}} &
+\textcolor{white}{\textbf{Waterfall}} &
+\textcolor{white}{\textbf{Agile / Scrum}} &
+\textcolor{white}{\textbf{Extreme Programming}}\\
+\midrule
+\endfirsthead
+\multicolumn{4}{c}{\small\itshape (Continued from previous page)}\\
+\toprule
+\rowcolor{tablehead}
+\textcolor{white}{\textbf{Criterion}} &
+\textcolor{white}{\textbf{Waterfall}} &
+\textcolor{white}{\textbf{Agile / Scrum}} &
+\textcolor{white}{\textbf{Extreme Programming}}\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Process type      & Sequential, linear    & Iterative, incremental & Iterative, engineering-focused\\
+\rowcolor{batchitLight}
+Flexibility       & Low --- requirements locked at start & High --- changes welcome each sprint & Very high --- design evolves continuously\\
+Documentation     & Heavy upfront         & Lightweight, just enough & Minimal\\
+\rowcolor{batchitLight}
+Team size         & Any (larger suits)    & 3--9 members           & Small (2--10)\\
+Feedback loops    & Late (at delivery)    & Every sprint (1--4 wks)& Continuous (pair programming)\\
+\rowcolor{batchitLight}
+Risk management   & Poor --- late testing & Good --- tested each sprint & Good --- test-driven\\
+Suitable for      & Stable requirements   & Evolving requirements  & Technically complex core\\
+\rowcolor{batchitLight}
+Deliverables      & One final delivery    & Working software each sprint & Continuous releases\\
+\end{longtable}
+
+\subsection{Reason for Choosing Scrum Methodology}
+
+The BatchIt project adopted \textbf{Scrum} as its primary software development methodology for the following reasons:
+
+\begin{enumerate}[leftmargin=*, label=\textcolor{batchitGreen}{\textbf{\arabic*.}}]
+  \item \textbf{Changing requirements:} During early design, multiple feature priorities shifted (e.g., adding map view, batch chat, multi-language support). Scrum's sprint-based approach allowed the team to reprioritize the backlog without disrupting the overall project.
+  \item \textbf{Team size compatibility:} Scrum is optimised for teams of 3--9 members. Our 5-member team maps directly to Scrum's recommended size.
+  \item \textbf{Parallel workstreams:} Scrum allowed the Flutter frontend and Django backend to evolve concurrently within each sprint, with clearly defined API contracts serving as the interface between workstreams.
+  \item \textbf{Continuous testing:} Sprint reviews enforced incremental testing, leading to the eventual 315-test suite covering 83.6\% of the codebase.
+  \item \textbf{Transparency:} Daily standups (virtual) and GitHub commit history provided full visibility of individual contributions.
+\end{enumerate}
+
+\section{Review of Related Concepts}
+
+\subsection{Group Buying and Collaborative Commerce}
+Group buying (also termed \textit{social commerce} or \textit{collective purchasing}) is a commercial model in which a minimum number of buyers must commit to a purchase before the transaction is executed, typically triggering a bulk or discounted price. Pioneered at scale by Groupon (2008), the model was extended to physical commodity markets by platforms such as Pinduoduo (China, 2015) and numerous regional co-operative marketplaces. BatchIt adapts this model for mobile-first markets in Sub-Saharan Africa, focusing on essential goods rather than discretionary services.
+
+\subsection{REST API Design}
+Representational State Transfer (REST) is an architectural style for distributed hypermedia systems defined by Fielding (2000). BatchIt's backend follows REST conventions: resources (batches, orders, providers) are identified by URIs; operations use HTTP verbs (GET, POST, PATCH, DELETE); responses carry standard HTTP status codes; and stateless authentication is achieved via JWT tokens, satisfying the REST stateless constraint.
+
+\subsection{Object-Oriented Programming in This Project}
+Both primary programming languages used --- Dart (Flutter) and Python (Django) --- are object-oriented:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Encapsulation:} Domain models (e.g., \texttt{Batch}, \texttt{Customer}) encapsulate data and behaviour; services encapsulate all API communication.
+  \item \textbf{Inheritance:} Django's \texttt{Customer} model extends \texttt{AbstractUser}; Flutter's screen widgets extend \texttt{StatelessWidget}/\texttt{StatefulWidget}; providers extend \texttt{ChangeNotifier}.
+  \item \textbf{Polymorphism:} The \texttt{ApiClient} methods (\texttt{get}, \texttt{post}, \texttt{patch}, \texttt{delete}) accept varying parameter sets via Dart optional named parameters.
+  \item \textbf{Abstraction:} The service layer (\texttt{BatchService}, \texttt{AuthService}) abstracts HTTP communication from the UI layer; Django's DRF serializers abstract model-to-JSON conversion.
+\end{itemize}
+
+\subsection{State Management with Provider Pattern}
+Flutter's \texttt{provider} package (ChangeNotifier + MultiProvider) is used throughout BatchIt. Each domain object has a corresponding provider class (e.g., \texttt{BatchProvider}, \texttt{AuthProvider}) that maintains reactive state and notifies widget subtrees on change.
+
+\section{Review of Related Literature}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Li et al. (2012)} studied group-buying adoption factors in China, finding that perceived cost savings and social influence are the primary drivers --- directly motivating BatchIt's progress-bar feature showing how close a batch is to its target.
+  \item \textbf{Bele et al. (2018)} documented REST API design best practices recommending versioned endpoints, paginated responses, and standardised error formats --- all adopted in BatchIt's Django backend.
+  \item \textbf{Google Flutter Team (2023)} recommends the Provider/ChangeNotifier pattern for medium-complexity Flutter apps, citing simpler testing compared to BLoC or Riverpod --- informing the project's architecture.
+  \item \textbf{OWASP Mobile Security Guide (2024)} informed the authentication implementation, specifically JWT token storage in \texttt{SharedPreferences} and token refresh on 401 responses.
+\end{itemize}
+
+% ═══════════════════════════════════════════════════════════
+\chapter{Methodology and Materials}
+% ═══════════════════════════════════════════════════════════
+
+\section{Research Methodology}
+
+BatchIt was developed using an \textbf{applied research} methodology combined with \textbf{iterative software engineering}. The research process followed four phases:
+
+\begin{enumerate}[leftmargin=*, label=\textcolor{batchitGreen}{\textbf{\arabic*.}}]
+  \item \textbf{Domain Analysis:} Market research into group-buying platforms, interviews with potential users, and review of existing apps (Groupon, local WhatsApp group-buying groups) to identify pain points.
+  \item \textbf{Requirements Engineering:} Formal elicitation of functional and non-functional requirements documented in a product backlog and validated with potential users.
+  \item \textbf{Design and Implementation:} UML modelling (use case, class, sequence diagrams) followed by OOP-based implementation in Dart and Python.
+  \item \textbf{Evaluation:} Automated unit/widget tests (315 tests, 83.6\% coverage) combined with manual acceptance testing across the full user journey.
+\end{enumerate}
+
+\newpage
+\section{System Requirements}
+
+\subsection{Functional Requirements}
+
+\begin{longtable}{c p{3.5cm} p{8cm}}
+\caption{Functional Requirements}\label{tab:func-req}\\
+\toprule
+\rowcolor{tablehead}
+\textcolor{white}{\textbf{FR\#}} &
+\textcolor{white}{\textbf{Module}} &
+\textcolor{white}{\textbf{Description}}\\
+\midrule
+\endfirsthead
+\multicolumn{3}{c}{\small\itshape (Continued)}\\
+\toprule
+\rowcolor{tablehead}
+\textcolor{white}{\textbf{FR\#}} &
+\textcolor{white}{\textbf{Module}} &
+\textcolor{white}{\textbf{Description}}\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+FR01 & Authentication  & Users shall be able to register with email, a 6-digit verification code, username, and password.\\
+\rowcolor{batchitLight}
+FR02 & Authentication  & Users shall be able to log in with email/password or via Google OAuth 2.0.\\
+FR03 & Authentication  & JWT access tokens shall expire after 60 minutes; refresh tokens after 7 days.\\
+\rowcolor{batchitLight}
+FR04 & Batch           & Authenticated users shall be able to create a batch specifying product name, total quantity, unit, and location.\\
+FR05 & Batch           & The system shall display nearby open batches filterable by status and geographic proximity.\\
+\rowcolor{batchitLight}
+FR06 & Batch           & Users shall be able to join a batch by specifying a requested quantity.\\
+FR07 & Batch           & The system shall automatically update batch fill progress when participants join.\\
+\rowcolor{batchitLight}
+FR08 & Batch           & Batch creators and admins shall be able to edit and delete batches.\\
+FR09 & Provider        & Business owners shall be able to apply as verified providers by submitting business documents.\\
+\rowcolor{batchitLight}
+FR10 & Provider        & Admins shall be able to verify or reject provider applications with a message.\\
+FR11 & Notifications   & The system shall send in-app notifications on batch events (creation, join, fill, provider approval).\\
+\rowcolor{batchitLight}
+FR12 & Chat            & Each batch shall have a dedicated group chat accessible to its participants.\\
+FR13 & Profile         & Users shall be able to update their name and profile photo.\\
+\rowcolor{batchitLight}
+FR14 & Settings        & Users shall be able to toggle the app theme (light/dark/system) and language (EN/FR).\\
+FR15 & Orders          & The system shall maintain an order record for each batch a user has joined.\\
+\end{longtable}
+
+\subsection{Non-Functional Requirements}
+
+\begin{tabularx}{\textwidth}{c l X}
+\toprule
+\rowcolor{tablehead}
+\textcolor{white}{\textbf{NFR\#}} &
+\textcolor{white}{\textbf{Category}} &
+\textcolor{white}{\textbf{Requirement}}\\
+\midrule
+NFR01 & Performance      & API response time shall be under 2 seconds for 95\% of requests under normal load.\\
+\rowcolor{batchitLight}
+NFR02 & Scalability      & The backend shall support horizontal scaling via stateless JWT authentication.\\
+NFR03 & Security         & All API communication shall use HTTPS in production; passwords shall be hashed with PBKDF2.\\
+\rowcolor{batchitLight}
+NFR04 & Availability     & The VPS-hosted API shall target 99\% uptime via Gunicorn + Systemd auto-restart.\\
+NFR05 & Usability        & The mobile app shall support English and French; the UI shall follow Material Design 3 guidelines.\\
+\rowcolor{batchitLight}
+NFR06 & Testability      & The codebase shall maintain $\geq$80\% line coverage as enforced by the Jenkins quality gate.\\
+NFR07 & Maintainability  & All modules shall be documented; the CI/CD pipeline shall reject code that fails static analysis.\\
+\rowcolor{batchitLight}
+NFR08 & Portability      & The Flutter app shall run on Android 5.0 (API 21) and above.\\
+\bottomrule
+\end{tabularx}
+
+% ─────────────────────────────────────────────────────────
+\newpage
+\section{System Design}
+
+\subsection{High-Level Architecture}
+
+Figure~\ref{fig:arch} illustrates the high-level architecture of the BatchIt system. The architecture follows a \textbf{layered client-server} pattern with a clear separation between the mobile presentation layer, the RESTful API layer, and the data persistence layer.
+
+\begin{figure}[H]
+\centering
+\centering\caption{\includegraphics[width=15cm]{architecture.png}}
+\label{fig:arch}
+\end{figure}
+
+\textbf{Data flow:} The Flutter app communicates exclusively with the Nginx reverse proxy over HTTPS. Nginx forwards requests to Gunicorn which spawns Django worker processes. Django handles business logic, interacts with PostgreSQL via the ORM, writes media files to disk, and calls external services (Brevo for email, Google's token verification API for OAuth). The Jenkins server monitors the GitHub repository via webhooks and on each push to \texttt{main} runs the full CI/CD pipeline: checkout, dependency install, static analysis, 315 automated tests with coverage report, APK build, and deployment.
+
+\subsection{Use Case Diagram}
+
+\begin{figure}[H]
+\centering
+\centering\caption{\includegraphics[width=10cm]{usecase.png}}
+\label{fig:usecase}
+\end{figure}
+
+\newpage
+\subsection{Class Diagram}
+
+The class diagram in Figure~\ref{fig:classdiag} represents the backend domain model as defined in \texttt{batchit\_app/models.py}. Lines with filled arrowheads denote foreign-key relationships; lines with a diamond denote composition (the child cannot exist without the parent).
+
+\begin{figure}[H]
+\centering
+\centering\caption{\includegraphics[width=15cm]{class.png}}
+
+\label{fig:classdiag}
+\end{figure}
+
+\newpage
+\subsection{Object Diagram}
+
+Figure~\ref{fig:objdiag} shows a snapshot of a specific batch in progress, illustrating the runtime state of the \texttt{Batch}, \texttt{BatchParticipant}, and \texttt{Customer} objects.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  obj/.style={
+    rectangle split,rectangle split parts=2,
+    draw=batchitDark,fill=white,
+    font=\scriptsize,
+    rectangle split part fill={batchitDark,white}
+  },
+  instname/.style={font=\scriptsize\bfseries,text=white},
+  link/.style={-,thick,color=batchitGreen}
+]
+
+%% ── Batch instance ───────────────────────────────────────
+\node[obj] (b) at (0,0) {
+  \textcolor{white}{\textbf{riceBatch : Batch}}
+  \nodepart{two}
+  \begin{tabular}{@{}ll@{}}
+  batch\_id    & = ``3f9a-...'' \\
+  product\_name & = ``Rice (50 kg bag)'' \\
+  total\_quantity & = 100.0 kg \\
+  filled\_quantity & = 60.0 kg \\
+  unit         & = ``kg'' \\
+  status       & = ``open'' \\
+  location\_name & = ``Mokolo Market, Yaounde'' \\
+  created\_at  & = 2026-05-01T08:30:00Z
+  \end{tabular}
+};
+
+%% ── Customer instances ───────────────────────────────────
+\node[obj] (c1) at (-5.5,-5.5) {
+  \textcolor{white}{\textbf{alice : Customer}}
+  \nodepart{two}
+  \begin{tabular}{@{}ll@{}}
+  customer\_id & = ``a1b2-...'' \\
+  username     & = ``alice\_cm'' \\
+  email        & = ``alice@example.com'' \\
+  first\_name  & = ``Alice''\\
+  last\_name   & = ``Nguema''
+  \end{tabular}
+};
+
+\node[obj] (c2) at (5.5,-5.5) {
+  \textcolor{white}{\textbf{bob : Customer}}
+  \nodepart{two}
+  \begin{tabular}{@{}ll@{}}
+  customer\_id & = ``b3c4-...'' \\
+  username     & = ``bob\_market'' \\
+  email        & = ``bob@shop.com'' \\
+  first\_name  & = ``Bob''\\
+  last\_name   & = ``Etoa''
+  \end{tabular}
+};
+
+%% ── Participant instances ─────────────────────────────────
+\node[obj] (p1) at (-5.5,-1.5) {
+  \textcolor{white}{\textbf{part1 : BatchParticipant}}
+  \nodepart{two}
+  \begin{tabular}{@{}ll@{}}
+  quantity\_requested & = 25.0 kg \\
+  status             & = ``pending'' \\
+  joined\_at         & = 2026-05-01T09:00Z
+  \end{tabular}
+};
+
+\node[obj] (p2) at (5.5,-1.5) {
+  \textcolor{white}{\textbf{part2 : BatchParticipant}}
+  \nodepart{two}
+  \begin{tabular}{@{}ll@{}}
+  quantity\_requested & = 35.0 kg \\
+  status             & = ``pending'' \\
+  joined\_at         & = 2026-05-02T11:15Z
+  \end{tabular}
+};
+
+%% ── Links ────────────────────────────────────────────────
+\draw[link] (b.south) to[out=-120,in=90] node[left,font=\tiny]{batch} (p1.north);
+\draw[link] (b.south) to[out=-60,in=90]  node[right,font=\tiny]{batch} (p2.north);
+\draw[link] (p1.south) -- node[left,font=\tiny]{customer} (c1.north);
+\draw[link] (p2.south) -- node[right,font=\tiny]{customer} (c2.north);
+
+\node[font=\tiny\itshape,color=batchitGray] at (0,-7)
+  {60 kg filled of 100 kg target → 60\% progress → status remains ``open''};
+
+\end{tikzpicture}
+\caption{Object Diagram: A Batch in Progress with Two Participants}
+\label{fig:objdiag}
+\end{figure}
+
+%% ── Sequence Diagrams ─────────────────────────────────────
+\newpage
+\subsection{Sequence Diagrams}
+
+The following five sequence diagrams cover the most critical use cases of the BatchIt system.
+
+\subsubsection{SD1 — Email Registration with Verification}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=17cm]{sd1.png}
+\caption{SD1: Email Registration with Verification Code}
+\label{fig:sd1}
+\end{figure}
+
+\subsubsection{SD2 — Email Login}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=17cm]{sd2.png}
+\caption{SD2: Email Login Flow}
+\label{fig:sd2}
+\end{figure}
+
+\subsubsection{SD3 — Create Batch}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=17cm]{sd3.png}
+\caption{SD3: Create Batch (with optional image)}
+\label{fig:sd3}
+\end{figure}
+
+\subsubsection{SD4 — Join Batch}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=17cm]{sd4.png}
+\caption{SD4: Customer Joins a Batch}
+\label{fig:sd4}
+\end{figure}
+
+\subsubsection{SD5 — Provider Registration and Admin Verification}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=17cm]{sd5.png}
+\caption{SD5: Provider Registration and Admin Verification}
+\label{fig:sd5}
+\end{figure}
+
+% ─────────────────────────────────────────────────────────
+\newpage
+\section{App Screenshots}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\centering {\includegraphics[width=4cm]{14.png}}
+\caption{Home screen}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\centering {\includegraphics[width=4cm]{10.png}}
+\caption{Map View}
+\end{subfigure}
+
+\vspace{0.4cm}
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\centering {\includegraphics[width=4cm]{8.png}}
+\caption{Provider detail}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\centering {\includegraphics[width=4cm]{3.png}}
+\caption{Profile}
+\end{subfigure}
+\caption{App Screenshots (Placeholders)}
+\end{figure}
+
+
+
+\newpage
+\begin{figure}[H]
+\centering
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\centering {\includegraphics[width=4cm]{2.png}}
+\caption{Login screen}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\centering {\includegraphics[width=4cm]{1.png}}
+\caption{Group Chat}
+\end{subfigure}
+
+\vspace{0.4cm}
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\centering {\includegraphics[width=4cm]{13.png}}
+\caption{Creat Batch}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.48\textwidth}
+\centering
+\centering {\includegraphics[width=4cm]{12.png}}
+\caption{Provider}
+\end{subfigure}
+\caption{App Screenshots (Placeholders)}
+\end{figure}
+
+% ─────────────────────────────────────────────────────────
+\newpage
+\section{Application of Scrum}
+
+\subsection{Team Organisation}
+
+The BatchIt team of 5 members was organised as a cross-functional Scrum team:
+
+\begin{tabularx}{\textwidth}{l l X}
+\toprule
+\rowcolor{tablehead}
+\textcolor{white}{\textbf{Role}} &
+\textcolor{white}{\textbf{Member}} &
+\textcolor{white}{\textbf{Responsibilities}}\\
+\midrule
+Scrum Master / DevOps \& VPS Setup & Kamdeu Yamdjeuson & Sprint planning, CI/CD pipeline, VPS setup, deployment, localization\\
+\rowcolor{batchitLight}
+Product Owner / Backend Lead        & Njume Leslie       & API architecture, database design, order logic, backend reviews\\
+Flutter Developer / UI \& Maps     & Atsimbong Joshua   & Flutter UI, animations, map integration, UX polish\\
+\rowcolor{batchitLight}
+Backend Developer / Realtime \& Chat & Chijioke Emmanuel & Notifications, chat features, realtime workflows, backend services\\
+Flutter Developer / Core Features   & Fru Chi            & Batch creation flow, provider discovery, state management, order screens\\
+\bottomrule
+\end{tabularx}
+
+\subsection{Workflow Management}
+
+The team used \textbf{GitHub} as the single source of truth. All development work followed a feature-branch workflow: each user story was developed on a dedicated branch (e.g., \texttt{feature/batch-creation}), reviewed via Pull Request, and merged to \texttt{main} only after CI/CD pipeline success.
+
+\textbf{Tools used:} GitHub (version control + PR reviews), WhatsApp (daily standups), GitHub Projects (kanban board for sprint backlog), VS Code + Android Studio.
+
+\subsection{Conflict Resolution}
+
+Merge conflicts were resolved through PR reviews. The two most significant conflicts encountered were:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{pubspec.yaml conflicts}: Resolved by designating the Full-Stack Lead as the sole maintainer of the dependency file.
+  \item \textbf{Django migration conflicts}: Resolved by squashing migrations at the end of each sprint and running \texttt{makemigrations --merge}.
+\end{itemize}
+
+\subsection{Challenges and How They Were Overcome}
+
+\begin{enumerate}[leftmargin=*, label=\textcolor{batchitGreen}{\textbf{\arabic*.}}]
+  \item \textbf{Jenkins Keystore Path Mismatch:} The Gradle JVM resolved \texttt{user.home} to \texttt{/root/.android/} while the Jenkins shell used \texttt{\textasciitilde} resolving to \texttt{/var/lib/jenkins/}. Resolved by hardcoding \texttt{/root/.android/} in the Jenkins pipeline's keystore generation stage.
+  \item \textbf{Google OAuth SHA-1 Configuration:} The SHA-1 fingerprint of the debug keystore on the VPS differed from the one registered in Google Cloud Console. Resolved by generating a permanent keystore on the VPS and registering its fingerprint.
+  \item \textbf{Flutter test coverage below 80\%:} Initial coverage was 28.3\%. Resolved by adding 315 tests across models, providers, services, and widgets using the \texttt{mocktail} package and direct locale class instantiation for l10n coverage.
+  \item \textbf{CORS Issues:} Django API rejected requests from the Flutter app during development. Resolved by configuring \texttt{django-cors-headers} with \texttt{CORS\_ALLOW\_ALL\_ORIGINS~=~True} (to be restricted in production).
+\end{enumerate}
+
+\section{Scrum Artifacts}
+
+\subsection{Product Backlog}
+
+\begin{longtable}{c p{4cm} p{5.5cm} c c}
+\caption{Product Backlog (Ordered by Priority)}\label{tab:product-backlog}\\
+\toprule
+\rowcolor{tablehead}
+\textcolor{white}{\textbf{ID}} &
+\textcolor{white}{\textbf{User Story}} &
+\textcolor{white}{\textbf{Acceptance Criteria}} &
+\textcolor{white}{\textbf{Priority}} &
+\textcolor{white}{\textbf{Story Pts}}\\
+\midrule
+\endfirsthead
+\multicolumn{5}{c}{\small\itshape (Continued)}\\
+\toprule
+\rowcolor{tablehead}
+\textcolor{white}{\textbf{ID}} &
+\textcolor{white}{\textbf{User Story}} &
+\textcolor{white}{\textbf{Acceptance Criteria}} &
+\textcolor{white}{\textbf{Priority}} &
+\textcolor{white}{\textbf{Story Pts}}\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+PB01 & As a user, I want to register with email verification so I can securely access the platform & Verification code sent; account created with valid code & Must-Have & 8\\
+\rowcolor{batchitLight}
+PB02 & As a user, I want to log in with Google so I don't need to remember a password & Google token accepted; user profile created/retrieved & Must-Have & 5\\
+PB03 & As a customer, I want to browse nearby batches so I can join ones that interest me & Batches listed, filterable by status; progress visible & Must-Have & 8\\
+\rowcolor{batchitLight}
+PB04 & As a customer, I want to join a batch with a specific quantity so I can participate & Quantity validated; participant record created; batch fill updated & Must-Have & 8\\
+PB05 & As a user, I want to create a batch with an optional image so providers can see what is needed & Batch saved; image uploaded to media storage & Must-Have & 13\\
+\rowcolor{batchitLight}
+PB06 & As a business owner, I want to register as a verified provider so my batches are trusted & Provider record created (pending); admin notified & Must-Have & 8\\
+PB07 & As an admin, I want to verify or reject provider applications so the platform remains trustworthy & Provider status updated; owner notified & Must-Have & 5\\
+\rowcolor{batchitLight}
+PB08 & As a participant, I want to chat in a batch group so I can coordinate with other buyers & Chat room auto-created; messages persisted & Should-Have & 8\\
+PB09 & As a user, I want to receive in-app notifications on batch events & Notifications stored; unread count badge shown & Should-Have & 5\\
+\rowcolor{batchitLight}
+PB10 & As a user, I want to view a map of batch locations so I can find convenient batches & Map renders with batch pins; tap shows detail & Should-Have & 5\\
+PB11 & As a user, I want to switch the app language to French so I can use it in my native language & All UI strings localised in FR; language persists across restarts & Could-Have & 3\\
+\rowcolor{batchitLight}
+PB12 & As a developer, I want a CI/CD pipeline so every push is automatically built and tested & Jenkins: test → build APK → deploy on each push to main & Must-Have & 13\\
+PB13 & As a user, I want to toggle dark/light mode so the app is comfortable in any lighting & Theme switch works; persists in UserSettings & Could-Have & 2\\
+\end{longtable}
+
+\subsection{Sprint Backlog}
+
+\begin{tabularx}{\textwidth}{l l X l}
+\toprule
+\rowcolor{tablehead}
+\textcolor{white}{\textbf{Sprint}} &
+\textcolor{white}{\textbf{PB Ref}} &
+\textcolor{white}{\textbf{Task}} &
+\textcolor{white}{\textbf{Assignee}}\\
+\midrule
+\rowcolor{batchitGreen!15}
+\multicolumn{4}{l}{\textbf{Sprint 1}}\\
+PB01 & PB01 & Set up Django project, PostgreSQL, auth endpoints (login/register) & BE Dev\\
+\rowcolor{batchitLight}
+PB01 & PB01 & Set up Flutter project with Provider pattern, auth screens & FE Dev\\
+PB01 & PB01 & Email verification code model + Brevo SMTP integration & BE Dev\\
+\rowcolor{batchitLight}
+PB12 & PB12 & Initialize Jenkins server, GitHub webhook, basic Jenkinsfile & DevOps\\
+\midrule
+\rowcolor{batchitGreen!15}
+\multicolumn{4}{l}{\textbf{Sprint 2}}\\
+PB03 & PB03 & Batch model, serializers, list/detail API endpoints & BE Dev\\
+\rowcolor{batchitLight}
+PB04 & PB04 & Join batch endpoint + fill-quantity logic + status transitions & BE Dev\\
+PB03 & PB03 & Home screen, batch list, batch detail screens in Flutter & FE Dev\\
+\rowcolor{batchitLight}
+PB05 & PB05 & Create batch screen + multipart image upload & Full-Stack\\
+\midrule
+\rowcolor{batchitGreen!15}
+\multicolumn{4}{l}{\textbf{Sprint 3}}\\
+PB06 & PB06 & Provider model + registration endpoint (multipart docs/logo) & BE Dev\\
+\rowcolor{batchitLight}
+PB07 & PB07 & Admin verification endpoint + admin screen in Flutter & Full-Stack\\
+PB09 & PB09 & Notification model + dispatch logic + notifications screen & BE Dev / FE Dev\\
+\rowcolor{batchitLight}
+PB08 & PB08 & BatchChatRoom + ChatMessage models, chat API endpoints, chat screen & Full-Stack\\
+\midrule
+\rowcolor{batchitGreen!15}
+\multicolumn{4}{l}{\textbf{Sprint 4}}\\
+PB02 & PB02 & Google OAuth: \texttt{google\_sign\_in} Flutter + \texttt{google-auth} Django & Full-Stack\\
+\rowcolor{batchitLight}
+PB12 & PB12 & Full Jenkins pipeline: analyze, 315 tests, APK build, deploy & DevOps\\
+PB11 & PB11 & French localisation (app\_localizations\_fr.dart) & FE Dev\\
+\rowcolor{batchitLight}
+PB13 & PB13 & Dark/light theme, UserSettings persistence & FE Dev / Full-Stack\\
+\bottomrule
+\end{tabularx}
+
+\subsection{Kanban Board and Scrum Meetings}
+
+\begin{figure}[H]
+
+\centering
+\includegraphics[width=17cm]{kanban.png}
+\caption{Kanban board snapshot}
+\end{figure}
+
+\begin{figure}[H]
+
+\centering
+\includegraphics[width=17cm]{scrum.png}
+\caption{Daily scrum meeting}
+\end{figure}
+
+
+\newpage
+\section{Test Case Document}
+
+The following table summarizes representative functional test cases executed during development.
+
+\begin{longtable}{c p{3cm} p{3cm} p{3cm} p{3cm} p{1cm}}
+\caption{Selected Test Cases}\label{tab:testcases}\\
+\toprule
+\rowcolor{tablehead}
+\textcolor{white}{\textbf{TC\#}} &
+\textcolor{white}{\textbf{Test Name}} &
+\textcolor{white}{\textbf{Preconditions}} &
+\textcolor{white}{\textbf{Steps}} &
+\textcolor{white}{\textbf{Expected}} &
+\textcolor{white}{\textbf{Status}}\\
+\midrule
+\endfirsthead
+\multicolumn{6}{c}{\small\itshape (Continued)}\\
+\toprule
+\rowcolor{tablehead}
+\textcolor{white}{\textbf{TC\#}} &
+\textcolor{white}{\textbf{Test Name}} &
+\textcolor{white}{\textbf{Preconditions}} &
+\textcolor{white}{\textbf{Steps}} &
+\textcolor{white}{\textbf{Expected}} &
+\textcolor{white}{\textbf{Status}}\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+TC001 & Login -- valid credentials & User registered & POST /auth/login/ with correct email+password & 200 OK, token returned & PASS\\
+\rowcolor{batchitLight}
+TC002 & Login -- invalid password & User registered & POST /auth/login/ with wrong password & 400, error message & PASS\\
+TC003 & Send verification code & Valid email & POST /auth/send-verification-code/ & 200, email dispatched & PASS\\
+\rowcolor{batchitLight}
+TC004 & Create batch & Authenticated user & POST /batches/ with required fields & 201, batch in response & PASS\\
+TC005 & Join batch -- success & Open batch, authenticated user & POST /batches/\{id\}/join/ \{quantity\} & 200, participant created & PASS\\
+\rowcolor{batchitLight}
+TC006 & Batch fill progress & Two participants summing to total & Check filled\_quantity & Equals sum of requests & PASS\\
+TC007 & Provider registration & Authenticated user & POST /providers/register/ (multipart) & 201, status=pending & PASS\\
+\rowcolor{batchitLight}
+TC008 & Admin verify provider & Provider pending & POST /admin/providers/\{id\}/verify/ & 200, status=verified & PASS\\
+TC009 & Batch.progress = 0.5 & currentQty=50, bulkSize=100 & Check Batch.progress getter & 0.5 & PASS\\
+\rowcolor{batchitLight}
+TC010 & Batch.canJoin = false & status=filled & Check canJoin & false & PASS\\
+TC011 & Auth token restore & Token in SharedPreferences & restoreAuthToken() & Returns true & PASS\\
+\rowcolor{batchitLight}
+TC012 & API 401 refresh retry & Token expired & GET /protected/ (mock 401 then 200) & Returns data after retry & PASS\\
+TC013 & AppPrimaryButton loading & isLoading=true & Tap button & No callback fired & PASS\\
+\rowcolor{batchitLight}
+TC014 & Localisation EN & AppLocalizationsEn & Access all string getters & Non-empty strings & PASS\\
+TC015 & Localisation FR & AppLocalizationsFr & Access all string getters & Non-empty strings & PASS\\
+\end{longtable}
+
+
+\newpage
+\section{Proposed Algorithms}
+
+\subsection{Batch Fill and Status Transition Algorithm}
+
+When a customer joins a batch, the backend executes the following logic:
+
+\begin{lstlisting}[language=Python, caption={Batch fill algorithm (views.py)}]
+def join_batch(request, batch_id):
+    batch = Batch.objects.get(batch_id=batch_id)
+    quantity = request.data['quantity_requested']
+
+    # Guard: batch must be open
+    if batch.status != 'open':
+        raise ValidationError("Batch is not open for joining.")
+
+    # Guard: quantity must not exceed remaining capacity
+    remaining = batch.total_quantity - batch.filled_quantity
+    if quantity > remaining:
+        raise ValidationError(f"Only {remaining} units remaining.")
+
+    # Create participant record
+    participant = BatchParticipant.objects.create(
+        batch=batch,
+        customer=request.user,
+        quantity_requested=quantity,
+        status='pending'
+    )
+
+    # Atomically update filled quantity
+    batch.filled_quantity += quantity
+    if batch.filled_quantity >= batch.total_quantity:
+        batch.status = 'filled'
+        notify_all_participants(batch, "Batch is now full!")
+    batch.save()
+
+    return Response(ParticipantSerializer(participant).data)
+\end{lstlisting}
+
+\subsection{Notification Dispatch Algorithm}
+
+\begin{lstlisting}[language=Python, caption={Notification dispatch for batch events}]
+def notify_batch_followers(batch, event_type):
+    """Notify all subscribers of the batch's provider."""
+    if batch.provider:
+        subscribers = Subscription.objects.filter(
+            provider=batch.provider
+        ).select_related('customer')
+        for sub in subscribers:
+            Notification.objects.create(
+                recipient=sub.customer,
+                title="New Batch Available",
+                body=f"{batch.product_name} - {batch.location_name}",
+                notification_type='batch_created',
+                related_batch=batch
+            )
+\end{lstlisting}
+
+\newpage
+\section{Technologies Used}
+
+\begin{longtable}{p{3cm} p{3.5cm} p{6cm}}
+\caption{Technologies and Their Roles}\label{tab:tech}\\
+\toprule
+\rowcolor{tablehead}
+\textcolor{white}{\textbf{Technology}} &
+\textcolor{white}{\textbf{Version / Type}} &
+\textcolor{white}{\textbf{Role in the Project}}\\
+\midrule
+\endfirsthead
+\multicolumn{3}{c}{\small\itshape (Continued)}\\
+\toprule
+\rowcolor{tablehead}
+\textcolor{white}{\textbf{Technology}} &
+\textcolor{white}{\textbf{Version / Type}} &
+\textcolor{white}{\textbf{Role in the Project}}\\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Flutter (Dart)         & 3.32.x / Mobile SDK    & Cross-platform mobile frontend (Android/iOS)\\
+\rowcolor{batchitLight}
+Provider package       & 6.1.2 / State Mgmt     & Reactive state management (ChangeNotifier pattern)\\
+\texttt{http} package  & 1.1.0 / HTTP Client    & REST API communication from Flutter\\
+\rowcolor{batchitLight}
+\texttt{google\_sign\_in} & 6.2.0 / Auth        & Google OAuth 2.0 integration in Flutter\\
+\texttt{flutter\_map}  & 7.0.2 / Maps           & OpenStreetMap-based map for batch location display\\
+\rowcolor{batchitLight}
+\texttt{shared\_prefs} & 2.2.0 / Storage        & Local storage for JWT tokens and user settings\\
+Django                 & 6.0.5 / Web Framework  & Python web framework; models, views, URL routing\\
+\rowcolor{batchitLight}
+Django REST Framework  & 3.17.1 / API Framework & Serialization, viewsets, authentication, permissions\\
+SimpleJWT              & 5.x / Auth             & JWT token generation, validation, and refresh\\
+\rowcolor{batchitLight}
+PostgreSQL             & 15 / RDBMS             & Primary relational database (production)\\
+dj-database-url        & 2.1.0 / Config         & 12-factor database URL parsing for environment config\\
+\rowcolor{batchitLight}
+drf-yasg               & 1.21.7 / Docs          & Auto-generated Swagger/OpenAPI documentation\\
+Gunicorn               & 20.x / WSGI Server     & Production Python WSGI HTTP server\\
+\rowcolor{batchitLight}
+Nginx                  & 1.24 / Reverse Proxy   & Reverse proxy, TLS termination, static file serving\\
+Systemd                & Linux init / ProcMgr   & Process management and auto-restart for Gunicorn\\
+\rowcolor{batchitLight}
+Jenkins                & 2.x / CI/CD            & Automated build, test, and deployment pipeline\\
+GitHub                 & SaaS / VCS             & Source code hosting, PR reviews, webhook triggers\\
+\rowcolor{batchitLight}
+Brevo (Sendinblue)     & SMTP / Email           & Transactional email for verification codes\\
+Google OAuth 2.0       & API / Auth             & Social login via Google identity platform\\
+\rowcolor{batchitLight}
+mocktail               & 1.0.4 / Testing        & Mock objects for Flutter unit and widget tests\\
+\texttt{flutter\_test} & SDK / Testing          & Flutter widget and unit test framework\\
+\end{longtable}
+
+% ─────────────────────────────────────────────────────────
+\newpage
+\section{DevOps and Deployment}
+
+\subsection{Server Infrastructure}
+
+The BatchIt backend is deployed on a \textbf{VPS} (Virtual Private Server) with the following configuration:
+
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{IP Address} & 38.242.246.126\\
+\rowcolor{batchitLight}
+\textbf{OS}         & Ubuntu 22.04 LTS\\
+\textbf{Web Server} & Nginx 1.24 (reverse proxy on port 80)\\
+\rowcolor{batchitLight}
+\textbf{WSGI}       & Gunicorn (4 workers, Unix socket at \texttt{/run/gunicorn.sock})\\
+\textbf{Process Mgr}& Systemd (\texttt{gunicorn.service} with \texttt{Restart=on-failure})\\
+\rowcolor{batchitLight}
+\textbf{Database}   & PostgreSQL 15 (local, \texttt{batchit\_db} schema)\\
+\textbf{CI/CD}      & Jenkins 2.x (on port 8080, triggered by GitHub push webhooks)\\
+\bottomrule
+\end{tabularx}
+
+\subsection{Nginx Configuration}
+
+\begin{lstlisting}[language=bash, caption={/etc/nginx/sites-available/batchit}]
+server {
+    listen 80;
+    server_name 38.242.246.126;
+
+    location /api/ {
+        proxy_pass http://unix:/run/gunicorn.sock;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+    location /media/ {
+        alias /var/www/batchit/media/;
+    }
+    location /static/ {
+        alias /var/www/batchit/static/;
+    }
+}
+\end{lstlisting}
+
+\subsection{Systemd Gunicorn Service}
+
+\begin{lstlisting}[language=bash, caption={/etc/systemd/system/gunicorn.service}]
+[Unit]
+Description=Gunicorn daemon for BatchIt Django API
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/home/ubuntu/BatchIt-Backend
+ExecStart=/home/ubuntu/venv/bin/gunicorn \
+    --access-logfile - \
+    --workers 4 \
+    --bind unix:/run/gunicorn.sock \
+    batchit_proj.wsgi:application
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+\end{lstlisting}
+
+\subsection{Environment Variables}
+
+The following environment variables are required on the production server (stored in \texttt{/etc/environment} or a \texttt{.env} file):
+
+\begin{lstlisting}[language=bash, caption={Required environment variables}]
+SECRET_KEY=<django-secret-key>
+DATABASE_URL=postgres://batchit_user:password@localhost:5432/batchit_db
+DEBUG=False
+ALLOWED_HOSTS=38.242.246.126,localhost
+EMAIL_HOST_USER=<brevo-smtp-login>
+EMAIL_HOST_PASSWORD=<brevo-smtp-key>
+DEFAULT_FROM_EMAIL=noreply@batchit.app
+GOOGLE_CLIENT_ID=434873490854-6ntukmrftsrv6n184mshqu1g3oi1677l.apps.googleusercontent.com
+\end{lstlisting}
+
+\newpage
+\subsection{Jenkins CI/CD Pipeline}
+
+The CI/CD pipeline is defined in the \texttt{Jenkinsfile} at the root of the Flutter repository and is triggered by a \textbf{GitHub push webhook} on every push to \texttt{main}.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  stage/.style={rectangle,rounded corners=5pt,draw=batchitDark,
+               fill=batchitLight,text width=3cm,minimum height=1cm,
+               text centered,font=\scriptsize\bfseries},
+  decision/.style={diamond,draw=batchitAccent!80!black,fill=batchitAccent!20,
+                  text width=1.8cm,text centered,font=\scriptsize,
+                  aspect=2},
+  ok/.style={->,>=Latex,color=batchitGreen,thick},
+  fail/.style={->,>=Latex,color=red!60!black,thick,dashed},
+  piparr/.style={->,>=Latex,thick,color=batchitDark}
+]
+\node[cibox,text width=3.5cm] (webhook) at (0,0) {GitHub Push\\(main branch)};
+\node[stage] (checkout)  at (0,-1.7) {Checkout\\Main Branch};
+\node[stage] (deps)      at (0,-3.2) {Install Android\\Dependencies};
+\node[stage] (analyze)   at (0,-4.7) {Flutter Analyze\\(lint / warnings)};
+\node[stage] (tests)     at (0,-6.2) {Run Tests\\+ Coverage Report};
+\node[decision] (qgate)  at (0,-7.9) {Coverage\\$\geq 80\%$?};
+\node[stage] (keystore)  at (0,-9.6) {Ensure Signing\\Keystore};
+\node[stage] (build)     at (0,-11.1) {Build APK\\+ AppBundle};
+\node[stage] (deploy)    at (0,-12.6) {Deploy Website\\+ APK};
+\node[cibox,text width=2cm]  (success) at (3,-12.6) {SUCCESS\\Email};
+\node[cibox,text width=2cm,draw=red!60!black,fill=red!8] (failure) at (3,-9.6)  {FAILURE\\Email};
+
+\draw[piparr] (webhook) -- (checkout);
+\draw[piparr] (checkout) -- (deps);
+\draw[piparr] (deps) -- (analyze);
+\draw[piparr] (analyze) -- (tests);
+\draw[piparr] (tests) -- (qgate);
+\draw[ok] (qgate) -- node[left,font=\tiny]{Yes} (keystore);
+\draw[fail] (qgate.east) -| node[above,font=\tiny]{No → mark UNSTABLE} (failure.north);
+\draw[piparr] (keystore) -- (build);
+\draw[piparr] (build) -- (deploy);
+\draw[ok] (deploy.east) -- (success.west);
+\draw[fail] (build.east) -| (failure.south);
+
+\end{tikzpicture}
+\caption{Jenkins CI/CD Pipeline Flow}
+\label{fig:pipeline}
+\end{figure}
+
+\textbf{Pipeline Stages:}
+\begin{enumerate}[leftmargin=*, label=\textcolor{batchitGreen}{\textbf{\arabic*.}}]
+  \item \textbf{Checkout Main Branch:} Clones the repository from GitHub and performs a hard reset to \texttt{origin/main}.
+  \item \textbf{Install Android Dependencies:} Runs \texttt{flutter pub get} and installs Android SDK build-tools and platform components via \texttt{sdkmanager}.
+  \item \textbf{Flutter Analyze:} Runs \texttt{flutter analyze --no-pub}; reports but does not fail on \texttt{info}/\texttt{warning} items.
+  \item \textbf{Run Tests with Coverage:} Executes \texttt{flutter test --coverage}, parses \texttt{coverage/lcov.info}, generates a per-file coverage report, and enforces the 80\% quality gate.
+  \item \textbf{Ensure Signing Keystore:} Generates the APK signing keystore at \texttt{/root/.android/batchit-debug.keystore} if it does not yet exist on the server (using Java \texttt{keytool}).
+  \item \textbf{Build APK \& AppBundle:} Runs \texttt{flutter build apk --release} and \texttt{flutter build appbundle --release}.
+  \item \textbf{Deploy:} Copies the built APK to the website download directory and updates the deployment metadata JSON served to the landing page.
+\end{enumerate}
+
+% ═══════════════════════════════════════════════════════════
+\chapter{Results and Discussions}
+% ═══════════════════════════════════════════════════════════
+
+\section{Application Scenarios}
+
+The following subsections describe the key application scenarios implemented in BatchIt.
+
+\subsection{Authentication Flow}
+The app opens to a splash screen that checks for a stored JWT token. If found and valid, the user is routed to the home screen. Otherwise, they are presented with the onboarding flow leading to the login or registration screens. Email registration requires a 6-digit verification code. Google OAuth is also supported, enabling one-tap sign-in.
+
+
+\subsection{Home Screen and Batch Discovery}
+The home screen presents a curated list of nearby open batches fetched from \texttt{GET /api/batches/?status=open}. Each \texttt{BatchCard} widget shows the product name, hub name, location, and a linear progress indicator representing the fill ratio (\texttt{currentQuantityKg / bulkSizeKg}).
+
+\subsection{Batch Detail and Join Flow}
+Tapping a batch card navigates to the batch detail screen which displays full information including notes, provider details, participant count, and the \texttt{JoinBatchScreen} accessible via a floating action button. The join flow validates that the requested quantity does not exceed remaining capacity before submitting.
+
+\subsection{Batch Group Chat}
+Each batch has a persistent group chat room. The \texttt{BatchChatScreen} sends messages via \texttt{POST /api/batches/\{id\}/chat/messages/} and retrieves the history via \texttt{GET}. The chat is implemented as \textbf{REST polling} (not WebSocket) --- a new message list is fetched whenever the user opens the screen or manually refreshes.
+
+\subsection{Provider Discovery and Subscription}
+The provider discovery screen lists all verified providers with their business name, category, and subscriber count. Users can subscribe to providers; subsequent batch creations by that provider trigger push-style in-app notifications.
+
+\subsection{Admin Provider Verification}
+Staff users (with \texttt{is\_staff = True}) can access the admin providers screen listing all pending applications. Each entry shows uploaded documents (PDF/image links), business details, and approve/reject buttons that call \texttt{POST /admin/providers/\{id\}/verify/}.
+
+\newpage
+\section{API Request/Response Examples}
+
+\begin{figure}[H]
+
+\centering
+\includegraphics[width=17cm]{login.png}
+\caption{post /api/auth/login   Request/Response}
+\end{figure}
+\begin{figure}[H]
+
+\centering
+\includegraphics[width=17cm]{batches.png}
+\caption{GET /api/batches/   Request/Response}
+\end{figure}
+
+
+
+\newpage
+\section{Test Coverage Summary}
+
+The automated test suite achieves \textbf{83.6\% line coverage} (1,466 of 1,753 lines). Table~\ref{tab:coverage} summarises coverage by key module.
+
+\begin{tabularx}{\textwidth}{X r r r}
+\toprule
+\rowcolor{tablehead}
+\textcolor{white}{\textbf{File / Module}} &
+\textcolor{white}{\textbf{Lines Found}} &
+\textcolor{white}{\textbf{Lines Hit}} &
+\textcolor{white}{\textbf{Coverage \%}}\\
+\midrule
+app\_localizations\_en.dart   & 296 & 296 & 100\%\\
+\rowcolor{batchitLight}
+app\_localizations\_fr.dart   & 296 & 296 & 100\%\\
+app\_theme.dart               & 73  & 73  & 100\%\\
+\rowcolor{batchitLight}
+order\_service.dart           & 45  & 45  & 100\%\\
+provider\_profile.dart        & 54  & 54  & 100\%\\
+\rowcolor{batchitLight}
+provider\_service.dart        & 81  & 70  & 86\%\\
+batch\_service.dart           & 91  & 77  & 85\%\\
+\rowcolor{batchitLight}
+auth\_provider.dart           & 49  & 42  & 86\%\\
+api\_client.dart              & 134 & 104 & 78\%\\
+\rowcolor{batchitLight}
+auth\_service.dart            & 136 & 0   & 0\%\\
+\midrule
+\textbf{Total}                & \textbf{1,753} & \textbf{1,466} & \textbf{83.6\%}\\
+\bottomrule
+\end{tabularx}
+\captionof{table}{Test Coverage Summary by Module}\label{tab:coverage}
+
+\section{CI/CD Pipeline Results}
+
+As of the most recent successful build (Build \#46):
+\begin{itemize}[leftmargin=*]
+  \item \textbf{315 tests} executed --- all passing.
+  \item \textbf{83.6\%} line coverage --- above the 80\% quality gate.
+  \item \textbf{APK build time:} approximately 6 minutes 30 seconds.
+  \item \textbf{Total pipeline time:} approximately 14 minutes from push to deployed APK.
+\end{itemize}
+
+The APK is served for download at: \url{http://38.242.246.126/download/BatchIt.apk}
+
+% ═══════════════════════════════════════════════════════════
+\chapter{Recommendations and Conclusion}
+% ═══════════════════════════════════════════════════════════
+
+\section{Summary of Achievements}
+
+The BatchIt team successfully designed and delivered a full-stack mobile application over four weeks using the Scrum methodology. The Flutter frontend provides a polished, bilingual (English/French) interface supporting the complete batch lifecycle from discovery through group chat. The Django REST Framework backend exposes 40+ API endpoints covering authentication, batch management, provider verification, notifications, and chat, all documented via Swagger. The system is deployed on a production VPS with a Jenkins CI/CD pipeline that automatically runs 315 automated tests (achieving 83.6\% line coverage), builds a signed Android APK, and deploys the backend on every push to \texttt{main}. The pipeline enforces a strict 80\% coverage quality gate, demonstrating professional software engineering practices throughout.
+
+\section{Difficulties Encountered}
+
+Several non-trivial challenges arose during the project:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{JWT vs Token authentication duality:} The backend initially used DRF's simple Token authentication, but was later migrated to SimpleJWT for better token lifecycle control. This required updating all Flutter API service headers.
+  \item \textbf{Keystore path discrepancy on Jenkins:} The Gradle JVM's \texttt{user.home} system property resolved to \texttt{/root/} while the Jenkins shell environment's \texttt{HOME} resolved to \texttt{/var/lib/jenkins/}, causing the signing keystore not to be found. The resolution required explicitly hardcoding \texttt{/root/.android/} in the pipeline.
+  \item \textbf{Achieving 80\% test coverage:} Starting from 28.3\% coverage, reaching 83.6\% required systematic analysis of uncovered lines, injection of a test HTTP client via a \texttt{@visibleForTesting} hook in the \texttt{ApiClient} singleton, and direct instantiation of locale classes for l10n coverage.
+  \item \textbf{Google Sign-In SHA-1 configuration:} Each distinct keystore (developer machine vs. VPS-generated) requires its own SHA-1 to be registered in Google Cloud Console. Managing multiple keystores required careful documentation.
+\end{itemize}
+
+\section{Recommendations for Future Work}
+
+\begin{enumerate}[leftmargin=*, label=\textcolor{batchitGreen}{\textbf{\arabic*.}}]
+  \item \textbf{Real-time chat with WebSocket:} Replace the current REST-polling chat with Django Channels and Django Channels Redis layer for true real-time messaging without periodic refresh.
+  \item \textbf{Push notifications:} Integrate Firebase Cloud Messaging (FCM) to deliver native push notifications to Android/iOS devices, replacing the current in-app-only notification system.
+  \item \textbf{Payment integration:} Integrate Mobile Money (MTN MoMo, Orange Money) or Stripe to enable in-app batch payments, completing the full purchasing workflow.
+  \item \textbf{Geospatial filtering:} Implement PostGIS extension on PostgreSQL and use spatial queries to return batches within a configurable radius from the user's current GPS location.
+  \item \textbf{iOS deployment:} Build and submit the Flutter app to the Apple App Store; currently only the Android APK is produced by the CI/CD pipeline.
+  \item \textbf{Production HTTPS:} Configure Let's Encrypt TLS certificates on the Nginx server to serve all API traffic over HTTPS, replacing the current HTTP configuration.
+  \item \textbf{Provider dashboard:} Build a web-based React admin panel allowing providers to monitor their batches, view participant lists, and manage pricing without requiring app access.
+  \item \textbf{Expand test coverage:} Add integration tests for the authentication service (currently 0\% coverage due to Google Sign-In platform dependency) and screen-level widget tests for key screens.
+\end{enumerate}
+
+% ═══════════════════════════════════════════════════════════
+\chapter*{References}
+\addcontentsline{toc}{chapter}{References}
+% ═══════════════════════════════════════════════════════════
+
+\begin{enumerate}[leftmargin=*, label={[\arabic*]}]
+  \item Fielding, R.T. (2000). \textit{Architectural Styles and the Design of Network-based Software Architectures}. Doctoral dissertation, University of California, Irvine.
+  \item Li, C., Shen, J., \& Xu, Y. (2012). Group buying in China: A case study of Groupon. \textit{Journal of Electronic Commerce Research}, 13(4), 299--314.
+  \item Google Flutter Team. (2023). \textit{Provider package documentation}. Retrieved from \url{https://pub.dev/packages/provider}
+  \item OWASP Foundation. (2024). \textit{OWASP Mobile Application Security Verification Standard (MASVS)}. Retrieved from \url{https://owasp.org/www-project-mobile-app-security/}
+  \item Bele, J.L., Bern\'{a}t, T., \& Jelen, B. (2018). REST API design patterns and best practices. \textit{Proceedings of the International Conference on Information Systems and Technologies}.
+  \item Django Software Foundation. (2024). \textit{Django REST Framework Documentation}. Retrieved from \url{https://www.django-rest-framework.org/}
+  \item Schwaber, K., \& Sutherland, J. (2020). \textit{The Scrum Guide}. Retrieved from \url{https://scrumguides.org}
+  \item Android Developers. (2024). \textit{Build and release an Android app}. Retrieved from \url{https://docs.flutter.dev/deployment/android}
+  \item Jenkins Documentation Team. (2024). \textit{Jenkins Pipeline Syntax Reference}. Retrieved from \url{https://www.jenkins.io/doc/book/pipeline/syntax/}
+  \item PostgreSQL Global Development Group. (2024). \textit{PostgreSQL 15 Documentation}. Retrieved from \url{https://www.postgresql.org/docs/15/}
+\end{enumerate}
+
+\end{document}
