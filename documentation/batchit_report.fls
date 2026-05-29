@@ -381,10 +381,10 @@ INPUT C:\Program Files\MiKTeX\tex\latex\lm\t1lmtt.fd
 INPUT C:\Program Files\MiKTeX\tex\latex\lm\t1lmtt.fd
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmtt12.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmbx12.tfm
-INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmri10.tfm
 INPUT .\batchit_report.toc
 INPUT .\batchit_report.toc
 INPUT batchit_report.toc
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmri10.tfm
 OUTPUT batchit_report.toc
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmri12.tfm
 INPUT C:\Program Files\MiKTeX\fonts\enc\dvips\lm\lm-mathsy.enc

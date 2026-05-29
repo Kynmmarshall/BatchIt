@@ -1,68 +1,68 @@
 \contentsline {chapter}{Group Information}{1}{chapter*.1}%
-\contentsline {chapter}{\numberline {1}Introduction}{6}{chapter.1}%
-\contentsline {section}{\numberline {1.1}General Introduction}{6}{section.1.1}%
-\contentsline {section}{\numberline {1.2}Aim and Objectives}{7}{section.1.2}%
-\contentsline {section}{\numberline {1.3}Problem Statement}{8}{section.1.3}%
-\contentsline {chapter}{\numberline {2}Literature Review}{10}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Software Development Methodologies}{10}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1}Comparison of Software Development Methodologies}{10}{subsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.1.2}Reason for Choosing Scrum Methodology}{11}{subsection.2.1.2}%
-\contentsline {section}{\numberline {2.2}Review of Related Concepts}{12}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}Group Buying and Collaborative Commerce}{12}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}REST API Design}{12}{subsection.2.2.2}%
-\contentsline {subsection}{\numberline {2.2.3}Object-Oriented Programming in This Project}{12}{subsection.2.2.3}%
-\contentsline {subsection}{\numberline {2.2.4}State Management with Provider Pattern}{13}{subsection.2.2.4}%
-\contentsline {section}{\numberline {2.3}Review of Related Literature}{13}{section.2.3}%
-\contentsline {chapter}{\numberline {3}Methodology and Materials}{14}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Research Methodology}{14}{section.3.1}%
-\contentsline {section}{\numberline {3.2}System Requirements}{15}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Functional Requirements}{15}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}Non-Functional Requirements}{17}{subsection.3.2.2}%
-\contentsline {section}{\numberline {3.3}System Design}{18}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}High-Level Architecture}{18}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}Use Case Diagram}{19}{subsection.3.3.2}%
-\contentsline {subsection}{\numberline {3.3.3}Class Diagram}{20}{subsection.3.3.3}%
-\contentsline {subsection}{\numberline {3.3.4}Object Diagram}{21}{subsection.3.3.4}%
-\contentsline {subsection}{\numberline {3.3.5}Sequence Diagrams}{22}{subsection.3.3.5}%
-\contentsline {subsubsection}{SD1 — Email Registration with Verification}{22}{subsubsection*.7}%
-\contentsline {subsubsection}{SD2 — Email Login}{23}{subsubsection*.9}%
-\contentsline {subsubsection}{SD3 — Create Batch}{24}{subsubsection*.11}%
-\contentsline {subsubsection}{SD4 — Join Batch}{25}{subsubsection*.13}%
-\contentsline {subsubsection}{SD5 — Provider Registration and Admin Verification}{26}{subsubsection*.15}%
-\contentsline {section}{\numberline {3.4}App Screenshots}{27}{section.3.4}%
-\contentsline {section}{\numberline {3.5}Application of Scrum}{29}{section.3.5}%
-\contentsline {subsection}{\numberline {3.5.1}Team Organisation}{29}{subsection.3.5.1}%
-\contentsline {subsection}{\numberline {3.5.2}Workflow Management}{29}{subsection.3.5.2}%
-\contentsline {subsection}{\numberline {3.5.3}Conflict Resolution}{30}{subsection.3.5.3}%
-\contentsline {subsection}{\numberline {3.5.4}Challenges and How They Were Overcome}{30}{subsection.3.5.4}%
-\contentsline {section}{\numberline {3.6}Scrum Artifacts}{31}{section.3.6}%
-\contentsline {subsection}{\numberline {3.6.1}Product Backlog}{31}{subsection.3.6.1}%
-\contentsline {subsection}{\numberline {3.6.2}Sprint Backlog}{34}{subsection.3.6.2}%
-\contentsline {subsection}{\numberline {3.6.3}Kanban Board and Scrum Meetings}{35}{subsection.3.6.3}%
-\contentsline {section}{\numberline {3.7}Test Case Document}{36}{section.3.7}%
-\contentsline {section}{\numberline {3.8}Proposed Algorithms}{38}{section.3.8}%
-\contentsline {subsection}{\numberline {3.8.1}Batch Fill and Status Transition Algorithm}{38}{subsection.3.8.1}%
-\contentsline {subsection}{\numberline {3.8.2}Notification Dispatch Algorithm}{39}{subsection.3.8.2}%
-\contentsline {section}{\numberline {3.9}Technologies Used}{40}{section.3.9}%
-\contentsline {section}{\numberline {3.10}DevOps and Deployment}{42}{section.3.10}%
-\contentsline {subsection}{\numberline {3.10.1}Server Infrastructure}{42}{subsection.3.10.1}%
-\contentsline {subsection}{\numberline {3.10.2}Nginx Configuration}{42}{subsection.3.10.2}%
-\contentsline {subsection}{\numberline {3.10.3}Systemd Gunicorn Service}{43}{subsection.3.10.3}%
-\contentsline {subsection}{\numberline {3.10.4}Environment Variables}{43}{subsection.3.10.4}%
-\contentsline {subsection}{\numberline {3.10.5}Jenkins CI/CD Pipeline}{45}{subsection.3.10.5}%
-\contentsline {chapter}{\numberline {4}Results and Discussions}{47}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Application Scenarios}{47}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Authentication Flow}{47}{subsection.4.1.1}%
-\contentsline {subsection}{\numberline {4.1.2}Home Screen and Batch Discovery}{47}{subsection.4.1.2}%
-\contentsline {subsection}{\numberline {4.1.3}Batch Detail and Join Flow}{47}{subsection.4.1.3}%
-\contentsline {subsection}{\numberline {4.1.4}Batch Group Chat}{48}{subsection.4.1.4}%
-\contentsline {subsection}{\numberline {4.1.5}Provider Discovery and Subscription}{48}{subsection.4.1.5}%
-\contentsline {subsection}{\numberline {4.1.6}Admin Provider Verification}{48}{subsection.4.1.6}%
-\contentsline {section}{\numberline {4.2}API Request/Response Examples}{49}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Test Coverage Summary}{51}{section.4.3}%
-\contentsline {section}{\numberline {4.4}CI/CD Pipeline Results}{51}{section.4.4}%
-\contentsline {chapter}{\numberline {5}Recommendations and Conclusion}{52}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Summary of Achievements}{52}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Difficulties Encountered}{52}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Recommendations for Future Work}{53}{section.5.3}%
-\contentsline {chapter}{References}{55}{chapter*.24}%
+\contentsline {chapter}{\numberline {1}Introduction}{5}{chapter.1}%
+\contentsline {section}{\numberline {1.1}General Introduction}{5}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Aim and Objectives}{6}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Problem Statement}{7}{section.1.3}%
+\contentsline {chapter}{\numberline {2}Literature Review}{9}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Software Development Methodologies}{9}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Comparison of Software Development Methodologies}{9}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Reason for Choosing Scrum Methodology}{10}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}Review of Related Concepts}{11}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Group Buying and Collaborative Commerce}{11}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}REST API Design}{11}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Object-Oriented Programming in This Project}{11}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}State Management with Provider Pattern}{12}{subsection.2.2.4}%
+\contentsline {section}{\numberline {2.3}Review of Related Literature}{12}{section.2.3}%
+\contentsline {chapter}{\numberline {3}Methodology and Materials}{13}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Research Methodology}{13}{section.3.1}%
+\contentsline {section}{\numberline {3.2}System Requirements}{14}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Functional Requirements}{14}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Non-Functional Requirements}{16}{subsection.3.2.2}%
+\contentsline {section}{\numberline {3.3}System Design}{17}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}High-Level Architecture}{17}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Use Case Diagram}{18}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Class Diagram}{19}{subsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.3.4}Object Diagram}{20}{subsection.3.3.4}%
+\contentsline {subsection}{\numberline {3.3.5}Sequence Diagrams}{21}{subsection.3.3.5}%
+\contentsline {subsubsection}{SD1 — Email Registration with Verification}{21}{subsubsection*.7}%
+\contentsline {subsubsection}{SD2 — Email Login}{22}{subsubsection*.9}%
+\contentsline {subsubsection}{SD3 — Create Batch}{23}{subsubsection*.11}%
+\contentsline {subsubsection}{SD4 — Join Batch}{24}{subsubsection*.13}%
+\contentsline {subsubsection}{SD5 — Provider Registration and Admin Verification}{25}{subsubsection*.15}%
+\contentsline {section}{\numberline {3.4}App Screenshots}{26}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Application of Scrum}{28}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Team Organisation}{28}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Workflow Management}{28}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}Conflict Resolution}{29}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.4}Challenges and How They Were Overcome}{29}{subsection.3.5.4}%
+\contentsline {section}{\numberline {3.6}Scrum Artifacts}{30}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Product Backlog}{30}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}Sprint Backlog}{33}{subsection.3.6.2}%
+\contentsline {subsection}{\numberline {3.6.3}Kanban Board and Scrum Meetings}{34}{subsection.3.6.3}%
+\contentsline {section}{\numberline {3.7}Test Case Document}{35}{section.3.7}%
+\contentsline {section}{\numberline {3.8}Proposed Algorithms}{37}{section.3.8}%
+\contentsline {subsection}{\numberline {3.8.1}Batch Fill and Status Transition Algorithm}{37}{subsection.3.8.1}%
+\contentsline {subsection}{\numberline {3.8.2}Notification Dispatch Algorithm}{38}{subsection.3.8.2}%
+\contentsline {section}{\numberline {3.9}Technologies Used}{39}{section.3.9}%
+\contentsline {section}{\numberline {3.10}DevOps and Deployment}{41}{section.3.10}%
+\contentsline {subsection}{\numberline {3.10.1}Server Infrastructure}{41}{subsection.3.10.1}%
+\contentsline {subsection}{\numberline {3.10.2}Nginx Configuration}{41}{subsection.3.10.2}%
+\contentsline {subsection}{\numberline {3.10.3}Systemd Gunicorn Service}{42}{subsection.3.10.3}%
+\contentsline {subsection}{\numberline {3.10.4}Environment Variables}{42}{subsection.3.10.4}%
+\contentsline {subsection}{\numberline {3.10.5}Jenkins CI/CD Pipeline}{44}{subsection.3.10.5}%
+\contentsline {chapter}{\numberline {4}Results and Discussions}{46}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Application Scenarios}{46}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Authentication Flow}{46}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Home Screen and Batch Discovery}{46}{subsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.1.3}Batch Detail and Join Flow}{46}{subsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.1.4}Batch Group Chat}{47}{subsection.4.1.4}%
+\contentsline {subsection}{\numberline {4.1.5}Provider Discovery and Subscription}{47}{subsection.4.1.5}%
+\contentsline {subsection}{\numberline {4.1.6}Admin Provider Verification}{47}{subsection.4.1.6}%
+\contentsline {section}{\numberline {4.2}API Request/Response Examples}{48}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Test Coverage Summary}{50}{section.4.3}%
+\contentsline {section}{\numberline {4.4}CI/CD Pipeline Results}{50}{section.4.4}%
+\contentsline {chapter}{\numberline {5}Recommendations and Conclusion}{51}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Summary of Achievements}{51}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Difficulties Encountered}{51}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Recommendations for Future Work}{52}{section.5.3}%
+\contentsline {chapter}{References}{54}{chapter*.24}%
