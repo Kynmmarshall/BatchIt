@@ -2,8 +2,10 @@
 // Tests for AppLocalizations — exercises every EN and FR string to maximise
 // l10n coverage without needing a running app widget.
 // ============================================================================
+import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/l10n/app_localizations_en.dart';
 import 'package:batchit/l10n/app_localizations_fr.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void _exerciseAll(dynamic l) {
@@ -384,6 +386,43 @@ void main() {
 
     test('myBatchesFilled includes values', () {
       expect(l.myBatchesFilled('10', '50'), contains('10'));
+    });
+  });
+
+  group('AppLocalizations delegate', () {
+    const delegate = AppLocalizations.delegate;
+
+    test('isSupported returns true for en', () {
+      expect(delegate.isSupported(const Locale('en')), isTrue);
+    });
+
+    test('isSupported returns true for fr', () {
+      expect(delegate.isSupported(const Locale('fr')), isTrue);
+    });
+
+    test('isSupported returns false for unsupported locale', () {
+      expect(delegate.isSupported(const Locale('es')), isFalse);
+    });
+
+    test('shouldReload returns false', () {
+      expect(delegate.shouldReload(delegate), isFalse);
+    });
+
+    test('load returns AppLocalizationsEn for en', () async {
+      final l = await delegate.load(const Locale('en'));
+      expect(l.localeName, 'en');
+    });
+
+    test('load returns AppLocalizationsFr for fr', () async {
+      final l = await delegate.load(const Locale('fr'));
+      expect(l.localeName, 'fr');
+    });
+
+    test('lookupAppLocalizations throws for unsupported locale', () {
+      expect(
+        () => lookupAppLocalizations(const Locale('es')),
+        throwsA(isA<FlutterError>()),
+      );
     });
   });
 }

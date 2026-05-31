@@ -303,6 +303,19 @@ void main() {
       }
     });
 
+    test('empty JSON body falls back to Unknown error', () async {
+      // errorBody = {} → no detail, no fieldErrors, no message → reasonPhrase ?? 'Unknown error'
+      when(() => mockClient.get(any(), headers: any(named: 'headers')))
+          .thenAnswer((_) async => http.Response('{}', 500));
+
+      try {
+        await apiClient.get('/test/');
+        fail('expected ApiException');
+      } on ApiException catch (e) {
+        expect(e.message, 'Unknown error');
+      }
+    });
+
     test('falls back to message field', () async {
       when(() => mockClient.get(any(), headers: any(named: 'headers')))
           .thenAnswer((_) async =>
