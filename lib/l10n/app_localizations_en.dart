@@ -594,8 +594,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get updateRequired => 'Update Required';
 
   @override
-  String get updateAvailableMessage =>
-      'A new version of the app is available.';
+  String get updateAvailableMessage => 'A new version of the app is available.';
 
   @override
   String get updateRequiredMessage =>
