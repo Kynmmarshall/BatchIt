@@ -327,38 +327,37 @@ INPUT batchit_report.out
 INPUT .\batchit_report.out
 INPUT .\batchit_report.out
 OUTPUT batchit_report.out
-INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmr17.tfm
-INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmbx12.tfm
-INPUT C:\Program Files\MiKTeX\tex\latex\lm\ts1lmr.fd
-INPUT C:\Program Files\MiKTeX\tex\latex\lm\ts1lmr.fd
-INPUT C:\Program Files\MiKTeX\tex\latex\lm\ts1lmr.fd
-INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ts1-lmr12.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmr10.tfm
-INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmbx10.tfm
-INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmr10.tfm
+INPUT C:\Program Files\MiKTeX\tex\latex\lm\ts1lmr.fd
+INPUT C:\Program Files\MiKTeX\tex\latex\lm\ts1lmr.fd
+INPUT C:\Program Files\MiKTeX\tex\latex\lm\ts1lmr.fd
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ts1-lmr10.tfm
-INPUT .\logo.png
-INPUT .\logo.png
-INPUT .\logo.png
-INPUT .\logo.png
-INPUT .\logo.png
-INPUT .\logo.png
-INPUT .\logo.png
-INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmr17.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmbx12.tfm
-INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmr12.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ts1-lmbx12.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmri12.tfm
-INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ts1-lmr10.tfm
+INPUT .\logo.png
+INPUT .\logo.png
+INPUT .\logo.png
+INPUT .\logo.png
+INPUT .\logo.png
+INPUT .\logo.png
+INPUT .\logo.png
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmr17.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmbx12.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmr17.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmri12.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmr12.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmbx10.tfm
 INPUT C:\Program Files\MiKTeX\tex\latex\lm\ot1lmr.fd
 INPUT C:\Program Files\MiKTeX\tex\latex\lm\ot1lmr.fd
 INPUT C:\Program Files\MiKTeX\tex\latex\lm\ot1lmr.fd
-INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\rm-lmr12.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\rm-lmr10.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\rm-lmr8.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\rm-lmr6.tfm
 INPUT C:\Program Files\MiKTeX\tex\latex\lm\omllmm.fd
 INPUT C:\Program Files\MiKTeX\tex\latex\lm\omllmm.fd
 INPUT C:\Program Files\MiKTeX\tex\latex\lm\omllmm.fd
-INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\lmmi12.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\lmmi10.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\lmmi8.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\lmmi6.tfm
 INPUT C:\Program Files\MiKTeX\tex\latex\lm\omslmsy.fd
@@ -371,14 +370,21 @@ INPUT C:\Program Files\MiKTeX\tex\latex\lm\omxlmex.fd
 INPUT C:\Program Files\MiKTeX\tex\latex\lm\omxlmex.fd
 INPUT C:\Program Files\MiKTeX\tex\latex\lm\omxlmex.fd
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\lmex10.tfm
-INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmbx12.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmr8.tfm
+INPUT C:\Program Files\MiKTeX\tex\latex\lm\t1lmtt.fd
+INPUT C:\Program Files\MiKTeX\tex\latex\lm\t1lmtt.fd
+INPUT C:\Program Files\MiKTeX\tex\latex\lm\t1lmtt.fd
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmtt10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmr10.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ts1-lmr10.tfm
 INPUT C:\Users\kynm\AppData\Local\MiKTeX\fonts\map\pdftex\pdftex.map
 INPUT C:\Program Files\MiKTeX\fonts\enc\dvips\lm\lm-ec.enc
 INPUT C:\Program Files\MiKTeX\fonts\enc\dvips\lm\lm-ts1.enc
-INPUT C:\Program Files\MiKTeX\tex\latex\lm\t1lmtt.fd
-INPUT C:\Program Files\MiKTeX\tex\latex\lm\t1lmtt.fd
-INPUT C:\Program Files\MiKTeX\tex\latex\lm\t1lmtt.fd
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmr17.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmbx12.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\rm-lmr12.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\lmmi12.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\lmsy10.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmtt12.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmbx12.tfm
 INPUT .\batchit_report.toc
@@ -386,7 +392,8 @@ INPUT .\batchit_report.toc
 INPUT batchit_report.toc
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmri10.tfm
 OUTPUT batchit_report.toc
-INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmri12.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ec-lmbx12.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\public\lm\ts1-lmr12.tfm
 INPUT C:\Program Files\MiKTeX\fonts\enc\dvips\lm\lm-mathsy.enc
 INPUT .\architecture.png
 INPUT .\architecture.png

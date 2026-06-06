@@ -277,53 +277,156 @@
 \begin{titlepage}
 \thispagestyle{empty}
 \begin{tikzpicture}[remember picture, overlay]
-  \fill[batchitGreen!10] (current page.north west) rectangle
-        ([yshift=-5.5cm]current page.north east);
-  \fill[batchitGreen] (current page.north west) rectangle
-        ([yshift=-2.8cm]current page.north east);
-  \node[text=white,font=\Large\bfseries] at
-        ([yshift=-1cm]current page.north) {%
-    ICT FACULTY};
-  \node[text=white,font=\normalsize] at
-        ([yshift=-1.9cm]current page.north) {%
-    ICT University \quad\textbullet\quad Spring 2026};
-  \node[text=batchitDark,font=\small\bfseries] at
-        ([yshift=-3.8cm]current page.north) {%
-    FINAL EXAMINATION};
-  \fill[batchitGreen] ([yshift=-24cm]current page.north west) rectangle
-        (current page.south east);
-  \node[text=white,font=\footnotesize] at
-        ([yshift=1cm]current page.south) {%
-    SEN2241 --- Object Oriented Analysis, Design and Implementation
-    \quad\textbullet\quad Instructor: Tekoh Palma Achu};
+
+  %% Full dark background
+  \fill[batchitDark]
+    (current page.south west) rectangle (current page.north east);
+
+  %% Decorative glow blobs
+  \fill[batchitGreen,opacity=0.22]
+    ([xshift=2cm,yshift=-4cm]current page.north east) circle(9cm);
+  \fill[batchitMid,opacity=0.18]
+    ([xshift=-2cm,yshift=5cm]current page.south west) circle(8cm);
+  \fill[batchitAccent,opacity=0.06]
+    ([yshift=2cm]current page.center) circle(7cm);
+
+  %% Orange accent strip at top
+  \fill[batchitAccent]
+    (current page.north west)
+    rectangle ([yshift=-0.45cm]current page.north east);
+
+  %% Teal accent strip at bottom
+  \fill[batchitGreen]
+    (current page.south west)
+    rectangle ([yshift=0.72cm]current page.south east);
+  \node[anchor=center,font=\small,text=white!85]
+    at ([yshift=0.36cm]current page.south)
+    {SEN2241 \textbullet{} Object Oriented Analysis, Design \& Implementation
+     \textbullet{} Instructor: Tekoh Palma Achu};
+
+  %% ── Header block (university + course title + separator) ──────────────────
+  \node[anchor=north,font=\normalsize\bfseries,text=white!80]
+    at ([yshift=-0.78cm]current page.north)
+    {ICT UNIVERSITY \quad\textbullet\quad ICT FACULTY \quad\textbullet\quad SPRING 2026};
+
+  \node[anchor=north,font=\normalsize\itshape,text=white!55]
+    at ([yshift=-1.65cm]current page.north)
+    {Object Oriented Analysis, Design \& Implementation};
+
+  \fill[batchitMid!50]
+    ([xshift=-7cm,yshift=-2.40cm]current page.north)
+    rectangle ([xshift=7cm,yshift=-2.55cm]current page.north);
+
+  %% ── FINAL PROJECT REPORT badge (well above logo) ──────────────────────────
+  \node[draw=batchitAccent,fill=batchitAccent!18!batchitDark,
+        rounded corners=6pt,font=\normalsize\bfseries,text=batchitAccent,
+        inner xsep=15pt,inner ysep=7pt]
+    at ([yshift=9.0cm]current page.center)
+    {FINAL PROJECT REPORT};
+
+  %% ── Logo (1.9 cm clearance below badge, 0.65 cm above app name) ───────────
+  \begin{scope}
+    \clip ([yshift=6.0cm]current page.center) circle(1.65cm);
+    \node[inner sep=0] at ([yshift=6.0cm]current page.center)
+      {\includegraphics[width=3.3cm]{logo.png}};
+  \end{scope}
+  \draw[batchitAccent,line width=3pt]
+    ([yshift=6.0cm]current page.center) circle(1.65cm);
+
+  %% ── App name ───────────────────────────────────────────────────────────────
+  \node[font=\fontsize{54}{58}\selectfont\bfseries,text=white]
+    at ([yshift=2.8cm]current page.center) {BatchIt};
+
+  %% ── Tagline ────────────────────────────────────────────────────────────────
+  \node[font=\Large\itshape,text=batchitAccent]
+    at ([yshift=1.2cm]current page.center)
+    {Buy Together, Save Together};
+
+  %% ── Divider ────────────────────────────────────────────────────────────────
+  \fill[batchitMid]
+    ([xshift=-6.5cm,yshift=0.50cm]current page.center)
+    rectangle ([xshift=6.5cm,yshift=0.37cm]current page.center);
+
+  %% ── Subtitle ───────────────────────────────────────────────────────────────
+  \node[font=\large,text=white!70]
+    at ([yshift=-0.25cm]current page.center)
+    {Mobile + REST API Application};
+
+  %% ── Tech badges ────────────────────────────────────────────────────────────
+  \node[fill=batchitGreen,text=white,font=\small\bfseries,
+        rounded corners=4pt,inner xsep=10pt,inner ysep=5pt]
+    at ([xshift=-7.0cm,yshift=-1.15cm]current page.center) {FLUTTER};
+  \node[fill=batchitAccent!80!black,text=white,font=\small\bfseries,
+        rounded corners=4pt,inner xsep=10pt,inner ysep=5pt]
+    at ([xshift=-3.0cm,yshift=-1.15cm]current page.center) {DJANGO REST};
+  \node[fill=batchitMid,text=white,font=\small\bfseries,
+        rounded corners=4pt,inner xsep=10pt,inner ysep=5pt]
+    at ([xshift=1.3cm,yshift=-1.15cm]current page.center) {POSTGRESQL};
+  \node[fill=batchitDark!35!batchitGreen,text=white,font=\small\bfseries,
+        rounded corners=4pt,inner xsep=10pt,inner ysep=5pt,
+        draw=batchitAccent!55,line width=0.6pt]
+    at ([xshift=6.0cm,yshift=-1.15cm]current page.center) {JENKINS CI/CD};
+
+  %% ── Info card (6 rows — Live and GitHub each on their own line) ───────────
+  \fill[batchitGreen!12!batchitDark,rounded corners=10pt]
+    ([xshift=-6.2cm,yshift=-1.95cm]current page.center)
+    rectangle ([xshift=6.2cm,yshift=-6.75cm]current page.center);
+  \draw[batchitGreen!55,rounded corners=10pt,line width=0.9pt]
+    ([xshift=-6.2cm,yshift=-1.95cm]current page.center)
+    rectangle ([xshift=6.2cm,yshift=-6.75cm]current page.center);
+
+  %% Card left orange accent bar (inset from rounded corners)
+  \fill[batchitAccent]
+    ([xshift=-6.2cm,yshift=-2.30cm]current page.center)
+    rectangle ([xshift=-5.88cm,yshift=-6.40cm]current page.center);
+
+  %% Labels at x=-5.55  |  Values at x=-2.60  (wider gap between col and value)
+  \node[anchor=west,font=\small\bfseries,text=batchitAccent]
+    at ([xshift=-5.55cm,yshift=-2.55cm]current page.center) {Course:};
+  \node[anchor=west,font=\small,text=white!90]
+    at ([xshift=-2.60cm,yshift=-2.55cm]current page.center) {SEN2241};
+
+  \node[anchor=west,font=\small\bfseries,text=batchitAccent]
+    at ([xshift=-5.55cm,yshift=-3.25cm]current page.center) {Group:};
+  \node[anchor=west,font=\small,text=white!90]
+    at ([xshift=-2.60cm,yshift=-3.25cm]current page.center)
+    {Group 13 \quad\textbullet\quad 5 Members};
+
+  \node[anchor=west,font=\small\bfseries,text=batchitAccent]
+    at ([xshift=-5.55cm,yshift=-3.95cm]current page.center) {Instructor:};
+  \node[anchor=west,font=\small,text=white!90]
+    at ([xshift=-2.60cm,yshift=-3.95cm]current page.center)
+    {Tekoh Palma Achu};
+
+  \node[anchor=west,font=\small\bfseries,text=batchitAccent]
+    at ([xshift=-5.55cm,yshift=-4.65cm]current page.center) {Submitted:};
+  \node[anchor=west,font=\small,text=white!90]
+    at ([xshift=-2.60cm,yshift=-4.65cm]current page.center)
+    {1\textsuperscript{st} Week of June 2026};
+
+  \node[anchor=west,font=\small\bfseries,text=batchitAccent]
+    at ([xshift=-5.55cm,yshift=-5.35cm]current page.center) {Live:};
+  \node[anchor=west,font=\small\ttfamily,text=white!85]
+    at ([xshift=-2.60cm,yshift=-5.35cm]current page.center)
+    {batchit.duckdns.org};
+
+  \node[anchor=west,font=\small\bfseries,text=batchitAccent]
+    at ([xshift=-5.55cm,yshift=-6.05cm]current page.center) {GitHub:};
+  \node[anchor=west,font=\small\ttfamily,text=white!85]
+    at ([xshift=-2.60cm,yshift=-6.05cm]current page.center)
+    {github.com/Kynmmarshall/BatchIt};
+
+  %% ── Team members (white on dark — clearly readable) ───────────────────────
+  \node[font=\footnotesize,text=white!75]
+    at ([yshift=-7.50cm]current page.center)
+    {\textbullet\ Kamdeu Yamdjeuson\quad
+     \textbullet\ Njume Leslie\quad
+     \textbullet\ Atsimbong Joshua\quad
+     \textbullet\ Chijioke Emmanuel\quad
+     \textbullet\ Fru Chi};
+
 \end{tikzpicture}
-
-\vspace*{3.0cm}
-\begin{center}
-  {\Large\bfseries\color{batchitDark} SEN2241}\\[2pt]
-  {\small\color{batchitGray} Object Oriented Analysis, Design and Implementation}\\[0.9cm]
-
-  \begin{tikzpicture}
-    \node[rectangle,rounded corners=14pt,
-          draw=batchitGreen,fill=white,
-          inner sep=18pt, drop shadow={opacity=0.18}] {%
-      \begin{minipage}{12cm}\centering
-        \includegraphics[width=3.4cm]{logo.png}\\[6pt]
-        {\Huge\bfseries\color{batchitDark} BatchIt}\\[3pt]
-        {\large\color{batchitMid}\textit{Buy Together Save Together}}\\[8pt]
-        {\color{batchitGreen}\rule{8cm}{0.8pt}}\\[8pt]
-        {\normalsize\color{batchitGray}Mobile + REST API Application}\\[2pt]
-        {\small\color{batchitGray}
-          Flutter (Dart) \textbullet\ Django REST Framework\textbullet\ PostgreSQL\textbullet\ Jenkins CI/CD}\\[10pt]
-        \begin{tabular}{rl}
-          \textbf{\color{batchitGray}Course Code:}     & SEN2241 \\[2pt]
-          \textbf{\color{batchitGray}Group Number:}    & Group 13 \\[2pt]
-          \textbf{\color{batchitGray}Instructor:}      & Tekoh Palma Achu \\[2pt]
-          \textbf{\color{batchitGray}Submission Date:} & 1\textsuperscript{st} Week of June 2026 \\[2pt]
-        \end{tabular}
-      \end{minipage}};
-  \end{tikzpicture}
-\end{center}
+\vspace*{\fill}
 \end{titlepage}
 
 % ── Group Information ─────────────────────────────────────
@@ -362,7 +465,7 @@
 1 & Kamdeu Yamdjeuson    & ICTU20241386 & Scrum Master / DevOps \& VPS Setup & 100\% \\
 \rowcolor{batchitLight}
 2 & Njuh Leslie         & ICTU20241282 & Product Owner / Backend Lead    & 100\% \\
-3 & Atsimbong Joshua     & ICTU2024 & Flutter Developer / UI \& Maps & \% \\
+3 & Atsimbong Joshua     & ICTU2024 & Flutter Developer / UI \& Maps & 100\% \\
 \rowcolor{batchitLight}
 4 & Chijioke Emmanuel    & ICTU2024 & Backend Developer / Realtime \& Chat & \% \\
 5 & Fru Chi              & ICTU20241812 & Flutter Developer / Core Features & 100\% \\

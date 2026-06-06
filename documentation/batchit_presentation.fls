@@ -526,8 +526,13 @@ INPUT C:\Program Files\MiKTeX\tex\latex\psnfss\ts1phv.fd
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvr8c.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvr8t.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvb8t.tfm
-INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvb8t.tfm
-INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvb8t.tfm
+INPUT .\logo.png
+INPUT .\logo.png
+INPUT .\logo.png
+INPUT .\logo.png
+INPUT .\logo.png
+INPUT .\logo.png
+INPUT .\logo.png
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvr8t.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvb8t.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvr8t.tfm
@@ -538,8 +543,6 @@ INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\helvetic\phvb8t.vf
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvb8r.tfm
 INPUT C:\Users\kynm\AppData\Local\MiKTeX\fonts\map\pdftex\pdftex.map
 INPUT C:\Program Files\MiKTeX\fonts\enc\dvips\base\8r.enc
-INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\helvetic\phvb8t.vf
-INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvb8r.tfm
 INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\helvetic\phvro8t.vf
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvro8r.tfm
 INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\helvetic\phvr8t.vf
@@ -549,6 +552,7 @@ INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvr8r.tfm
 INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\helvetic\phvr8c.vf
 INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\helvetic\phvb8t.vf
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvb8r.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvb8t.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvb8t.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvr8t.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvro8t.tfm
@@ -571,6 +575,9 @@ OUTPUT batchit_presentation.vrb
 INPUT .\batchit_presentation.vrb
 INPUT .\batchit_presentation.vrb
 INPUT batchit_presentation.vrb
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvro8t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\helvetic\phvro8t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvro8r.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmss8.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmss8.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\cm\cmss8.tfm
@@ -601,25 +608,42 @@ INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm5.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvr8t.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvro8t.tfm
-INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvro8t.tfm
-INPUT C:\Program Files\MiKTeX\fonts\tfm\jknappen\ec\ectt0800.tfm
-INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\helvetic\phvro8t.vf
-INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvro8r.tfm
-INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvb8c.tfm
-INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\helvetic\phvb8c.vf
-OUTPUT batchit_presentation.vrb
-INPUT .\batchit_presentation.vrb
-INPUT .\batchit_presentation.vrb
-INPUT batchit_presentation.vrb
-INPUT C:\Program Files\MiKTeX\fonts\tfm\jknappen\ec\ectt1200.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\jknappen\ec\ectt0800.tfm
 INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvr8c.tfm
 INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\helvetic\phvr8c.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\jknappen\ec\ectt0800.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvb8c.tfm
+INPUT .\kanban.png
+INPUT .\kanban.png
+INPUT .\kanban.png
+INPUT .\kanban.png
+INPUT .\kanban.png
+INPUT .\kanban.png
+INPUT .\kanban.png
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\helvetic\phvb8c.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\jknappen\ec\ectt1095.tfm
+INPUT .\login.png
+INPUT .\login.png
+INPUT .\login.png
+INPUT .\login.png
+INPUT .\login.png
+INPUT .\login.png
+INPUT .\login.png
 OUTPUT batchit_presentation.vrb
 INPUT .\batchit_presentation.vrb
 INPUT .\batchit_presentation.vrb
 INPUT batchit_presentation.vrb
-INPUT C:\Program Files\MiKTeX\fonts\tfm\jknappen\ec\ectt1095.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvr8t.tfm
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvb8t.tfm
+INPUT .\qr.png
+INPUT .\qr.png
+INPUT .\qr.png
+INPUT .\qr.png
+INPUT .\qr.png
+INPUT .\qr.png
+INPUT .\qr.png
+INPUT C:\Program Files\MiKTeX\fonts\vf\adobe\helvetic\phvb8t.vf
+INPUT C:\Program Files\MiKTeX\fonts\tfm\adobe\helvetic\phvb8r.tfm
 OUTPUT batchit_presentation.nav
 OUTPUT batchit_presentation.toc
 OUTPUT batchit_presentation.snm
@@ -632,6 +656,8 @@ INPUT C:\Users\kynm\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi450\ectt
 INPUT C:\Users\kynm\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi450\ectt0800.pk
 INPUT C:\Users\kynm\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\ectt0800.pk
 INPUT C:\Users\kynm\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\ectt0800.pk
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy6.pfb
+INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy6.pfb
 INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy8.pfb
 INPUT C:\Program Files\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy8.pfb
 INPUT C:\Program Files\MiKTeX\fonts\type1\urw\helvetic\uhvb8a.pfb

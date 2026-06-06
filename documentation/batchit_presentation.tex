@@ -146,14 +146,11 @@
   \fill[BIOrange,opacity=0.12]
     ([xshift=-1cm,yshift=0.8cm]current page.south east) circle(2.8cm);
   % Logo circle
-  \fill[BITeal]   ($(current page.center)+(-4.6cm,1.2cm)$) circle(1.1cm);
-  \draw[BIOrange,line width=3pt]
-                  ($(current page.center)+(-4.6cm,1.2cm)$) circle(1.1cm);
-  \node[font=\bfseries\LARGE,text=BIWhite]
-    at ($(current page.center)+(-4.6cm,1.2cm)$) {B};
+  \node[inner sep=0] at ($(current page.center)+(-4.6cm,1.2cm)$) {\includegraphics[width=2.2cm]{logo.png}};
+  
   % App name
   \node[anchor=west,font=\fontsize{34}{38}\selectfont\bfseries,text=BIWhite]
-    at ($(current page.center)+(-3.1cm,1.25cm)$) {BatchIt};
+    at ($(current page.center)+(-3.1cm,1.5cm)$) {BatchIt};
   \node[anchor=west,font=\large\itshape,text=BIOrange]
     at ($(current page.center)+(-3.1cm,0.55cm)$) {Buy Together, Save Together};
   % Divider
@@ -237,69 +234,96 @@
 
 %% SLIDE 3 — SYSTEM ARCHITECTURE
 \begin{frame}[fragile]{System Architecture}
-\vspace{-0.1cm}
+\vspace{-0.25cm}
 \begin{center}
-\begin{tikzpicture}[scale=0.84,transform shape,
-  layer/.style={draw=#1,fill=#1!15,rounded corners=5pt,
-                minimum width=2.8cm,minimum height=0.72cm,
-                font=\scriptsize\bfseries,text=#1!80!black},
-  srv/.style={draw=BISlate,fill=BISlate!12,rounded corners=4pt,
-              minimum width=2.5cm,minimum height=0.62cm,
-              font=\tiny\bfseries,text=BICharcoal},
-  ext/.style={draw=BIOrange!70,fill=BIOrange!10,rounded corners=4pt,
-              minimum width=2cm,minimum height=0.58cm,
-              font=\tiny,text=BIOrangeDk},
-  lbl/.style={font=\tiny\bfseries,text=BIGray},
-  arr/.style={-{Stealth[length=4pt]},thick,BITeal}
+\begin{tikzpicture}[scale=0.73,transform shape,
+  comp/.style={draw=#1,fill=#1!12,rounded corners=4pt,
+               minimum width=2.6cm,minimum height=0.78cm,
+               font=\tiny\bfseries,text=#1!80!black,align=center},
+  arr/.style={-{Stealth[length=4pt]},thick,color=BITeal},
+  darr/.style={-{Stealth[length=3pt]},dashed,thin,color=BISlate!65}
 ]
-  % CI/CD
-  \node[layer=BITealLt,minimum width=2.2cm] (gh)  at (-5.2, 3.2) {GitHub Repo};
-  \node[layer=BITealDk,minimum width=2.2cm] (jk)  at (-5.2, 2.1) {Jenkins Pipeline};
-  \node[lbl] at (-5.2,3.7) {CI/CD};
 
-  % Client
-  \node[draw=BITeal,fill=BITeal!15,rounded corners=6pt,
-        minimum width=3.2cm,minimum height=0.8cm,
-        font=\small\bfseries,text=BITeal] (fl) at (0,3.2) {Flutter Mobile App};
-  \node[lbl] at (0,3.75) {CLIENT LAYER};
+% ─── TIER BACKGROUND BANDS ──────────────────────────────────────
+\fill[BIOrange!8,   rounded corners=3pt](0,0.0)rectangle(13.5,1.2);
+\draw[BIOrange!35,  thin,rounded corners=3pt](0,0.0)rectangle(13.5,1.2);
+\fill[BICharcoal!6, rounded corners=3pt](0,1.4)rectangle(13.5,2.6);
+\draw[BICharcoal!22,thin,rounded corners=3pt](0,1.4)rectangle(13.5,2.6);
+\fill[BITealDk!9,   rounded corners=3pt](0,2.8)rectangle(13.5,4.1);
+\draw[BITealDk!28,  thin,rounded corners=3pt](0,2.8)rectangle(13.5,4.1);
+\fill[BISlate!8,    rounded corners=3pt](0,4.3)rectangle(13.5,5.5);
+\draw[BISlate!25,   thin,rounded corners=3pt](0,4.3)rectangle(13.5,5.5);
+\fill[BITeal!10,    rounded corners=3pt](0,5.7)rectangle(13.5,6.8);
+\draw[BITeal!35,    thin,rounded corners=3pt](0,5.7)rectangle(13.5,6.8);
+\fill[BITealLt!10,  rounded corners=3pt](0,7.0)rectangle(13.5,8.2);
+\draw[BITealLt!40,  thin,rounded corners=3pt](0,7.0)rectangle(13.5,8.2);
 
-  % Edge
-  \node[srv] (fw)  at (0,2.0) {VPS Firewall (UFW)};
-  \node[srv] (tls) at (0,1.1) {TLS Termination (Let's Encrypt)};
-  \node[lbl] at (-1.5,2.5) {EDGE};
+% ─── LABEL / CONTENT SEPARATOR ──────────────────────────────────
+\draw[BIGray!30,thin](1.9,0.0)--(1.9,8.2);
 
-  % VPS stack
-  \node[lbl] at (4.4,3.75) {VPS 38.242.246.126};
-  \node[srv]  (ng) at (4.4,3.2) {Nginx Reverse Proxy};
-  \node[srv]  (gu) at (4.4,2.3) {Gunicorn WSGI};
-  \node[srv]  (dj) at (4.4,1.4) {Django REST API};
-  \node[srv]  (pg) at (3.1,0.3) {PostgreSQL 15};
-  \node[srv]  (ms) at (5.7,0.3) {Media Storage};
+% ─── TIER LABELS ────────────────────────────────────────────────
+\node[font=\tiny\bfseries,text=BITealLt!75!black,align=center] at(0.95,7.6){CI/CD\\LAYER};
+\node[font=\tiny\bfseries,text=BITeal,align=center]             at(0.95,6.25){CLIENT\\TIER};
+\node[font=\tiny\bfseries,text=BISlate,align=center]            at(0.95,4.9){NETWORK\\SECURITY};
+\node[font=\tiny\bfseries,text=BITealDk,align=center]           at(0.95,3.45){APPLICATION\\Layer};
+\node[font=\tiny\bfseries,text=BICharcoal!80,align=center]      at(0.95,2.0){DATA\\Layer};
+\node[font=\tiny\bfseries,text=BIOrangeDk,align=center]         at(0.95,0.6){EXTERNAL\\SERVICES};
 
-  % External
-  \node[lbl]  at (7.8,2.6) {EXTERNAL};
-  \node[ext]  (br) at (7.8,2.0) {Brevo SMTP};
-  \node[ext]  (go) at (7.8,1.1) {Google OAuth};
+% ─── CI/CD COMPONENTS ───────────────────────────────────────────
+\node[comp=BITealLt](gh) at(5.0,7.6){GitHub\\Repository};
+\node[comp=BITealDk,minimum width=3.2cm](jk) at(9.2,7.6){Jenkins\\CI/CD Pipeline};
+\draw[arr](gh)--(jk) node[midway,above,font=\tiny]{push / webhook};
 
-  % Arrows
-  \draw[arr] (gh) -- (jk) node[midway,right,font=\tiny]{webhook};
-  \draw[arr] (jk.east) to[out=0,in=180] (fl.west)
-    node[near end,above,font=\tiny]{Build APK};
-  \draw[arr] (jk.east) to[out=0,in=160] (dj.north west);
-  \draw[arr] (fl)  -- (fw)  node[midway,right,font=\tiny]{HTTPS/JSON};
-  \draw[arr] (fw)  -- (tls);
-  \draw[arr] (tls.east) to[out=0,in=200] (ng.west);
-  \draw[arr] (ng)  -- (gu);
-  \draw[arr] (gu)  -- (dj);
-  \draw[arr] (dj)  -- (pg) node[midway,left,font=\tiny]{ORM};
-  \draw[arr] (dj)  -- (ms);
-  \draw[arr] (dj.east) to[out=0,in=180]  (br.west);
-  \draw[arr] (dj.east) to[out=-10,in=180](go.west);
+% ─── CLIENT COMPONENT ───────────────────────────────────────────
+\node[comp=BITeal,minimum width=3.8cm](fl) at(7.0,6.25){Flutter Mobile App (Dart)\\Android / iOS};
 
-  % Security controls legend
-  \node[draw=BITeal!30,fill=BITeal!5,rounded corners=3pt,
-        font=\tiny,text=BICharcoal,inner sep=3pt] at (4.4,-0.5)
-    {Security: JWT Auth \textbullet{} PBKDF2 Hash \textbullet{} Input Validation (DRF serializers)};
+% ─── NETWORK / SECURITY COMPONENTS ──────────────────────────────
+\node[comp=BISlate,minimum width=2.4cm](dns) at(3.5,4.9){DNS\\batchit.duckdns.org};
+\node[comp=BISlate](fw)                      at(7.2,4.9){Firewall UFW\\Ports 443/80};
+\node[comp=BISlate,minimum width=2.5cm](tls) at(11.0,4.9){Let's Encrypt\\TLS Termination};
+\draw[arr](dns)--(fw);
+\draw[arr](fw)--(tls);
+
+% ─── APPLICATION COMPONENTS ─────────────────────────────────────
+\node[comp=BITealDk](ng) at(4.0,3.45){Nginx\\Reverse Proxy};
+\node[comp=BITealDk](gu) at(7.5,3.45){Gunicorn\\WSGI Server};
+\node[comp=BITealDk,minimum width=3.0cm](dj) at(11.2,3.45){Django REST API\\DRF + JWT Auth};
+\draw[arr](ng)--(gu);
+\draw[arr](gu)--(dj);
+
+% ─── DATA COMPONENTS ────────────────────────────────────────────
+\node[comp=BICharcoal,minimum width=2.8cm](pg) at(7.8,2.0){PostgreSQL 15\\Django ORM};
+\node[comp=BICharcoal,minimum width=2.5cm](ms) at(11.2,2.0){Media Storage\\/media/ (VPS FS)};
+
+% ─── EXTERNAL COMPONENTS ────────────────────────────────────────
+\node[comp=BIOrange,minimum width=2.8cm](br) at(7.8,0.6){Brevo SMTP\\Email Verification};
+\node[comp=BIOrange,minimum width=2.8cm](go) at(11.2,0.6){Google OAuth 2.0\\Social Login};
+
+% ─── INTER-TIER FLOW ARROWS ─────────────────────────────────────
+% Client → Network
+\draw[arr](fl.south)--(fw.north) node[midway,right,font=\tiny]{HTTPS/JSON};
+% Network → Application (TLS curves across to Nginx)
+\draw[arr](tls.south) to[out=-110,in=70](ng.north);
+% Application → Data
+\draw[arr](dj.south) to[out=-90,in=90](pg.north)
+  node[near start,right,font=\tiny]{ORM};
+\draw[arr](dj.south)--(ms.north);
+% Application → External
+\draw[arr](dj.south) to[out=-90,in=90](br.north);
+\draw[arr](dj.south) to[out=-90,in=90](go.north);
+
+% ─── CI/CD DEPLOY ARROWS (dashed) ───────────────────────────────
+\draw[darr](jk.south) to[out=-90,in=90](fl.north)
+  node[near end,right,font=\tiny]{APK build};
+\draw[darr](jk.east)--(13.3,7.6)--(13.3,3.45)--(dj.east)
+  node[near end,above,font=\tiny]{deploy};
+
+% ─── VPS BOUNDARY BOX ───────────────────────────────────────────
+\draw[BITealDk!55,dashed,rounded corners=5pt,line width=0.9pt]
+  (2.1,1.35) rectangle(13.2,4.15);
+\node[font=\tiny\itshape,text=BITealDk,anchor=south west]
+  at(2.1,4.15){VPS Ubuntu 22.04 -- 38.242.246.126};
+
 \end{tikzpicture}
 \end{center}
 \end{frame}
@@ -347,181 +371,182 @@
 \end{columns}
 \end{frame}
 
-%% SLIDE 5 — CLASS DIAGRAM
-\begin{frame}{Object-Oriented Design --- Core Class Diagram}
-\vspace{-0.05cm}
-\begin{center}
-\begin{tikzpicture}[scale=0.78,transform shape,
-  cls/.style={draw=BITeal,fill=BICardBg,rounded corners=4pt,
-              minimum width=2.8cm,font=\tiny,text=BICharcoal},
-  fk/.style={-{Stealth[length=4pt]},BIGray,thin},
-  inh/.style={-{Triangle[open,length=6pt]},thick,BITeal},
-  cmp/.style={-{Diamond[open,length=5pt]},thick,BITealDk}
-]
-% AbstractUser
-\node[cls] (au) at (0,4.6) {%
-  \begin{tabular}{l}
-    \rowcolor{BITeal}\color{BIWhite}\textbf{<<abstract>>}\\
-    \rowcolor{BITeal}\color{BIWhite}\textbf{AbstractUser}\\
-    username : String\\
-    email : Email\\
-    password\_hash : String
-  \end{tabular}};
-
-% Customer
-\node[cls] (cu) at (-3.5,2.6) {%
-  \begin{tabular}{l}
-    \rowcolor{BITeal!85}\color{BIWhite}\textbf{Customer}\\
-    customer\_id : UUID\\
-    phone : String\\
-    profile\_photo : URL\\
-    preferences : JSON
-  \end{tabular}};
-
-% Provider
-\node[cls] (pv) at (3.5,2.6) {%
-  \begin{tabular}{l}
-    \rowcolor{BITeal!85}\color{BIWhite}\textbf{Provider}\\
-    provider\_id : UUID\\
-    business\_name : String\\
-    status : String\\
-    latitude / longitude
-  \end{tabular}};
-
-% Batch
-\node[cls] (ba) at (0,0.9) {%
-  \begin{tabular}{l}
-    \rowcolor{BITealDk}\color{BIWhite}\textbf{Batch}\\
-    batch\_id : UUID\\
-    product\_name : String\\
-    total\_quantity : float\\
-    filled\_quantity : float\\
-    status : String\\
-    +progress\_ratio() : float\\
-    +can\_join() : bool
-  \end{tabular}};
-
-% BatchParticipant
-\node[cls] (bp) at (-3.5,-1.3) {%
-  \begin{tabular}{l}
-    \rowcolor{BIOrangeDk}\color{BIWhite}\textbf{BatchParticipant}\\
-    quantity\_requested\\
-    status : String\\
-    joined\_at : DateTime\\
-    +confirm() / +cancel()
-  \end{tabular}};
-
-% BatchChatRoom
-\node[cls] (bc) at (3.5,-1.3) {%
-  \begin{tabular}{l}
-    \rowcolor{BIOrangeDk}\color{BIWhite}\textbf{BatchChatRoom}\\
-    id : UUID\\
-    created\_at : DateTime\\
-    +add\_message(...)\\
-    +get\_messages(limit)
-  \end{tabular}};
-
-% Notification
-\node[cls] (no) at (-6.5,0.9) {%
-  \begin{tabular}{l}
-    \rowcolor{BISlate}\color{BIWhite}\textbf{Notification}\\
-    title : String\\
-    body : Text\\
-    notification\_type\\
-    is\_read : bool
-  \end{tabular}};
-
-% Subscription
-\node[cls] (sb) at (6.5,0.9) {%
-  \begin{tabular}{l}
-    \rowcolor{BISlate}\color{BIWhite}\textbf{Subscription}\\
-    subscription\_id\\
-    subscribed\_at\\
-    +activate()\\
-    +cancel()
-  \end{tabular}};
-
-% Relationships
-\draw[inh] (cu.north) to[bend right=8] (au.south west);
-\draw[inh] (pv.north) to[bend left=8]  (au.south east);
-\draw[fk]  (cu.south) to node[left,font=\tiny]{creates 0..*}    (ba.north west);
-\draw[fk]  (pv.south) to node[right,font=\tiny]{provides 0..*} (ba.north east);
-\draw[cmp] (ba.south west) to node[above left,font=\tiny]{0..*} (bp.north);
-\draw[cmp] (ba.south east) to node[above right,font=\tiny]{1}   (bc.north);
-\draw[fk]  (cu.west) to[bend right=20] node[above,font=\tiny]{recipient}(no.east);
-\draw[fk]  (cu.south) to[bend left=5]  node[below left,font=\tiny]{joins}(bp.north west);
-\draw[fk]  (pv.east) to node[above,font=\tiny]{0..*}(sb.west);
-\end{tikzpicture}
-\end{center}
-\end{frame}
-
-%% SLIDE 6 — SEQUENCE DIAGRAMS
-\begin{frame}{Critical Sequence Flows}
+%% SLIDE 5 — OOP CONCEPTS
+\begin{frame}{Object-Oriented Design --- Concepts \& Patterns Applied}
 \vspace{0.06cm}
 \begin{columns}[T]
 \begin{column}{0.49\textwidth}
-  {\small\bfseries\color{BITeal} SD1 --- Email Registration + Verification}
-  \vspace{0.1cm}
 
-  \begin{tikzpicture}[scale=0.82,transform shape,
-    life/.style={draw=BITeal!40,dashed,thin},
-    fwd/.style={-{Stealth[length=4pt]},BICharcoal,thin},
-    bck/.style={-{Stealth[length=4pt]},BIGray,dashed,thin},
-    hd/.style={font=\tiny\bfseries,text=BITeal,align=center}
-  ]
-    \node[hd](U) at (0,3.7)    {User};
-    \node[hd](A) at (2.0,3.7)  {Flutter};
-    \node[hd](D) at (4.0,3.7)  {Django};
-    \node[hd](E) at (5.8,3.7)  {Brevo};
-    \foreach \x in {0,2.0,4.0,5.8}
-      \draw[life](\x,3.5)--(\x,-0.2);
-    \draw[fwd](0,3.2)--node[above,font=\tiny]{1: Enter email}(2.0,3.2);
-    \draw[fwd](2.0,2.85)--node[above,font=\tiny]{2: POST /send-code}(4.0,2.85);
-    \draw[fwd](4.0,2.55)--node[above,font=\tiny]{3: Send 6-digit}(5.8,2.55);
-    \draw[bck](5.8,2.25)--node[above,font=\tiny]{4: 250 OK}(4.0,2.25);
-    \draw[bck](4.0,1.95)--node[above,font=\tiny]{5: 200 OK}(2.0,1.95);
-    \draw[bck](2.0,1.65)--node[above,font=\tiny]{6: Show verify screen}(0,1.65);
-    \draw[fwd](0,1.35)--node[above,font=\tiny]{7: code+user+pass}(2.0,1.35);
-    \draw[fwd](2.0,1.05)--node[above,font=\tiny]{8: POST /register-verify}(4.0,1.05);
-    \draw[BIOrange,thin](1.5,0.82) rectangle (5.5,0.1);
-    \node[font=\tiny\itshape,text=BIOrange] at (2.1,0.72){[valid]};
-    \draw[bck](4.0,0.55)--node[above,font=\tiny]{9: 201 \{token,user\}}(2.0,0.55);
-    \draw[bck](2.0,0.2)--node[above,font=\tiny]{10: Navigate Home}(0,0.2);
-  \end{tikzpicture}
+  \begin{tcolorbox}[cardbox,title={Encapsulation}]
+    \scriptsize Data and behaviour bundled inside model classes.
+    \texttt{Batch} exposes only clean methods to callers:
+    \begin{itemize}\setlength\itemsep{1pt}
+      \item \texttt{progress\_ratio()} --- computes fill percentage
+      \item \texttt{can\_join(qty)} --- validates remaining capacity
+    \end{itemize}
+    Flutter services (\texttt{BatchService}, \texttt{ApiClient}) hide all HTTP internals from UI widgets.
+  \end{tcolorbox}
+
+  \vspace{-0.12cm}
+
+  \begin{tcolorbox}[cardbox,title={Inheritance}]
+    \scriptsize Django \texttt{AbstractUser} extended by two concrete user types:
+    \begin{itemize}\setlength\itemsep{1pt}
+      \item \texttt{Customer} --- phone, preferences, profile photo
+      \item \texttt{Provider} --- business name, GPS coords, verification status
+    \end{itemize}
+    Flutter: \texttt{StatefulWidget} / \texttt{StatelessWidget} base classes inherited across all 20+ screens.
+  \end{tcolorbox}
+
 \end{column}
 \begin{column}{0.49\textwidth}
-  {\small\bfseries\color{BITeal} SD4 --- Customer Joins a Batch}
-  \vspace{0.1cm}
 
-  \begin{tikzpicture}[scale=0.82,transform shape,
-    life/.style={draw=BITeal!40,dashed,thin},
-    fwd/.style={-{Stealth[length=4pt]},BICharcoal,thin},
-    bck/.style={-{Stealth[length=4pt]},BIGray,dashed,thin},
-    hd/.style={font=\tiny\bfseries,text=BITeal,align=center}
-  ]
-    \node[hd](C) at (0,3.7)   {Customer};
-    \node[hd](F) at (2.0,3.7) {Flutter};
-    \node[hd](B) at (4.0,3.7) {Backend};
-    \node[hd](N) at (5.8,3.7) {Notif.};
-    \foreach \x in {0,2.0,4.0,5.8}
-      \draw[life](\x,3.5)--(\x,-0.2);
-    \draw[fwd](0,3.2)--node[above,font=\tiny]{1: Enter qty}(2.0,3.2);
-    \draw[fwd](2.0,2.85)--node[above,font=\tiny]{2: POST /batches/\{id\}/join}(4.0,2.85);
-    \draw[BITeal!40,thin](3.5,2.65) rectangle (6.0,1.4);
-    \node[font=\tiny\itshape,text=BITeal] at (4.5,2.55){[qty<=remaining]};
-    \node[font=\tiny,text=BICharcoal,anchor=west] at (4.1,2.35){3: Create Participant};
-    \node[font=\tiny,text=BICharcoal,anchor=west] at (4.1,2.1) {4: Update filled\_qty};
-    \draw[BIOrange!40,thin](3.5,1.95) rectangle (6.0,1.4);
-    \node[font=\tiny\itshape,text=BIOrange] at (4.4,1.85){[filled>=total]};
-    \node[font=\tiny,text=BICharcoal,anchor=west] at (4.1,1.6){5: status = filled};
-    \draw[fwd](4.0,1.35)--node[above,font=\tiny]{6: Notify all}(5.8,1.35);
-    \draw[bck](4.0,1.05)--node[above,font=\tiny]{8: 200 \{participant\}}(2.0,1.05);
-    \draw[bck](2.0,0.75)--node[above,font=\tiny]{9: Update local state}(2.0,0.75);
-    \draw[bck](2.0,0.4)--node[above,font=\tiny]{10: Show success snackbar}(0,0.4);
-    \draw[bck](4.0,0.1)--node[above,font=\tiny]{11: 400 qty too high}(2.0,0.1);
-  \end{tikzpicture}
+  \begin{tcolorbox}[orangecard,title={Polymorphism}]
+    \scriptsize Same interface, different runtime behaviour:
+    \begin{itemize}\setlength\itemsep{1pt}
+      \item \texttt{BasePermission} $\to$ \texttt{IsCustomer} / \texttt{IsProvider} / \texttt{IsAdmin}
+      \item \texttt{ModelSerializer} $\to$ \texttt{BatchSerializer} / \texttt{OrderSerializer}
+    \end{itemize}
+  \end{tcolorbox}
+
+  \vspace{0.16cm}
+
+  \begin{tcolorbox}[orangecard,title={Abstraction \& Composition}]
+    \scriptsize
+    \textbf{Abstraction:} Service layer hides REST API details behind typed methods (\texttt{fetchBatches()}, \texttt{joinBatch()}).\\[3pt]
+    \textbf{Composition:} \texttt{Batch} owns one \texttt{BatchChatRoom} (1:1) and many \texttt{BatchParticipant} objects (1:N). \texttt{Customer} relates to \texttt{Provider} via a \texttt{Subscription} join object.
+  \end{tcolorbox}
+
 \end{column}
 \end{columns}
+
+\vspace{0.16cm}
+
+\begin{tcolorbox}[tealstat,title={Design Patterns}]
+  \scriptsize
+  \textbf{Singleton} --- \texttt{ApiClient} single shared instance \quad\textbullet\quad
+  \textbf{Repository} --- Service classes decouple UI from data \quad\textbullet\quad
+  \textbf{Observer} --- Flutter \texttt{ChangeNotifier} / \texttt{Provider} for reactive state \quad\textbullet\quad
+  \textbf{Strategy} --- Swappable DRF permission and serializer classes
+\end{tcolorbox}
+
+\end{frame}
+
+%% SLIDE 6 — TECH STACK
+\begin{frame}{Technology Stack}
+\vspace{-0.2cm}
+\begin{center}
+\begin{tikzpicture}[scale=0.85,transform shape]
+
+% ─── COLUMN 1: MOBILE CLIENT ────────────────────────────────────
+\fill[BITeal,rounded corners=5pt](0,6.2) rectangle (3.0,7.5);
+\fill[BILightBg,rounded corners=2pt](0.22,6.32) rectangle (0.78,7.32);
+\fill[BITeal](0.5,6.36) circle(0.08);
+\node[font=\scriptsize\bfseries,text=BIWhite,anchor=west,align=left] at (0.92,6.92){MOBILE\\CLIENT};
+
+\foreach \ii/\tech in {
+  0/{Flutter 3.x (Dart)},
+  1/{Material Design 3},
+  2/{Provider (State Mgmt)},
+  3/{flutter\_map (OSM)},
+  4/{google\_sign\_in (OAuth)},
+  5/{mocktail -- 315 tests}%
+}{
+  \fill[BITeal!15,rounded corners=3pt]
+    (0.05,{5.38-\ii*0.80}) rectangle (2.95,{6.08-\ii*0.80});
+  \draw[BITeal!35,thin,rounded corners=3pt]
+    (0.05,{5.38-\ii*0.80}) rectangle (2.95,{6.08-\ii*0.80});
+  \fill[BITeal](0.05,{5.38-\ii*0.80}) rectangle (0.22,{6.08-\ii*0.80});
+  \node[font=\tiny\bfseries,text=BITeal,anchor=west]
+    at (0.30,{5.73-\ii*0.80}) {\tech};
+}
+
+% ─── COLUMN 2: BACKEND ───────────────────────────────────────────
+\fill[BITealDk,rounded corners=5pt](3.2,6.2) rectangle (6.2,7.5);
+\fill[BILightBg!85,rounded corners=1pt](3.42,6.60) rectangle (3.95,7.28);
+\fill[BILightBg!85,rounded corners=1pt](3.42,6.34) rectangle (3.95,6.52);
+\fill[BITealDk!50](3.80,6.43) circle(0.05);
+\fill[BITealDk!50](3.68,6.43) circle(0.05);
+\node[font=\scriptsize\bfseries,text=BIWhite,anchor=west,align=left] at (4.08,6.92){BACKEND\\SERVER};
+
+\foreach \ii/\tech in {
+  0/{Python 3.11},
+  1/{Django 4.x},
+  2/{Django REST Framework},
+  3/{Gunicorn WSGI},
+  4/{drf-yasg (Swagger)},
+  5/{PBKDF2 Password Hash}%
+}{
+  \fill[BITealDk!15,rounded corners=3pt]
+    (3.25,{5.38-\ii*0.80}) rectangle (6.15,{6.08-\ii*0.80});
+  \draw[BITealDk!35,thin,rounded corners=3pt]
+    (3.25,{5.38-\ii*0.80}) rectangle (6.15,{6.08-\ii*0.80});
+  \fill[BITealDk](3.25,{5.38-\ii*0.80}) rectangle (3.42,{6.08-\ii*0.80});
+  \node[font=\tiny\bfseries,text=BITealDk,anchor=west]
+    at (3.50,{5.73-\ii*0.80}) {\tech};
+}
+
+% ─── COLUMN 3: DATA & AUTH ───────────────────────────────────────
+\fill[BIOrangeDk,rounded corners=5pt](6.4,6.2) rectangle (9.4,7.5);
+\fill[BILightBg!80,rounded corners=1pt](6.60,6.34) rectangle (7.12,6.50);
+\fill[BILightBg!80,rounded corners=1pt](6.60,6.58) rectangle (7.12,6.74);
+\fill[BILightBg!80,rounded corners=1pt](6.60,6.82) rectangle (7.12,7.28);
+\node[font=\scriptsize\bfseries,text=BIWhite,anchor=west,align=left] at (7.25,6.92){DATA \&\\AUTH};
+
+\foreach \ii/\tech in {
+  0/{PostgreSQL 15},
+  1/{Django ORM},
+  2/{Knox Token Auth},
+  3/{JWT (60min access)},
+  4/{Brevo SMTP},
+  5/{Google OAuth 2.0}%
+}{
+  \fill[BIOrange!15,rounded corners=3pt]
+    (6.45,{5.38-\ii*0.80}) rectangle (9.35,{6.08-\ii*0.80});
+  \draw[BIOrange!40,thin,rounded corners=3pt]
+    (6.45,{5.38-\ii*0.80}) rectangle (9.35,{6.08-\ii*0.80});
+  \fill[BIOrangeDk](6.45,{5.38-\ii*0.80}) rectangle (6.62,{6.08-\ii*0.80});
+  \node[font=\tiny\bfseries,text=BIOrangeDk,anchor=west]
+    at (6.70,{5.73-\ii*0.80}) {\tech};
+}
+
+% ─── COLUMN 4: DEVOPS & INFRA ────────────────────────────────────
+\fill[BISlate,rounded corners=5pt](9.6,6.2) rectangle (12.6,7.5);
+\fill[BILightBg!80](9.78,6.58) rectangle (10.14,6.95);
+\fill[BILightBg!80](9.78,7.00) rectangle (10.14,7.26);
+\fill[BILightBg!80](9.78,6.34) rectangle (10.14,6.50);
+\node[font=\scriptsize\bfseries,text=BIWhite,anchor=west,align=left] at (10.22,6.92){DEVOPS \&\\INFRA};
+
+\foreach \ii/\tech in {
+  0/{GitHub (VCS)},
+  1/{Jenkins Pipeline},
+  2/{Nginx Reverse Proxy},
+  3/{Ubuntu 22.04 VPS},
+  4/{Let's Encrypt TLS},
+  5/{UFW Firewall}%
+}{
+  \fill[BISlate!15,rounded corners=3pt]
+    (9.65,{5.38-\ii*0.80}) rectangle (12.55,{6.08-\ii*0.80});
+  \draw[BISlate!35,thin,rounded corners=3pt]
+    (9.65,{5.38-\ii*0.80}) rectangle (12.55,{6.08-\ii*0.80});
+  \fill[BISlate](9.65,{5.38-\ii*0.80}) rectangle (9.82,{6.08-\ii*0.80});
+  \node[font=\tiny\bfseries,text=BISlate,anchor=west]
+    at (9.90,{5.73-\ii*0.80}) {\tech};
+}
+
+% ─── ARROWS BETWEEN COLUMN HEADERS ──────────────────────────────
+\draw[myarr](3.0,6.85)--(3.2,6.85);
+\draw[myarr](6.2,6.85)--(6.4,6.85);
+\draw[myarr](9.4,6.85)--(9.6,6.85);
+
+% ─── BOTTOM INFO BAR ─────────────────────────────────────────────
+\fill[BICharcoal!8,rounded corners=3pt](0,0.2) rectangle (12.6,0.9);
+\draw[BICharcoal!20,thin,rounded corners=3pt](0,0.2) rectangle (12.6,0.9);
+\node[font=\tiny,text=BICharcoal] at (6.3,0.55)
+  {REST/JSON over HTTPS \quad\textbullet\quad 40+ Endpoints \quad\textbullet\quad Swagger/OpenAPI \quad\textbullet\quad Live: \texttt{batchit.duckdns.org}};
+
+\end{tikzpicture}
+\end{center}
 \end{frame}
 
 %% SLIDE 7 — SCRUM & TEAM
@@ -530,31 +555,13 @@
 \begin{columns}[T]
 \begin{column}{0.53\textwidth}
   {\small\bfseries\color{BITeal} 4 Sprints \textbullet{} GitHub Projects Kanban \textbullet{} Feature Branches}
-  \vspace{0.15cm}
+  \vspace{0.12cm}
 
-  \begin{tikzpicture}[scale=0.9,transform shape]
-    % Sprint bars
-    \fill[BITeal!85]    (0,3.6) rectangle (5.4,4.2);
-    \fill[BITealDk!85]  (0,2.75) rectangle (5.4,3.35);
-    \fill[BITealLt!85]  (0,1.9) rectangle (5.4,2.5);
-    \fill[BIOrange!85]  (0,1.05) rectangle (5.4,1.65);
-    % Sprint labels
-    \node[anchor=west,font=\scriptsize\bfseries,text=BIWhite] at (0.15,3.9) {S1};
-    \node[anchor=west,font=\scriptsize,text=BIWhite]          at (0.55,3.9) {Auth + CI/CD Setup};
-    \node[anchor=west,font=\scriptsize\bfseries,text=BIWhite] at (0.15,3.05){S2};
-    \node[anchor=west,font=\scriptsize,text=BIWhite]          at (0.55,3.05){Batch Core + Join Logic};
-    \node[anchor=west,font=\scriptsize\bfseries,text=BIWhite] at (0.15,2.2) {S3};
-    \node[anchor=west,font=\scriptsize,text=BIWhite]          at (0.55,2.2) {Provider + Chat + Notifications};
-    \node[anchor=west,font=\scriptsize\bfseries,text=BIWhite] at (0.15,1.35){S4};
-    \node[anchor=west,font=\scriptsize,text=BIWhite]          at (0.55,1.35){OAuth + 315 Tests + Deploy};
-    % Story points note
-    \node[font=\tiny,text=BIGray] at (2.7,0.6)
-      {Must-Have: 68 pts \textbullet{} Should-Have: 18 pts \textbullet{} Could-Have: 5 pts};
-    % Methodology note
-    \node[draw=BITeal!30,fill=BITeal!5,rounded corners=3pt,
-          font=\tiny,text=BICharcoal,inner sep=4pt] at (2.7,0.15)
-      {GitHub \textbullet{} WhatsApp standups \textbullet{} VS Code \textbullet{} Android Studio};
-  \end{tikzpicture}
+  \begin{tcolorbox}[enhanced,arc=4pt,boxrule=1pt,
+    colframe=BITeal!40,colback=white,
+    top=2pt,bottom=2pt,left=2pt,right=2pt]
+    \includegraphics[width=\linewidth]{kanban.png}
+  \end{tcolorbox}
 \end{column}
 \begin{column}{0.44\textwidth}
   {\small\bfseries\color{BITeal} Team Roles (5 Members)}
@@ -581,115 +588,105 @@
     \fill[BIOrange]   (0,1.2) circle(0.2cm);
     \node[font=\tiny\bfseries,text=BICharcoal,anchor=west] at (0.32,1.28) {Fru Chi};
     \node[font=\tiny,text=BIGray,anchor=west]              at (0.32,1.08) {Flutter Developer / Core Features};
-    % Conflict resolution
-    \node[draw=BIOrange!50,fill=BIOrange!8,rounded corners=3pt,
-          font=\tiny,text=BICharcoal,inner sep=4pt,text width=4.8cm] at (2.5,0.35)
-      {\textbf{Conflicts resolved:} pubspec.yaml ownership; Django migration squash per sprint};
   \end{tikzpicture}
+  \vspace{0.06cm}
+  \begin{tcolorbox}[orangestat,title={Conflicts Resolved}]
+    \tiny
+    \textbf{VPS cost refusal} $\to$ members who declined to pay excluded from deployment credits\\
+    \textbf{Docs funding} $\to$ authorship withheld from non-contributing members\\
+    \textbf{pubspec.yaml} race condition $\to$ single owner assigned per sprint\\
+    \textbf{Migration conflicts} $\to$ squash \& rebase before each sprint start\\
+    \textbf{API naming} $\to$ RESTful convention enforced via DRF router
+  \end{tcolorbox}
 \end{column}
 \end{columns}
 \end{frame}
 
-%% SLIDE 8 — ALGORITHMS & API
-\begin{frame}[fragile]{Core Algorithms \& API Design}
-\vspace{0.05cm}
+%% SLIDE 8 — API
+\begin{frame}{REST API --- Django REST Framework}
+\vspace{0.4cm}
 \begin{columns}[T]
-\begin{column}{0.56\textwidth}
-  {\small\bfseries\color{BITeal} Batch Fill Algorithm (Django views.py)}
-  \vspace{0.08cm}
 
-  \begin{tcolorbox}[codebox]
-\begin{lstlisting}
-def join_batch(request, batch_id):
-    batch = Batch.objects.get(batch_id=batch_id)
-    qty = request.data['quantity_requested']
-
-    # Guard: batch must be open
-    if batch.status != 'open':
-        raise ValidationError("Batch is not open.")
-
-    # Guard: quantity check
-    remaining = (batch.total_quantity
-                 - batch.filled_quantity)
-    if qty > remaining:
-        raise ValidationError(
-            f"Only {remaining} units left.")
-
-    # Create participant + atomic update
-    BatchParticipant.objects.create(
-        batch=batch, customer=request.user,
-        quantity_requested=qty, status='pending')
-
-    batch.filled_quantity += qty
-    if batch.filled_quantity >= batch.total_quantity:
-        batch.status = 'filled'
-        notify_all_participants(batch, "Batch full!")
-    batch.save()
-    return Response(ParticipantSerializer(...).data)
-\end{lstlisting}
-  \end{tcolorbox}
-\end{column}
-\begin{column}{0.42\textwidth}
-  {\small\bfseries\color{BITeal} Selected REST Endpoints}
-  \vspace{0.1cm}
-
-  \begin{tikzpicture}[scale=0.9,transform shape]
-    % POST
-    \fill[BITealLt]   (0,5.5) rectangle (0.9,5.85);
-    \node[font=\tiny\bfseries,text=BIWhite,anchor=west] at (0.05,5.67) {POST};
-    \node[font=\tiny\ttfamily,text=BICharcoal,anchor=west] at (0.95,5.67) {/auth/login/};
-
-    \fill[BITealLt]   (0,4.95) rectangle (0.9,5.3);
-    \node[font=\tiny\bfseries,text=BIWhite,anchor=west] at (0.05,5.12) {POST};
-    \node[font=\tiny\ttfamily,text=BICharcoal,anchor=west] at (0.95,5.12) {/auth/register-verify/};
-
-    \fill[BIOrange]   (0,4.4) rectangle (0.7,4.75);
-    \node[font=\tiny\bfseries,text=BIWhite,anchor=west] at (0.05,4.57) {GET};
-    \node[font=\tiny\ttfamily,text=BICharcoal,anchor=west] at (0.75,4.57) {/batches/?status=open};
-
-    \fill[BITeal]     (0,3.85) rectangle (0.9,4.2);
-    \node[font=\tiny\bfseries,text=BIWhite,anchor=west] at (0.05,4.02) {POST};
-    \node[font=\tiny\ttfamily,text=BICharcoal,anchor=west] at (0.95,4.02) {/batches/\{id\}/join/};
-
-    \fill[BITeal]     (0,3.3) rectangle (0.9,3.65);
-    \node[font=\tiny\bfseries,text=BIWhite,anchor=west] at (0.05,3.47) {POST};
-    \node[font=\tiny\ttfamily,text=BICharcoal,anchor=west] at (0.95,3.47) {/providers/register/};
-
-    \fill[BITealDk]   (0,2.75) rectangle (0.9,3.1);
-    \node[font=\tiny\bfseries,text=BIWhite,anchor=west] at (0.05,2.92) {POST};
-    \node[font=\tiny\ttfamily,text=BICharcoal,anchor=west] at (0.95,2.92) {/admin/providers/\{id\}/verify/};
-
-    \fill[BIGray]     (0,2.2) rectangle (0.7,2.55);
-    \node[font=\tiny\bfseries,text=BIWhite,anchor=west] at (0.05,2.37) {GET};
-    \node[font=\tiny\ttfamily,text=BICharcoal,anchor=west] at (0.75,2.37) {/batches/\{id\}/chat/messages/};
-
-    \fill[BIGray]     (0,1.65) rectangle (0.9,2.0);
-    \node[font=\tiny\bfseries,text=BIWhite,anchor=west] at (0.05,1.82) {POST};
-    \node[font=\tiny\ttfamily,text=BICharcoal,anchor=west] at (0.95,1.82) {/batches/\{id\}/chat/messages/};
-  \end{tikzpicture}
-
+%% ── LEFT: DRF pipeline centered ─────────────────────────────────
+\begin{column}{0.50\textwidth}
+  {\small\bfseries\color{BITeal} DRF Request Pipeline}
   \vspace{0.12cm}
-  \begin{tcolorbox}[tealstat,title={API Stats}]
-    \scriptsize \textbf{40+} endpoints \textbullet{} JWT Auth\\
-    Swagger/OpenAPI via \texttt{drf-yasg}\\
-    PBKDF2 password hashing
-  \end{tcolorbox}
+
+  \begin{center}
+  \begin{tikzpicture}[scale=0.92,transform shape]
+
+    \node[draw=BISlate!50,fill=BISlate!8,rounded corners=5pt,
+          minimum width=5.2cm,minimum height=0.65cm,
+          font=\small\bfseries,text=BISlate]
+          (n1) at (0,5.60) {Client HTTP Request};
+
+    \node[draw=BITealDk!55,fill=BITealDk!10,rounded corners=5pt,
+          minimum width=5.2cm,minimum height=0.65cm,
+          font=\small\bfseries,text=BITealDk]
+          (n2) at (0,4.60) {Nginx --- Reverse Proxy};
+
+    \node[draw=BITealDk!55,fill=BITealDk!10,rounded corners=5pt,
+          minimum width=5.2cm,minimum height=0.65cm,
+          font=\small\bfseries,text=BITealDk]
+          (n3) at (0,3.60) {Gunicorn WSGI Server};
+
+    \node[draw=BITeal!65,fill=BITeal!12,rounded corners=5pt,
+          minimum width=5.2cm,minimum height=0.65cm,
+          font=\small\bfseries,text=BITeal,align=center]
+          (n4) at (0,2.60) {DRF Router + Knox Auth + Permissions};
+
+    \node[draw=BITeal!65,fill=BITeal!12,rounded corners=5pt,
+          minimum width=5.2cm,minimum height=0.65cm,
+          font=\small\bfseries,text=BITeal]
+          (n5) at (0,1.60) {ViewSet / APIView + Serializer};
+
+    \node[draw=BIOrangeDk!65,fill=BIOrange!10,rounded corners=5pt,
+          minimum width=5.2cm,minimum height=0.65cm,
+          font=\small\bfseries,text=BIOrangeDk]
+          (n6) at (0,0.60) {PostgreSQL 15 via Django ORM};
+
+    \foreach \a/\b in {n1/n2,n2/n3,n3/n4,n4/n5,n5/n6}
+      \draw[myarr](\a.south)--(\b.north);
+
+    \node[font=\scriptsize\itshape,text=BIGray] at (0,0.08)
+      {JSON response returned to client};
+
+  \end{tikzpicture}
+  \end{center}
+
 \end{column}
+
+%% ── RIGHT: Postman + API facts ───────────────────────────────────
+\begin{column}{0.48\textwidth}
+  {\small\bfseries\color{BITeal} Postman --- Live API Test}
+  \vspace{0.12cm}
+
+  \begin{tcolorbox}[colframe=BITeal!50,colback=white,
+                    boxsep=0pt,top=0pt,bottom=0pt,left=0pt,right=0pt,
+                    title={POST /api/auth/login/ --- 200 OK},
+                    fonttitle=\small\ttfamily\bfseries,
+                    colbacktitle=BITeal,coltitle=BIWhite,
+                    toptitle=3pt,bottomtitle=3pt]
+    \includegraphics[width=\linewidth]{login.png}
+  \end{tcolorbox}
+
+\end{column}
+
 \end{columns}
 \end{frame}
 
 %% SLIDE 9 — CI/CD + TEST COVERAGE
 \begin{frame}[fragile]{CI/CD Pipeline \& Test Coverage}
-\vspace{0.05cm}
+\vspace{0.25cm}
 \begin{columns}[T]
 \begin{column}{0.49\textwidth}
   {\small\bfseries\color{BITeal} Jenkins Pipeline --- Triggered on Every Push to \texttt{main}}
   \vspace{0.15cm}
 
   \begin{tikzpicture}[scale=0.88,transform shape,
-    stg/.style={draw=#1,fill=#1!18,rounded corners=4pt,
-                minimum width=4.5cm,minimum height=0.58cm,
-                font=\scriptsize\bfseries,text=#1!80!black},
+    stg/.style={draw=#1,fill=#1!25,rounded corners=5pt,
+                minimum width=4.8cm,minimum height=0.60cm,
+                font=\scriptsize\bfseries,text=BICharcoal},
     ar/.style={-{Stealth[length=4pt]},thick,BITeal}
   ]
     \node[stg=BITealLt]  (s1) at (0,4.0) {1. Checkout main branch};
@@ -706,7 +703,7 @@ def join_batch(request, batch_id):
     \foreach \a/\b in {s1/s2,s2/s3,s3/s4,s4/gate,gate/s5,s5/s6,s6/s7}
       \draw[ar](\a.south)--(\b.north);
     \node[font=\tiny,text=BIGray] at (0,-1.65)
-      {Build \#46: APK ~6m30s \textbullet{} Total pipeline ~14 min};
+      {Build \#46: APK ~6m30s \textbullet{} Total pipeline ~7 min};
   \end{tikzpicture}
 \end{column}
 \begin{column}{0.49\textwidth}
@@ -739,7 +736,7 @@ def join_batch(request, batch_id):
     \node[font=\tiny\bfseries,text=BIOrangeDk,rotate=90] at (\gatex+0.1,2.3){80\% gate};
   \end{tikzpicture}
 
-  \vspace{0.1cm}
+  \vspace{-0.25cm}
   \begin{tcolorbox}[tealstat,title={Test Suite Stats}]
     \scriptsize
     \textbf{315 tests} --- all passing\\
@@ -807,7 +804,7 @@ def join_batch(request, batch_id):
 \end{column}
 \begin{column}{0.5\textwidth}
   {\small\bfseries\color{BITeal} Recommendations for Future Work}
-  \vspace{0.12cm}
+  \vspace{0.42cm}
 
   \begin{tikzpicture}[scale=0.87,transform shape]
     % Future items
@@ -842,22 +839,74 @@ def join_batch(request, batch_id):
       at (0.3,2.05){React provider dashboard (web admin panel)};
   \end{tikzpicture}
 
-  \vspace{0.15cm}
-  \begin{tikzpicture}[scale=0.9]
-    \fill[BITeal](0,0) rectangle (6.5,0.9);
-    \fill[BIOrange](0,0) rectangle (0.08,0.9);
-    \node[font=\small\bfseries,text=BIWhite,anchor=west] at (0.25,0.62)
-      {BatchIt --- Buy Together, Save Together};
-    \node[font=\tiny,text=BILightBg,anchor=west] at (0.25,0.28)
-      {SEN2241 \textbullet{} Group 13 \textbullet{} ICT University \textbullet{} Spring 2026};
-  \end{tikzpicture}
-
-  {\tiny\color{BIGray}
-  Instructor: Tekoh Palma Achu \quad
-  GitHub: \texttt{github.com/Kynmmarshall/BatchIt} \quad
-  Live: \texttt{batchit.duckdns.org}}
 \end{column}
 \end{columns}
 \end{frame}
+
+%% SLIDE 11 — THANK YOU / CLOSING
+{
+\setbeamertemplate{footline}{}
+\begin{frame}[plain]
+\begin{tikzpicture}[overlay,remember picture]
+
+  %% BACKGROUND
+  \fill[BICharcoal](current page.south west) rectangle (current page.north east);
+  \fill[BITeal,opacity=0.20]
+    ([xshift=2.5cm,yshift=2cm]current page.south east) circle(5.5cm);
+  \fill[BITealDk,opacity=0.22]
+    ([xshift=-1cm,yshift=-1cm]current page.north west) circle(3.5cm);
+  \fill[BIOrange,opacity=0.06]
+    (current page.center) circle(4cm);
+  \fill[BIOrange]
+    (current page.north west)
+    rectangle ([yshift=-0.24cm]current page.north east);
+  \fill[BITeal!60]
+    (current page.south west)
+    rectangle ([yshift=0.18cm]current page.south east);
+
+  %% LEFT: TEXT CONTENT
+  \node[anchor=west,font=\fontsize{40}{44}\selectfont\bfseries,text=BIWhite]
+    at ([xshift=0.7cm,yshift=1.9cm]current page.west)
+    {Thank You};
+  \node[anchor=west,font=\large\itshape,text=BIOrange]
+    at ([xshift=0.7cm,yshift=0.95cm]current page.west)
+    {Questions \& Discussion Welcome};
+  \fill[BITealLt,opacity=0.7]
+    ([xshift=0.7cm,yshift=0.45cm]current page.west)
+    rectangle ([xshift=9.2cm,yshift=0.30cm]current page.west);
+
+  %% BatchIt banner — drawn directly (no nested tikzpicture)
+  \fill[BITeal]
+    ([xshift=0.70cm,yshift=-0.70cm]current page.west)
+    rectangle ([xshift=8.42cm,yshift=0.09cm]current page.west);
+  \fill[BIOrange]
+    ([xshift=0.70cm,yshift=-0.70cm]current page.west)
+    rectangle ([xshift=0.77cm,yshift=0.09cm]current page.west);
+  \node[anchor=west,font=\small\bfseries,text=BIWhite]
+    at ([xshift=0.92cm,yshift=-0.16cm]current page.west)
+    {BatchIt --- Buy Together, Save Together};
+  \node[anchor=west,font=\tiny,text=BILightBg]
+    at ([xshift=0.92cm,yshift=-0.45cm]current page.west)
+    {SEN2241 \textbullet{} Group 13 \textbullet{} ICT University \textbullet{} Spring 2026};
+
+  \node[anchor=west,font=\scriptsize,text=BIGray]
+    at ([xshift=0.7cm,yshift=-1.25cm]current page.west)
+    {Instructor: Tekoh Palma Achu};
+  \node[anchor=west,font=\scriptsize,text=BILightBg]
+    at ([xshift=0.7cm,yshift=-1.75cm]current page.west)
+    {\textbf{GitHub:} \texttt{github.com/Kynmmarshall/BatchIt}};
+  \node[anchor=west,font=\scriptsize,text=BILightBg]
+    at ([xshift=0.7cm,yshift=-2.25cm]current page.west)
+    {\textbf{Live:}\quad\texttt{batchit.duckdns.org}};
+
+  %% RIGHT: QR CODE via 
+  \node[anchor=center] at ($(current page.east)+(-3.7cm,0.3cm)$) {\includegraphics[width=3.58cm]{qr.png}};
+  \node[anchor=north,font=\scriptsize,text=BIGray!90]
+    at ([xshift=-3.7cm,yshift=-1.85cm]current page.east)
+    {Scan to visit \texttt{batchit.duckdns.org}};
+
+\end{tikzpicture}
+\end{frame}
+}
 
 \end{document}
