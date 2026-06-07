@@ -38,13 +38,25 @@ class BatchProvider extends ChangeNotifier {
   List<Batch> get myJoinedBatches => _myJoinedBatches;
   bool get isLoading => _isLoading;
 
-  Future<void> loadNearbyBatches() async {
+  Future<void> loadNearbyBatches({
+    double? latitude,
+    double? longitude,
+    double? radiusKm,
+  }) async {
     _isLoading = true;
     notifyListeners();
 
-    final openBatches = await _batchService.fetchNearbyBatches(status: 'open');
+    final openBatches = await _batchService.fetchNearbyBatches(
+      status: 'open',
+      latitude: latitude,
+      longitude: longitude,
+      radiusKm: radiusKm,
+    );
     final filledBatches = await _batchService.fetchNearbyBatches(
       status: 'filled',
+      latitude: latitude,
+      longitude: longitude,
+      radiusKm: radiusKm,
     );
     final merged = <String, Batch>{};
     for (final b in openBatches) {

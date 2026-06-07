@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1780826751.36208 "c:/Users/kynm/Desktop/BatchIt/documentation/batchit_presentation.tex" "batchit_presentation.pdf" "batchit_presentation" 1780826762.1351 0
+["pdflatex"] 1780857084.24483 "c:/Users/kynm/Desktop/BatchIt/documentation/batchit_presentation.tex" "batchit_presentation.pdf" "batchit_presentation" 1780857092.56338 0
   "C:/Program Files/MiKTeX/fonts/enc/dvips/base/8r.enc" 1458473887 4993 80dc9bab7f31fb78a000ccfed0e27cab ""
   "C:/Program Files/MiKTeX/fonts/tfm/adobe/helvetic/phvb8c.tfm" 1136768654 1344 2b79eb16daca0e8fd7cff8a5505df513 ""
   "C:/Program Files/MiKTeX/fonts/tfm/adobe/helvetic/phvb8r.tfm" 1136768654 4484 b828043cbd581d289d955903c1339981 ""
@@ -315,12 +315,12 @@
   "C:/Users/kynm/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/ectt0800.pk" 1780663610 15192 79ffbda6159b686fed76fc59b34896ab ""
   "C:/Users/kynm/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/ectt1095.pk" 1778870558 21972 7bf4430ed527f26ade3fcea4549c3062 ""
   "C:/Users/kynm/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1778870201 13340202 3d8282f8a45ae2b7e415d27b8d2bfae6 ""
-  "batchit_presentation.aux" 1780826761 2648 7a9d8b3dd4331a6c46341e4aab5af9ac "pdflatex"
-  "batchit_presentation.nav" 1780826761 1202 a971439ba5eedf62b158aa4c3f07763d "pdflatex"
-  "batchit_presentation.out" 1780826755 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "batchit_presentation.tex" 1780826730 41851 f6db21404741a7e62b9035394897a78a ""
-  "batchit_presentation.vrb" 1780826760 2981 8e6a53b8da6793b5bb474cf5e0458102 "pdflatex"
-  "c:/Users/kynm/Desktop/BatchIt/documentation/batchit_presentation.tex" 1780826730 41851 f6db21404741a7e62b9035394897a78a ""
+  "batchit_presentation.aux" 1780857092 2852 22e4279aad41b8ff28b9cfa41fd6f834 "pdflatex"
+  "batchit_presentation.nav" 1780857092 1295 ef040a83926d85743749b42a2275f515 "pdflatex"
+  "batchit_presentation.out" 1780857086 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "batchit_presentation.tex" 1780857072 44585 fc97d0d93a23b0e38c28c0fa628f04cd ""
+  "batchit_presentation.vrb" 1780857091 2981 8e6a53b8da6793b5bb474cf5e0458102 "pdflatex"
+  "c:/Users/kynm/Desktop/BatchIt/documentation/batchit_presentation.tex" 1780857072 44585 fc97d0d93a23b0e38c28c0fa628f04cd ""
   "kanban.png" 1780072869 154214 4b0d626c27a456bdd28c7e34c98b9d21 ""
   "login.png" 1780076303 187109 3c897a31d904e3ff0a2763652c58da7f ""
   "logo.png" 1776346607 587947 b37166b711b530364ceec2c28966026b ""

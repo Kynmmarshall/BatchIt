@@ -29,7 +29,9 @@ import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/batch_card.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
 import 'package:batchit/widgets/app_staggered_fade.dart';
+import 'package:batchit/widgets/distance_filter_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
 /// Private filter enum for home screen batch visibility modes.
@@ -42,19 +44,65 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-/// Manages home screen state including filter selection.
+/// Manages home screen state including filter selection and distance filtering.
 class _HomeScreenState extends State<HomeScreen> {
   _BatchFilter _selectedFilter = _BatchFilter.nearby;
+  double _distanceKm = 20.0;
+  Position? _currentPosition;
+  bool _distanceFilterEnabled = true;
 
-  /// Fetches nearby batches on first render.
-  /// Uses addPostFrameCallback to load after widget tree ready.
-  /// Without this, batches list remains empty until user manually refreshes.
   @override
   void initState() {
     super.initState();
+    _loadCurrentLocation();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<BatchProvider>().loadNearbyBatches();
     });
+  }
+
+  Future<void> _loadCurrentLocation() async {
+    try {
+      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) return;
+
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        return;
+      }
+
+      final position = await Geolocator.getCurrentPosition();
+      if (!mounted) return;
+      setState(() => _currentPosition = position);
+
+      if (!mounted) { return; }
+      context.read<BatchProvider>().loadNearbyBatches(
+        latitude: position.latitude,
+        longitude: position.longitude,
+        radiusKm: _distanceKm,
+      );
+    } catch (_) {}
+  }
+
+  void _toggleDistanceFilter() {
+    setState(() => _distanceFilterEnabled = !_distanceFilterEnabled);
+    _reloadWithDistance();
+  }
+
+  void _reloadWithDistance() {
+    final pos = _currentPosition;
+    if (_distanceFilterEnabled && pos != null) {
+      context.read<BatchProvider>().loadNearbyBatches(
+        latitude: pos.latitude,
+        longitude: pos.longitude,
+        radiusKm: _distanceKm,
+      );
+    } else {
+      context.read<BatchProvider>().loadNearbyBatches();
+    }
   }
 
   /// Filters batch list based on selected filter criteria.
@@ -306,6 +354,55 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
               ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Icon(
+                    _distanceFilterEnabled
+                        ? Icons.near_me_rounded
+                        : Icons.near_me_disabled,
+                    size: 15,
+                    color: _distanceFilterEnabled
+                        ? scheme.primary
+                        : scheme.onSurfaceVariant,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    'Distance filter',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: _distanceFilterEnabled
+                          ? scheme.primary
+                          : scheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const Spacer(),
+                  GestureDetector(
+                    onTap: _toggleDistanceFilter,
+                    child: Icon(
+                      _distanceFilterEnabled
+                          ? Icons.toggle_on_rounded
+                          : Icons.toggle_off_rounded,
+                      size: 32,
+                      color: _distanceFilterEnabled
+                          ? scheme.primary
+                          : scheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+              if (_distanceFilterEnabled) ...[
+                const SizedBox(height: 8),
+                DistanceFilterBar(
+                  value: _distanceKm,
+                  hasLocation: _currentPosition != null,
+                  onChanged: (v) => setState(() => _distanceKm = v),
+                  onChangeEnd: (v) {
+                    setState(() => _distanceKm = v);
+                    _reloadWithDistance();
+                  },
+                ),
+              ],
               const SizedBox(height: 22),
               Row(
                 children: [

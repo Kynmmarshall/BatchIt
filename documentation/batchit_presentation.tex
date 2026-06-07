@@ -232,6 +232,49 @@
 \end{columns}
 \end{frame}
 
+%% SLIDE 4 — KEY FEATURES
+\begin{frame}{Key Features}
+\vspace{0.08cm}
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+  \begin{tcolorbox}[cardbox,title={Batch Lifecycle Management}]
+    \scriptsize Create \(\to\) Discover \(\to\) Join \(\to\) Fill \(\to\) Complete.
+    Live \textbf{progress bar}. Auto status transitions (open/filled/expired).
+  \end{tcolorbox}\vspace{0.14cm}
+  \begin{tcolorbox}[cardbox,title={Dual Authentication}]
+    \scriptsize Email/password + \textbf{6-digit code} via Brevo SMTP, plus
+    \textbf{Google OAuth 2.0}. JWT: 60 min access, 7 day refresh.
+  \end{tcolorbox}\vspace{0.14cm}
+  \begin{tcolorbox}[cardbox,title={Provider Verification Workflow}]
+    \scriptsize Business submits docs $\to$ Admin reviews $\to$ Approved/Rejected
+    with in-app notification.
+  \end{tcolorbox}\vspace{0.14cm}
+  \begin{tcolorbox}[cardbox,title={Bilingual UI (EN / FR) + Themes}]
+    \scriptsize Full Material Design 3 with light/dark toggle.
+    French localization persists across restarts.
+  \end{tcolorbox}
+\end{column}
+\begin{column}{0.49\textwidth}
+  \begin{tcolorbox}[orangecard,title={Batch Group Chat}]
+    \scriptsize Each batch has a \textbf{persistent group chat room}.
+    REST polling (POST messages / GET history). Coordinate with buyers.
+  \end{tcolorbox}\vspace{0.14cm}
+  \begin{tcolorbox}[orangecard,title={Map-Based Discovery}]
+    \scriptsize OpenStreetMap via \texttt{flutter\_map}. View providers and
+    batches by \textbf{geographic proximity}. Tap pins for detail.
+  \end{tcolorbox}\vspace{0.14cm}
+  \begin{tcolorbox}[orangecard,title={In-App Notifications}]
+    \scriptsize Triggered on batch creation, join, fill, and provider approval.
+    Unread badge count. Provider subscription model.
+  \end{tcolorbox}\vspace{0.14cm}
+  \begin{tcolorbox}[orangecard,title={Orders, Profile \& 40+ REST Endpoints}]
+    \scriptsize Full order history, profile photo upload.
+    Swagger/OpenAPI docs via \texttt{drf-yasg}.
+  \end{tcolorbox}
+\end{column}
+\end{columns}
+\end{frame}
+
 %% SLIDE 3 — SYSTEM ARCHITECTURE
 \begin{frame}[fragile]{System Architecture}
 \vspace{-0.25cm}
@@ -328,48 +371,7 @@
 \end{center}
 \end{frame}
 
-%% SLIDE 4 — KEY FEATURES
-\begin{frame}{Key Features}
-\vspace{0.08cm}
-\begin{columns}[T]
-\begin{column}{0.49\textwidth}
-  \begin{tcolorbox}[cardbox,title={Batch Lifecycle Management}]
-    \scriptsize Create \(\to\) Discover \(\to\) Join \(\to\) Fill \(\to\) Complete.
-    Live \textbf{progress bar}. Auto status transitions (open/filled/expired).
-  \end{tcolorbox}\vspace{0.14cm}
-  \begin{tcolorbox}[cardbox,title={Dual Authentication}]
-    \scriptsize Email/password + \textbf{6-digit code} via Brevo SMTP, plus
-    \textbf{Google OAuth 2.0}. JWT: 60 min access, 7 day refresh.
-  \end{tcolorbox}\vspace{0.14cm}
-  \begin{tcolorbox}[cardbox,title={Provider Verification Workflow}]
-    \scriptsize Business submits docs $\to$ Admin reviews $\to$ Approved/Rejected
-    with in-app notification.
-  \end{tcolorbox}\vspace{0.14cm}
-  \begin{tcolorbox}[cardbox,title={Bilingual UI (EN / FR) + Themes}]
-    \scriptsize Full Material Design 3 with light/dark toggle.
-    French localization persists across restarts.
-  \end{tcolorbox}
-\end{column}
-\begin{column}{0.49\textwidth}
-  \begin{tcolorbox}[orangecard,title={Batch Group Chat}]
-    \scriptsize Each batch has a \textbf{persistent group chat room}.
-    REST polling (POST messages / GET history). Coordinate with buyers.
-  \end{tcolorbox}\vspace{0.14cm}
-  \begin{tcolorbox}[orangecard,title={Map-Based Discovery}]
-    \scriptsize OpenStreetMap via \texttt{flutter\_map}. View providers and
-    batches by \textbf{geographic proximity}. Tap pins for detail.
-  \end{tcolorbox}\vspace{0.14cm}
-  \begin{tcolorbox}[orangecard,title={In-App Notifications}]
-    \scriptsize Triggered on batch creation, join, fill, and provider approval.
-    Unread badge count. Provider subscription model.
-  \end{tcolorbox}\vspace{0.14cm}
-  \begin{tcolorbox}[orangecard,title={Orders, Profile \& 40+ REST Endpoints}]
-    \scriptsize Full order history, profile photo upload.
-    Swagger/OpenAPI docs via \texttt{drf-yasg}.
-  \end{tcolorbox}
-\end{column}
-\end{columns}
-\end{frame}
+
 
 %% SLIDE 5 — OOP CONCEPTS
 \begin{frame}{Object-Oriented Design --- Concepts \& Patterns Applied}
@@ -432,7 +434,57 @@
 
 \end{frame}
 
-%% SLIDE 6 — TECH STACK
+%% SLIDE 6 — DESIGN PATTERNS
+\begin{frame}{Design Patterns Applied}
+\vspace{0.06cm}
+\begin{columns}[T]
+\begin{column}{0.49\textwidth}
+
+  \begin{tcolorbox}[cardbox,title={Creational Patterns (Flutter)}]
+    \scriptsize
+    \textbf{Singleton} --- \texttt{ApiClient} uses a private constructor and a static \texttt{\_instance}; all six service classes share one HTTP client and one auth-token state.\\[3pt]
+    \textbf{Factory} --- Every model class exposes a \texttt{fromJson()} factory constructor; the service layer instantiates them directly from decoded API responses.
+  \end{tcolorbox}
+
+  \vspace{0.12cm}
+
+  \begin{tcolorbox}[cardbox,title={Structural Patterns (Flutter)}]
+    \scriptsize
+    \textbf{Facade} --- \texttt{ApiClient} hides raw \texttt{http.Client} calls; token injection, 401 retry, and error parsing are invisible to every caller.\\[3pt]
+    \textbf{Repository} --- \texttt{BatchService}, \texttt{AuthService}, and \texttt{ProviderService} isolate all HTTP details from the six \texttt{ChangeNotifier} providers.
+  \end{tcolorbox}
+
+\end{column}
+\begin{column}{0.49\textwidth}
+
+  \begin{tcolorbox}[orangecard,title={Behavioural Patterns}]
+    \scriptsize
+    \textbf{Observer} \textit{(Flutter)} --- Six \texttt{ChangeNotifier} subclasses drive reactive UI: \texttt{notifyListeners()} triggers \texttt{Consumer} and \texttt{context.watch()} rebuilds automatically.\\[3pt]
+    \textbf{Strategy} \textit{(Django)} --- DRF permission classes (\texttt{IsCustomer}, \texttt{IsProvider}, \texttt{IsAdmin}) and \texttt{ModelSerializer} subclasses are selected per endpoint at runtime.
+  \end{tcolorbox}
+
+  \vspace{0.12cm}
+
+  \begin{tcolorbox}[orangecard,title={Architectural Patterns (Django)}]
+    \scriptsize
+    \textbf{MVT} --- \texttt{models.py} defines schema; DRF \texttt{ListCreateAPIView} and \texttt{RetrieveUpdateDestroyAPIView} handle all REST logic without templates.\\[3pt]
+    \textbf{Serializer / Adapter} --- DRF serialisers map DB field names to the public API contract (e.g.\ \texttt{total\_quantity} $\to$ \texttt{bulk\_size\_kg}).\\[3pt]
+    \textbf{Transaction Script} --- \texttt{@transaction.atomic} keeps multi-step batch creation consistent under concurrent writes.
+  \end{tcolorbox}
+
+\end{column}
+\end{columns}
+
+\vspace{0.10cm}
+
+\begin{tcolorbox}[tealstat,title={Separation of Concerns --- Runtime Data Flow}]
+  \scriptsize
+  \textbf{Widget} $\to$ \texttt{Provider} (\textit{Observer}) $\to$ \texttt{Service} (\textit{Repository}) $\to$ \texttt{ApiClient} (\textit{Facade/Singleton}) $\to$ \textbf{HTTP} $\to$ \texttt{Django View} (\textit{MVT}) $\to$ \texttt{Serialiser} (\textit{Adapter}) $\to$ \textbf{DB}
+\end{tcolorbox}
+
+\end{frame}
+
+%% SLIDE 7 — TECH STACK
 \begin{frame}{Technology Stack}
 \vspace{-0.2cm}
 \begin{center}
@@ -549,7 +601,7 @@
 \end{center}
 \end{frame}
 
-%% SLIDE 7 — SCRUM & TEAM
+%% SLIDE 8 — SCRUM & TEAM
 \begin{frame}{Scrum Methodology \& Team Organisation}
 \vspace{0.06cm}
 \begin{columns}[T]
@@ -602,7 +654,7 @@
 \end{columns}
 \end{frame}
 
-%% SLIDE 8 — API
+%% SLIDE 9 — API
 \begin{frame}{REST API --- Django REST Framework}
 \vspace{0.4cm}
 \begin{columns}[T]
@@ -675,7 +727,7 @@
 \end{columns}
 \end{frame}
 
-%% SLIDE 9 — CI/CD + TEST COVERAGE
+%% SLIDE 10 — CI/CD + TEST COVERAGE
 \begin{frame}[fragile]{CI/CD Pipeline \& Test Coverage}
 \vspace{0.25cm}
 \begin{columns}[T]
@@ -748,7 +800,7 @@
 \end{columns}
 \end{frame}
 
-%% SLIDE 10 — RESULTS & CONCLUSION
+%% SLIDE 11 — RESULTS & CONCLUSION
 \begin{frame}{Results, Future Work \& Conclusion}
 \vspace{0.05cm}
 \begin{columns}[T]
@@ -843,7 +895,7 @@
 \end{columns}
 \end{frame}
 
-%% SLIDE 11 — THANK YOU / CLOSING
+%% SLIDE 12 — THANK YOU / CLOSING
 {
 \setbeamertemplate{footline}{}
 \begin{frame}[plain]

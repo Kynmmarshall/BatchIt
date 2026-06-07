@@ -73,6 +73,73 @@ void main() {
 
       expect(provider.batches.length, 1);
     });
+
+    test('sets isLoading true then false around the fetch', () async {
+      final loadingStates = <bool>[];
+      provider.addListener(() => loadingStates.add(provider.isLoading));
+
+      when(() => mockBatchService.fetchNearbyBatches(status: 'open'))
+          .thenAnswer((_) async => []);
+      when(() => mockBatchService.fetchNearbyBatches(status: 'filled'))
+          .thenAnswer((_) async => []);
+
+      await provider.loadNearbyBatches();
+
+      expect(loadingStates, containsAllInOrder([true, false]));
+    });
+
+    test('forwards latitude, longitude and radiusKm to the service', () async {
+      when(() => mockBatchService.fetchNearbyBatches(
+            status: 'open',
+            latitude: 3.8,
+            longitude: 11.5,
+            radiusKm: 25.0,
+          )).thenAnswer((_) async => [makeBatch(id: 'near1')]);
+      when(() => mockBatchService.fetchNearbyBatches(
+            status: 'filled',
+            latitude: 3.8,
+            longitude: 11.5,
+            radiusKm: 25.0,
+          )).thenAnswer((_) async => []);
+
+      await provider.loadNearbyBatches(
+        latitude: 3.8,
+        longitude: 11.5,
+        radiusKm: 25.0,
+      );
+
+      verify(() => mockBatchService.fetchNearbyBatches(
+            status: 'open',
+            latitude: 3.8,
+            longitude: 11.5,
+            radiusKm: 25.0,
+          )).called(1);
+      expect(provider.batches.length, 1);
+      expect(provider.batches.first.id, 'near1');
+    });
+
+    test('omits location params when called without arguments', () async {
+      when(() => mockBatchService.fetchNearbyBatches(status: 'open'))
+          .thenAnswer((_) async => [makeBatch(id: 'any')]);
+      when(() => mockBatchService.fetchNearbyBatches(status: 'filled'))
+          .thenAnswer((_) async => []);
+
+      await provider.loadNearbyBatches();
+
+      verify(() => mockBatchService.fetchNearbyBatches(status: 'open')).called(1);
+    });
+
+    test('returns empty list and does not throw when service returns empty', () async {
+      when(() => mockBatchService.fetchNearbyBatches(status: 'open'))
+          .thenAnswer((_) async => []);
+      when(() => mockBatchService.fetchNearbyBatches(status: 'filled'))
+          .thenAnswer((_) async => []);
+
+      await provider.loadNearbyBatches();
+
+      expect(provider.batches, isEmpty);
+      expect(provider.isLoading, false);
+    });
   });
 
   group('loadMyCreatedBatches', () {

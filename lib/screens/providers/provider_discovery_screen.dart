@@ -6,6 +6,7 @@ import 'package:batchit/services/provider_service.dart';
 import 'package:batchit/themes/app_spacing.dart';
 import 'package:batchit/widgets/app_primary_button.dart';
 import 'package:batchit/widgets/app_screen_container.dart';
+import 'package:batchit/widgets/distance_filter_bar.dart';
 import 'package:batchit/widgets/provider_card.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -28,6 +29,8 @@ class _ProviderDiscoveryScreenState extends State<ProviderDiscoveryScreen> {
   bool _loading = true;
   Position? _currentPosition;
   String _query = '';
+  double _distanceKm = 20.0;
+  bool _distanceFilterEnabled = true;
 
   @override
   void initState() {
@@ -88,14 +91,35 @@ class _ProviderDiscoveryScreenState extends State<ProviderDiscoveryScreen> {
   }
 
   List<ProviderProfile> get _filtered {
+    var results = _all;
+
+    // Text search
     final q = _query.trim().toLowerCase();
-    if (q.isEmpty) return _all;
-    return _all.where((p) {
-      return [p.businessName, p.ownerName, p.address, p.description, p.category.name]
-          .join(' ')
-          .toLowerCase()
-          .contains(q);
-    }).toList();
+    if (q.isNotEmpty) {
+      results = results.where((p) {
+        return [p.businessName, p.ownerName, p.address, p.description, p.category.name]
+            .join(' ')
+            .toLowerCase()
+            .contains(q);
+      }).toList();
+    }
+
+    // Distance filter — only applied when enabled and we have the user's position.
+    // Providers with no coordinates are kept so they are never silently hidden.
+    final pos = _currentPosition;
+    if (_distanceFilterEnabled && pos != null) {
+      results = results.where((p) {
+        final lat = p.latitude;
+        final lng = p.longitude;
+        if (lat == null || lng == null) return true;
+        final meters = Geolocator.distanceBetween(
+          pos.latitude, pos.longitude, lat, lng,
+        );
+        return meters <= _distanceKm * 1000;
+      }).toList();
+    }
+
+    return results;
   }
 
   Future<void> _toggle(ProviderProfile p) async {
@@ -145,6 +169,53 @@ class _ProviderDiscoveryScreenState extends State<ProviderDiscoveryScreen> {
                 prefixIcon: const Icon(Icons.search_rounded),
               ),
             ),
+            const SizedBox(height: AppSpacing.sm),
+            Row(
+              children: [
+                Icon(
+                  _distanceFilterEnabled
+                      ? Icons.near_me_rounded
+                      : Icons.near_me_disabled,
+                  size: 15,
+                  color: _distanceFilterEnabled
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  'Distance filter',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: _distanceFilterEnabled
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const Spacer(),
+                GestureDetector(
+                  onTap: () => setState(
+                    () => _distanceFilterEnabled = !_distanceFilterEnabled,
+                  ),
+                  child: Icon(
+                    _distanceFilterEnabled
+                        ? Icons.toggle_on_rounded
+                        : Icons.toggle_off_rounded,
+                    size: 32,
+                    color: _distanceFilterEnabled
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+            if (_distanceFilterEnabled) ...[
+              const SizedBox(height: 8),
+              DistanceFilterBar(
+                value: _distanceKm,
+                hasLocation: _currentPosition != null,
+                onChanged: (v) => setState(() => _distanceKm = v),
+              ),
+            ],
             const SizedBox(height: AppSpacing.md),
             if (_loading)
               const Padding(
