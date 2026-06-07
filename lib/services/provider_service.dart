@@ -3,6 +3,15 @@ import 'package:batchit/models/provider_profile.dart';
 import 'package:batchit/services/api_client.dart';
 import 'package:flutter/foundation.dart';
 
+// Top-level functions required by compute() — isolate entry points.
+List<ProviderProfile> _parseProviderList(List<dynamic> raw) =>
+    raw.map((e) => ProviderProfile.fromJson(e as Map<String, dynamic>)).toList();
+
+List<ProviderProfile> _parseVerifiedProviderList(List<dynamic> raw) => raw
+    .map((e) => ProviderProfile.fromJson(e as Map<String, dynamic>))
+    .where((p) => p.isVerified)
+    .toList();
+
 class ProviderService {
   final ApiClient _apiClient = ApiClient();
 
@@ -15,10 +24,7 @@ class ProviderService {
           ? response
           : (response as Map<String, dynamic>?)?['results'] as List<dynamic>? ?? [];
       debugPrint('[ProviderService] Total items from API: ${items.length}');
-      final verified = items
-          .map((e) => ProviderProfile.fromJson(e as Map<String, dynamic>))
-          .where((p) => p.isVerified)
-          .toList();
+      final verified = await compute(_parseVerifiedProviderList, items);
       debugPrint('[ProviderService] Verified providers: ${verified.length}');
       return verified;
     } catch (e) {
@@ -34,9 +40,7 @@ class ProviderService {
       final items = response is List
           ? response
           : (response as Map<String, dynamic>?)?['results'] as List<dynamic>? ?? [];
-      return items
-          .map((e) => ProviderProfile.fromJson(e as Map<String, dynamic>))
-          .toList();
+      return compute(_parseProviderList, items);
     } catch (e) {
       debugPrint('[ProviderService] fetchAllProviders error: $e');
       return [];
@@ -73,9 +77,7 @@ class ProviderService {
       final items = response is List
           ? response
           : (response as Map<String, dynamic>?)?['results'] as List<dynamic>? ?? [];
-      return items
-          .map((e) => ProviderProfile.fromJson(e as Map<String, dynamic>))
-          .toList();
+      return compute(_parseProviderList, items);
     } catch (e) {
       debugPrint('[ProviderService] fetchFollowedProviders error: $e');
       return [];

@@ -36,8 +36,10 @@ class _ProviderDiscoveryScreenState extends State<ProviderDiscoveryScreen> {
   void initState() {
     super.initState();
     _searchController.addListener(_onSearch);
-    _loadCurrentLocation();
-    _load();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadCurrentLocation();
+      _load();
+    });
   }
 
   @override

@@ -1,28 +1,28 @@
-/// ============================================================================
-/// [MainNavigationShell] - Root-level tab navigator for authenticated users
-/// ============================================================================
-/// StatefulWidget that manages bottom navigation bar (5 tabs) and IndexedStack
-/// for tab-based screen switching after user authentication.
-///
-/// Tab structure (in order, index 0-4):
-/// 0. Home - Browse nearby batches and active batch carousel
-/// 1. Create Batch - Form to create new bulk purchasing batch
-/// 2. Notifications - Alert feed grouped by date
-/// 3. Profile - User account dashboard and settings
-/// 4. More - Additional features (Map, Chat, Provider Discovery)
-///
-/// State management:
-/// - Local _index tracks selected tab (0-4)
-/// - IndexedStack houses all 5 screens (only selected renders)
-/// - setState on tab selection to update _index
-/// - All screens persist state while not visible
-///
-/// Key responsibilities:
-/// - Render bottom NavigationBar with localized labels
-/// - Switch between tab screens via IndexedStack
-/// - Maintain visual selection state (icon/label highlighting)
-/// - Apply platform-consistent bottom safe area
-/// ============================================================================
+//============================================================================
+//[MainNavigationShell] - Root-level tab navigator for authenticated users
+//============================================================================
+//StatefulWidget that manages bottom navigation bar (5 tabs) and IndexedStack
+//for tab-based screen switching after user authentication.
+//
+//Tab structure (in order, index 0-4):
+//0. Home - Browse nearby batches and active batch carousel
+//1. Create Batch - Form to create new bulk purchasing batch
+//2. Notifications - Alert feed grouped by date
+//3. Profile - User account dashboard and settings
+//4. More - Additional features (Map, Chat, Provider Discovery)
+//
+//State management:
+//- Local _index tracks selected tab (0-4)
+//- IndexedStack houses all 5 screens (only selected renders)
+//- setState on tab selection to update _index
+//- All screens persist state while not visible
+//
+//Key responsibilities:
+//- Render bottom NavigationBar with localized labels
+//- Switch between tab screens via IndexedStack
+//- Maintain visual selection state (icon/label highlighting)
+//- Apply platform-consistent bottom safe area
+//============================================================================
 import 'package:batchit/l10n/app_localizations.dart';
 import 'package:batchit/providers/notification_provider.dart';
 import 'package:batchit/screens/batch/create_batch_screen.dart';
@@ -41,15 +41,32 @@ class MainNavigationShell extends StatefulWidget {
   State<MainNavigationShell> createState() => _MainNavigationShellState();
 }
 
-/// Holds mutable tab state and renders bottom navigation UI.
-/// Updates _index on destination selection to trigger rebuild.
+//Holds mutable tab state and renders bottom navigation UI.
+//Updates _index on destination selection to trigger rebuild.
 class _MainNavigationShellState extends State<MainNavigationShell> {
   int _index = 0;
+
+  // Screens are built lazily — only when first visited. Once built, the
+  // same widget instance is returned on every subsequent rebuild so Flutter
+  // reuses the element and preserves the screen's State.
+  final _screenCache = <int, Widget>{};
+
+  Widget _screenFor(int i) => _screenCache.putIfAbsent(
+        i,
+        () => switch (i) {
+          0 => const HomeScreen(),
+          1 => const CreateBatchScreen(),
+          2 => const NotificationsScreen(),
+          3 => const ProfileScreen(),
+          4 => const MoreScreen(),
+          _ => throw StateError('Unknown tab $i'),
+        },
+      );
 
   @override
   void initState() {
     super.initState();
-    // Load notifications so the unread badge is populated immediately.
+    _screenFor(0); // Build Home immediately.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) context.read<NotificationProvider>().load();
     });
@@ -61,18 +78,21 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
     final unreadCount = context.watch<NotificationProvider>().unreadCount;
     final hasUnread = unreadCount > 0;
 
-    final screens = [
-      const HomeScreen(),
-      const CreateBatchScreen(),
-      const NotificationsScreen(),
-      const ProfileScreen(),
-      const MoreScreen(),
-    ];
+    // Build children list: cached widget for visited tabs, zero-cost
+    // SizedBox.shrink() placeholder for tabs the user hasn't opened yet.
+    // The currently active tab is always created/returned from cache.
+    final children = List<Widget>.generate(
+      5,
+      (i) => _screenCache.containsKey(i)
+          ? _screenCache[i]!
+          : const SizedBox.shrink(),
+    );
+    children[_index] = _screenFor(_index);
 
     return Scaffold(
       body: IndexedStack(
         index: _index,
-        children: screens,
+        children: children,
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -84,8 +104,8 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
           top: false,
           child: NavigationBar(
             selectedIndex: _index,
-            onDestinationSelected: (value) {
-              setState(() => _index = value);
+            onDestinationSelected: (i) {
+              setState(() => _index = i);
             },
             destinations: [
               NavigationDestination(
@@ -121,7 +141,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
   }
 }
 
-/// Bell icon that turns green and shows a badge dot when there are unread notifications.
+//Bell icon that turns green and shows a badge dot when there are unread notifications.
 class _NotifIcon extends StatelessWidget {
   const _NotifIcon({required this.hasUnread, required this.selected});
 

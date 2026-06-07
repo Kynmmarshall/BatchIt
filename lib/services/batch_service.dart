@@ -13,10 +13,33 @@ import 'package:batchit/services/api_client.dart';
 /// Endpoints (backend):
 /// - GET /api/batches/                   (list with filters)
 /// - POST /api/batches/                  (create)
-/// - GET /api/batches/<id>/              (retrieve)
-/// - PATCH /api/batches/<id>/            (update)
-/// - POST /api/batches/<id>/join/        (join batch - custom action)
+/// - GET /api/batches/`<id>`/              (retrieve)
+/// - PATCH /api/batches/`<id>`/            (update)
+/// - POST /api/batches/`<id>`/join/        (join batch - custom action)
 /// ============================================================================
+
+// Top-level functions required by compute() — must not be closures or instance methods.
+List<Batch> _parseBatchList(List<dynamic> raw) =>
+    raw.map((e) => _batchFromJson(e as Map<String, dynamic>)).toList();
+
+Batch _batchFromJson(Map<String, dynamic> json) => Batch(
+      id: json['id'] as String? ?? json['batch_id'] as String? ?? 'unknown',
+      providerId: json['provider_id'] as String?,
+      creatorId: json['creator_id'] as String?,
+      status: json['status'] as String? ?? 'open',
+      productName: json['product_name'] as String? ?? 'Unknown Product',
+      bulkSizeKg: (json['bulk_size_kg'] as num?)?.toDouble() ??
+          (json['total_quantity'] as num?)?.toDouble() ?? 0.0,
+      currentQuantityKg: (json['current_quantity_kg'] as num?)?.toDouble() ??
+          (json['filled_quantity'] as num?)?.toDouble() ?? 0.0,
+      unit: json['unit'] as String? ?? 'kg',
+      locationName: json['location_name'] as String? ??
+          json['location'] as String? ?? '',
+      hubName: json['hub_name'] as String? ??
+          json['provider_name'] as String? ?? '',
+      imageUrl: json['image_url'] as String?,
+      notes: json['notes'] as String?,
+    );
 
 class BatchService {
   final ApiClient _apiClient = ApiClient();
@@ -44,9 +67,7 @@ class BatchService {
       // Expected response: { 'results': [...] } or [...]
       final List<dynamic> batchList = response is List ? response : response['results'] ?? [];
 
-      return batchList
-          .map((batchJson) => _mapBatchFromJson(batchJson as Map<String, dynamic>))
-          .toList();
+      return compute(_parseBatchList, batchList);
     } on ApiException catch (e) {
       debugPrint('Failed to fetch batches: $e');
       return [];
@@ -110,9 +131,7 @@ class BatchService {
     try {
       final response = await _apiClient.get('/batches/', params: {'creator': 'me'});
       final List<dynamic> batchList = response is List ? response : response['results'] ?? [];
-      return batchList
-          .map((json) => _mapBatchFromJson(json as Map<String, dynamic>))
-          .toList();
+      return compute(_parseBatchList, batchList);
     } on ApiException catch (e) {
       debugPrint('[BatchService] fetchMyCreatedBatches failed: $e');
       return [];
@@ -124,9 +143,7 @@ class BatchService {
     try {
       final response = await _apiClient.get('/batches/', params: {'participant': 'me'});
       final List<dynamic> batchList = response is List ? response : response['results'] ?? [];
-      return batchList
-          .map((json) => _mapBatchFromJson(json as Map<String, dynamic>))
-          .toList();
+      return compute(_parseBatchList, batchList);
     } on ApiException catch (e) {
       debugPrint('[BatchService] fetchMyJoinedBatches failed: $e');
       return [];
@@ -188,26 +205,6 @@ class BatchService {
     await _apiClient.delete('/batches/$batchId/edit/');
   }
 
-  /// Maps backend batch JSON to frontend Batch model.
-  Batch _mapBatchFromJson(Map<String, dynamic> json) {
-    return Batch(
-      id: json['id'] as String? ?? json['batch_id'] as String? ?? 'unknown',
-      providerId: json['provider_id'] as String?,
-      creatorId: json['creator_id'] as String?,
-      status: json['status'] as String? ?? 'open',
-      productName: json['product_name'] as String? ?? 'Unknown Product',
-      bulkSizeKg: (json['bulk_size_kg'] as num?)?.toDouble() ??
-          (json['total_quantity'] as num?)?.toDouble() ?? 0.0,
-      currentQuantityKg: (json['current_quantity_kg'] as num?)?.toDouble() ??
-          (json['filled_quantity'] as num?)?.toDouble() ?? 0.0,
-      unit: json['unit'] as String? ?? 'kg',
-      locationName: json['location_name'] as String? ??
-          json['location'] as String? ?? '',
-      hubName: json['hub_name'] as String? ??
-          json['provider_name'] as String? ?? '',
-      imageUrl: json['image_url'] as String?,
-      notes: json['notes'] as String?,
-    );
-  }
+  Batch _mapBatchFromJson(Map<String, dynamic> json) => _batchFromJson(json);
 
 }
