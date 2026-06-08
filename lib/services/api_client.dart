@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:batchit/core/app_constants.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive/hive.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
 
@@ -51,21 +51,24 @@ class ApiClient {
   Future<void> setAuthToken(String token) async {
     _authToken = token;
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('auth_token', token);
+      final box = Hive.box('auth');
+      await box.put('auth_token', token);
     } catch (e) {
       debugPrint('Failed to save auth token to storage: $e');
     }
   }
 
   /// Sets both access and refresh tokens (JWT flow).
-  Future<void> setAuthTokens({required String accessToken, String? refreshToken}) async {
+  Future<void> setAuthTokens({
+    required String accessToken,
+    String? refreshToken,
+  }) async {
     _authToken = accessToken;
     _refreshToken = refreshToken;
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('auth_token', accessToken);
-      if (refreshToken != null) await prefs.setString('refresh_token', refreshToken);
+      final box = Hive.box('auth');
+      await box.put('auth_token', accessToken);
+      if (refreshToken != null) await box.put('refresh_token', refreshToken);
     } catch (e) {
       debugPrint('Failed to save auth tokens to storage: $e');
     }
@@ -77,8 +80,9 @@ class ApiClient {
     _authToken = null;
     _refreshToken = null;
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('auth_token');
+      final box = Hive.box('auth');
+      await box.delete('auth_token');
+      await box.delete('refresh_token');
     } catch (e) {
       debugPrint('Failed to clear auth token from storage: $e');
     }
@@ -88,9 +92,9 @@ class ApiClient {
   /// Returns true if token was restored, false otherwise.
   Future<bool> restoreAuthToken() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('auth_token');
-      final refresh = prefs.getString('refresh_token');
+      final box = Hive.box('auth');
+      final token = box.get('auth_token') as String?;
+      final refresh = box.get('refresh_token') as String?;
       if (token != null && token.isNotEmpty) {
         _authToken = token;
         _refreshToken = refresh;
@@ -161,7 +165,9 @@ class ApiClient {
   ///   - params: Optional query parameters map
   Future<dynamic> get(String endpoint, {Map<String, String>? params}) {
     final uri = Uri.parse('$_baseUrl$endpoint');
-    final uriWithParams = params != null ? uri.replace(queryParameters: params) : uri;
+    final uriWithParams = params != null
+        ? uri.replace(queryParameters: params)
+        : uri;
     debugPrint('[BatchIt][api] GET $uriWithParams');
     return _withRefresh(() async {
       final response = await _httpClient
@@ -174,15 +180,22 @@ class ApiClient {
 
   /// Performs an authenticated GET request and returns the raw response bytes.
   /// Useful for file downloads that should include the current auth token.
-  Future<Uint8List> getBytes(String endpoint, {Map<String, String>? params}) async {
+  Future<Uint8List> getBytes(
+    String endpoint, {
+    Map<String, String>? params,
+  }) async {
     final uri = Uri.parse('$_baseUrl$endpoint');
-    final uriWithParams = params != null ? uri.replace(queryParameters: params) : uri;
+    final uriWithParams = params != null
+        ? uri.replace(queryParameters: params)
+        : uri;
     debugPrint('[BatchIt][api] GET(bytes) $uriWithParams');
     final result = await _withRefresh(() async {
       final response = await _httpClient
           .get(uriWithParams, headers: _buildHeaders())
           .timeout(AppConstants.apiTimeout);
-      debugPrint('[BatchIt][api] GET(bytes) $endpoint → ${response.statusCode}');
+      debugPrint(
+        '[BatchIt][api] GET(bytes) $endpoint → ${response.statusCode}',
+      );
       if (response.statusCode < 200 || response.statusCode >= 300) {
         throw _handleError(response);
       }
@@ -274,7 +287,9 @@ class ApiClient {
     request.fields.addAll(fields);
 
     if (file != null) {
-      request.files.add(await http.MultipartFile.fromPath(fileField, file.path));
+      request.files.add(
+        await http.MultipartFile.fromPath(fileField, file.path),
+      );
     }
 
     return _withRefresh(() async {
@@ -305,7 +320,9 @@ class ApiClient {
 
     if (files != null) {
       for (final entry in files) {
-        request.files.add(await http.MultipartFile.fromPath(entry.key, entry.value.path));
+        request.files.add(
+          await http.MultipartFile.fromPath(entry.key, entry.value.path),
+        );
       }
     }
 
@@ -344,10 +361,10 @@ class ApiClient {
     }
 
     final errorBody = _tryParseErrorBody(response.body);
-    
+
     // Try to extract a meaningful error message
     String errorMessage = 'Unknown error';
-    
+
     // First, check for 'detail' field (generic error message)
     if (errorBody['detail'] != null) {
       errorMessage = errorBody['detail'].toString();
@@ -417,11 +434,7 @@ class ApiException implements Exception {
   final String message;
   final Map<String, dynamic>? body;
 
-  ApiException({
-    required this.statusCode,
-    required this.message,
-    this.body,
-  });
+  ApiException({required this.statusCode, required this.message, this.body});
 
   @override
   String toString() => 'ApiException: [$statusCode] $message';

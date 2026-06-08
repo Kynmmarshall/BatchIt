@@ -24,17 +24,25 @@ import 'package:batchit/services/batch_service.dart';
 import 'package:batchit/services/order_service.dart';
 import 'package:batchit/services/provider_service.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 /// Application entry point - initializes Provider state and runs the app.
-/// 
+///
 /// Execution flow:
 /// 1. Sets up MultiProvider with 4 root-level providers
 /// 2. Passes AppSettings and Auth providers first for app initialization
 /// 3. Passes Batch and Order providers with dependencies on other providers
 /// 4. Runs BatchItApp widget which handles routing based on auth state
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   debugPrint('[BatchIt][main] App starting...');
+
+  // Initialize Hive and open boxes used for local persistence.
+  await Hive.initFlutter();
+  await Hive.openBox('auth');
+  await Hive.openBox('settings');
+
   final providerService = ProviderService();
   runApp(
     MultiProvider(

@@ -13,10 +13,29 @@
 /// Dependencies: None (no external services)
 /// ============================================================================
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 class AppSettingsProvider extends ChangeNotifier {
   Locale _locale = const Locale('en');
   ThemeMode _themeMode = ThemeMode.system;
+  late final Box _settingsBox;
+
+  AppSettingsProvider() {
+    _settingsBox = Hive.box('settings');
+    // Load persisted settings if present
+    final persistedLocale = _settingsBox.get('locale') as String?;
+    final persistedTheme = _settingsBox.get('theme_mode') as String?;
+    if (persistedLocale != null && persistedLocale.isNotEmpty) {
+      _locale = Locale(persistedLocale);
+    }
+    if (persistedTheme != null && persistedTheme.isNotEmpty) {
+      _themeMode = switch (persistedTheme) {
+        'light' => ThemeMode.light,
+        'dark' => ThemeMode.dark,
+        _ => ThemeMode.system,
+      };
+    }
+  }
 
   Locale get locale => _locale;
   ThemeMode get themeMode => _themeMode;
@@ -28,6 +47,7 @@ class AppSettingsProvider extends ChangeNotifier {
       return;
     }
     _locale = locale;
+    _settingsBox.put('locale', locale.languageCode);
     notifyListeners();
   }
 
@@ -39,6 +59,14 @@ class AppSettingsProvider extends ChangeNotifier {
       ThemeMode.light => ThemeMode.dark,
       ThemeMode.dark => ThemeMode.system,
     };
+    _settingsBox.put(
+      'theme_mode',
+      _themeMode == ThemeMode.light
+          ? 'light'
+          : _themeMode == ThemeMode.dark
+          ? 'dark'
+          : 'system',
+    );
     notifyListeners();
   }
 
@@ -46,6 +74,14 @@ class AppSettingsProvider extends ChangeNotifier {
   void setTheme(ThemeMode mode) {
     if (_themeMode == mode) return;
     _themeMode = mode;
+    _settingsBox.put(
+      'theme_mode',
+      _themeMode == ThemeMode.light
+          ? 'light'
+          : _themeMode == ThemeMode.dark
+          ? 'dark'
+          : 'system',
+    );
     notifyListeners();
   }
 
@@ -53,6 +89,14 @@ class AppSettingsProvider extends ChangeNotifier {
   void applyTheme(ThemeMode mode) {
     if (_themeMode == mode) return;
     _themeMode = mode;
+    _settingsBox.put(
+      'theme_mode',
+      _themeMode == ThemeMode.light
+          ? 'light'
+          : _themeMode == ThemeMode.dark
+          ? 'dark'
+          : 'system',
+    );
     notifyListeners();
   }
 }
