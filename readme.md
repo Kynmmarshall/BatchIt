@@ -3,7 +3,7 @@
 BatchIt is a Flutter application for collective bulk buying. It helps nearby users join product batches, reach target quantities, and collect orders through local hubs.
 
 ## Overview
-
+fu
 Instead of buying full wholesale quantities alone, users can collaborate in shared batches. This reduces cost per user and improves access to bulk pricing.
 
 Core flow:
